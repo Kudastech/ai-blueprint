@@ -33,27 +33,28 @@ helping you write.
 
 ```mermaid
 flowchart TD
-    subgraph you["you provide (the only files you write)"]
-        PP["project-plan.md<br/>what and why"]
-        BPL["build-plan.md<br/>ordered features"]
+    subgraph you["you provide"]
+        PP["project-plan.md"]
+        BPL["build-plan.md"]
     end
 
     PP --> OV(["/overview"])
     BPL --> OV
     OV --> POV["project-overview.md<br/>source of truth"]
-
     POV -.->|optional| PT(["/prototype"])
-    PT -.-> PRO["prototypes/<br/>throwaway mockups"]
+    PT -.-> PRO["prototypes/"]
 
     POV --> FT(["/feature"])
-    FT --> CF["current-feature.md<br/>one spec at a time"]
-    CF --> IM(["/implement"])
-    IM --> CP(["/complete"])
-    CP --> AR["docs/features/NN-name.md<br/>logged + merged"]
-    AR -.->|next feature| FT
+    POV --> FX(["/fix"])
+    FT --> CF["current-feature.md"]
+    FX --> CF
+    CF --> IM(["/implement<br/>build + iterate, reviewed"])
+    IM --> CP(["/complete<br/>log + merge"])
+    CP --> AR["docs/features/ or docs/fixes/"]
+    AR -.->|next| FT
 
     classDef skill fill:#2563eb,stroke:#1e40af,color:#ffffff;
-    class OV,PT,FT,IM,CP skill;
+    class OV,PT,FT,FX,IM,CP skill;
 ```
 
 ## Starting a new project
