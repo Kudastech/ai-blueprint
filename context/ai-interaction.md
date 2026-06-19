@@ -21,6 +21,13 @@ Run `/feature` (or `/fix` for a bug or change that isn't a planned feature) to
 write the spec, `/implement` to build it on a branch, and `/complete` to log it
 and merge. The numbered loop below is what those skills follow.
 
+The skills are the structured path, not a requirement. You can also just describe
+a feature, fix, or change in chat at any time and we'll build it the same way; the
+rules below still apply (small steps, you approve each diff, the conventions in
+`coding-standards.md`), because they're always in context. Use the skills when you
+want the repeatable loop and the logging; prompt directly when you just want
+something done.
+
 1. **Spec** - Run `/feature` (no number = the next unchecked item in
    `build-plan.md`) to generate @context/current-feature.md, then review it
    together before any code.

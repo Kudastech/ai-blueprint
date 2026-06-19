@@ -196,6 +196,11 @@ fixes to `docs/fixes/` rather than checking them off the build plan.
 | **/complete** | when a feature is built and reviewed | Logs the feature (archives the spec to `docs/features/`, checks it off `build-plan.md`, resets `current-feature.md`), then merges the branch to main with your go-ahead and deletes it. Never pushes without a yes. |
 | **/prototype** | before the build loop, to lock the look | Asks about the look and which pages, proposes a plan, then writes throwaway static mockups to `prototypes/` sharing one theme (CSS variables). A pre-build helper, outside the feature loop. |
 
+These commands are the structured path, not a cage. You can describe a feature,
+fix, or change directly in chat at any time, and the same conventions still apply
+(they're loaded from `context/`). Reach for the skills when you want the repeatable
+loop and the logging; prompt directly when you just want something done.
+
 ## A note on the app itself
 
 This blueprint is a **workflow layer**, not an app skeleton, so there's no
