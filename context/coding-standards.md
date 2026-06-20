@@ -79,6 +79,9 @@
 
 ## Testing
 
+- Testing is optional and off by default. The blueprint installs no test runner;
+  add one only when you choose to, never mid-feature without asking. The flow uses
+  tests only if a runner is already configured.
 - Vitest for unit tests (server actions and utilities only, not components)
 - Test files live next to source files: `feature.test.ts`
 - Run tests: `npm run test` (single run) or `npm run test:watch` (watch mode)

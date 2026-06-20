@@ -39,11 +39,16 @@ Work through the spec's build steps in order, one at a time. For each step:
 
 1. Implement just that step: the smallest change that satisfies its "done when."
 2. Show the **diff**, not whole files.
-3. **Explain it.** For each file created or changed, one or two sentences on what
-   it does and any key function or pattern. This is the anti-vibe-coding gate; the
-   user should understand every change.
-4. **Test it.** Run the project's build and tests if it has them (for example
-   `npm run build`, `npm run test`) and confirm the step's "done when" is met.
+3. **Explain it, and prove it.** Give a short summary: what the step delivered,
+   one line per changed file on what it does and why, then confirm the step's
+   "done when" is met with evidence (build output, a screenshot, a passing
+   assertion). This summary is the comprehension gate, so keep it concrete, not
+   ceremonial.
+4. **Build, and test if the project tests.** Run the build (for example
+   `npm run build`). Run unit tests only if a runner is already configured
+   (`npm run test`) - testing is optional and off by default, so never install one
+   mid-step. If a step surfaces non-trivial logic the spec didn't foresee, add a
+   focused test then (when testing is set up) or note why not.
 5. **Iterate until it works.** If it fails or the user wants changes, revise the
    step (re-prompt or hand-edit the code), show the updated diff, and re-test.
    Repeat until it works and the user approves. Nothing is committed until the

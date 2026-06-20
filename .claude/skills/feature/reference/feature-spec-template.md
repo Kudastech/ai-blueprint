@@ -44,7 +44,9 @@ Small, reviewable units. Each ends with something working.
 
 ## Testing
 
-- How to verify: what to unit-test, what to click through.
+- How to verify: what to click through, and the observable done-when per step.
+- Unit tests are optional, and only when a test runner is already configured. If
+  so, note what to test (logic, server actions, utilities - not components).
 
 ## Notes for the AI
 

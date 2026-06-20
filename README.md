@@ -147,10 +147,11 @@ regenerates from them.
 5. **Read the spec.** Adjust anything before code is written. This is your review
    gate.
 6. **Run `/implement`** to build it, one reviewed step at a time. It branches,
-   then for each step: build, show the diff and explain it, test, and **iterate
-   until it works** (re-prompt or hand-edit). After each approved step it pops a
-   quick choice - **commit a checkpoint**, **continue**, or **stop here** to pause -
-   so checkpoints stay optional. It builds on the branch only.
+   then for each step: build, show the diff, explain it and **confirm the done-when
+   with evidence** (build output, a screenshot), test if the project has a runner,
+   and **iterate until it works** (re-prompt or hand-edit). After each approved step
+   it pops a quick choice - **commit a checkpoint**, **continue**, or **stop here**
+   to pause - so checkpoints stay optional. It builds on the branch only.
 7. **Run `/complete`** to wrap up: it archives the spec to
    `docs/features/NN-name.md`, checks the feature off in `build-plan.md`, resets
    `context/current-feature.md` to its stub, makes **one feature-level commit**,

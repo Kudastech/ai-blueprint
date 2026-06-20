@@ -34,10 +34,12 @@ something done.
 2. **Branch** - Create a new branch for the feature/fix.
 3. **Implement** - Build one small step from the spec at a time, not the whole
    feature at once.
-4. **Review** - Show the diff (not full files). I read and approve each step
-   before moving to the next.
-5. **Test** - Verify in the browser. Run `npm run test` for unit tests and
-   `npm run build` to check for errors.
+4. **Review** - Show the diff (not full files), with a short summary: what the
+   step delivered, one line per file on the why, and the done-when shown true. I
+   read and approve each step before moving to the next.
+5. **Test** - Verify the done-when with evidence: the browser/a screenshot and
+   `npm run build`. Run `npm run test` only if a test runner is already
+   configured; testing is optional and off by default.
 6. **Iterate** - If it doesn't work or needs changes, re-prompt or hand-edit and
    re-test; repeat until it works, before moving on.
 7. **Checkpoint (optional)** - after an approved step `/implement` pops a quick
@@ -53,8 +55,8 @@ something done.
     and deletes it, so the feature lands as one commit; push stays a separate
     explicit yes.
 
-Do NOT commit without permission or until the build and tests pass. If build or
-tests fail, fix the issues first.
+Do NOT commit without permission or until the build passes (and tests, if the
+project has them). If the build or tests fail, fix the issues first.
 
 ## Branching
 
