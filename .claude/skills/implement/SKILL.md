@@ -64,9 +64,11 @@ Work through the spec's build steps in order, one at a time. For each step:
    user is happy with the step.
 6. **Mark it done, then prompt to move on.** Once the step is approved, check that
    step off (`- [x]`) in `context/current-feature.md` so progress survives a context
-   clear. Then use `AskUserQuestion` (a quick selectable prompt, not a free-text
-   question) to offer a short choice, noting that checkpoints are optional since
-   `/complete` makes the real feature-level commit:
+   clear. Then offer a short choice, noting that checkpoints are optional since
+   `/complete` makes the real feature-level commit. Use `AskUserQuestion` (a quick
+   selectable prompt) for this - but when you've just produced a long block to read
+   (a deep explanation, a big walk-through), ask in plain text instead, so the modal
+   doesn't cover what the user is still reading:
    - **Continue** (default) - roll into the next step without committing.
    - **Commit checkpoint** - commit just this step on the branch with a
      conventional message (a cheap rollback point).
@@ -76,9 +78,10 @@ Work through the spec's build steps in order, one at a time. For each step:
    - **Stop here** - pause the loop so the user can review or come back later.
 
    On **Continue** or after **Commit checkpoint**, go to the next step. On **Walk
-   me through it**, explain in depth and then show this prompt again. On **Stop
-   here**, stop and say where things stand: the branch is intact; run `/implement`
-   again to resume, or `/complete` to wrap up what's built so far.
+   me through it**, explain in depth and then re-ask this prompt in plain text (the
+   explanation is long, so a modal would cover it). On **Stop here**, stop and say
+   where things stand: the branch is intact; run `/implement` again to resume, or
+   `/complete` to wrap up what's built so far.
 
 Never batch the whole thing into one diff. If a step's diff is too big to read,
 split it. Build and tests must pass before any commit.

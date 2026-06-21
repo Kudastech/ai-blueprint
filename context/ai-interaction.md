@@ -42,11 +42,12 @@ something done.
    configured; testing is optional and off by default.
 6. **Iterate** - If it doesn't work or needs changes, re-prompt or hand-edit and
    re-test; repeat until it works, before moving on.
-7. **Checkpoint (optional)** - after an approved step `/implement` pops a quick
-   choice (continue / commit a checkpoint / walk me through it / stop here).
-   Checkpoints are optional cheap rollback points; "walk me through it" gives a
-   deeper code explanation and loops back; `/complete` makes the real feature-level
-   commit. Build and tests must pass before any commit.
+7. **Checkpoint (optional)** - after an approved step `/implement` offers a quick
+   choice (continue / commit a checkpoint / walk me through it / stop here) as a
+   selectable popup, or in plain text when there's a lot to read first so it doesn't
+   cover what you're reading. Checkpoints are optional cheap rollback points; "walk
+   me through it" gives a deeper code explanation and loops back; `/complete` makes
+   the real feature-level commit. Build and tests must pass before any commit.
 8. **Log** - `/complete` archives the spec to `docs/features/NN-name.md` (or
    `docs/fixes/`), checks the feature off in `docs/planning/build-plan.md`, and
    resets `context/current-feature.md` to its stub.
