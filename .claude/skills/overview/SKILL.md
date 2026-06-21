@@ -1,6 +1,6 @@
 ---
 name: overview
-description: Generate context/project-overview.md from the two planning docs (docs/planning/project-plan.md and docs/planning/build-plan.md). The overview is the single AI-facing source of truth that CLAUDE.md loads every session. Use when the user runs /overview, has just finished writing or editing the plans, or asks to (re)generate the project overview.
+description: Generate blueprint/context/project-overview.md from the two planning docs (blueprint/planning/project-plan.md and blueprint/planning/build-plan.md). The overview is the single AI-facing source of truth that CLAUDE.md loads every session. Use when the user runs /overview, has just finished writing or editing the plans, or asks to (re)generate the project overview.
 ---
 
 # overview - turn the two plans into the AI-facing source of truth
@@ -12,20 +12,20 @@ Where this sits in the workflow:
      written by you)      feature list,                        AI reads every           at a time)
                           written by you)                      session)
 
-You provide two files: `docs/planning/project-plan.md` (what & why) and
-`docs/planning/build-plan.md` (the ordered feature list), drafted by you or with
+You provide two files: `blueprint/planning/project-plan.md` (what & why) and
+`blueprint/planning/build-plan.md` (the ordered feature list), drafted by you or with
 the AI's help; what matters is that you own their content. Everything else in the
 workflow is generated from those two. This skill is the first generation step: it
-distills both plans into `context/project-overview.md`, the single doc CLAUDE.md
+distills both plans into `blueprint/context/project-overview.md`, the single doc CLAUDE.md
 loads at the start of every session.
 
 ## Input
 
 The two planning docs, already written:
 
-- `docs/planning/project-plan.md` - problem, users, features, data, tech,
+- `blueprint/planning/project-plan.md` - problem, users, features, data, tech,
   monetization, UI/UX
-- `docs/planning/build-plan.md` - the ordered, one-line-per-feature build list
+- `blueprint/planning/build-plan.md` - the ordered, one-line-per-feature build list
 
 If either is missing or still has placeholder text, stop and tell the user to
 fill it in first. This skill distills plans; it does not invent them.
@@ -39,7 +39,7 @@ these, not paper over them.
 
 ## Step 2 - synthesize the overview
 
-Write `context/project-overview.md` (create `context/` if needed), following
+Write `blueprint/context/project-overview.md` (create `blueprint/context/` if needed), following
 `reference/project-overview-template.md`. The overview is a consolidation, not a
 copy:
 

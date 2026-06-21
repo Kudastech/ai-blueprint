@@ -15,7 +15,7 @@
 ## Workflow
 
 The loop we use for every feature. The spec for the feature being built lives in
-@context/current-feature.md.
+@blueprint/context/current-feature.md.
 
 Run `/feature` (or `/fix` for a bug or change that isn't a planned feature) to
 write the spec, `/implement` to build it on a branch, and `/complete` to log it
@@ -29,7 +29,7 @@ want the repeatable loop and the logging; prompt directly when you just want
 something done.
 
 1. **Spec** - Run `/feature` (no number = the next unchecked item in
-   `build-plan.md`) to generate @context/current-feature.md, then review it
+   `build-plan.md`) to generate @blueprint/context/current-feature.md, then review it
    together before any code.
 2. **Branch** - Create a new branch for the feature/fix.
 3. **Implement** - Build one small step from the spec at a time, not the whole
@@ -48,9 +48,9 @@ something done.
    cover what you're reading. Checkpoints are optional cheap rollback points; "walk
    me through it" gives a deeper code explanation and loops back; `/complete` makes
    the real feature-level commit. Build and tests must pass before any commit.
-8. **Log** - `/complete` archives the spec to `docs/features/NN-name.md` (or
-   `docs/fixes/`), checks the feature off in `docs/planning/build-plan.md`, and
-   resets `context/current-feature.md` to its stub.
+8. **Log** - `/complete` archives the spec to `blueprint/history/features/NN-name.md` (or
+   `blueprint/history/fixes/`), checks the feature off in `blueprint/planning/build-plan.md`, and
+   resets `blueprint/context/current-feature.md` to its stub.
 9. **Feature commit** - `/complete` stages everything on the branch (step work
    plus the logging changes) into one conventional feature commit.
 10. **Squash-merge** - `/complete` squash-merges the branch to main (explicit yes)

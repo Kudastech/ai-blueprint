@@ -13,34 +13,34 @@ This project is built with the **AI Coding Blueprint**, a workflow layer, not an
 app skeleton. To start a new project, scaffold the app first in an empty folder
 (create-next-app, Vite, etc.), then overlay these files on top. Never run a
 framework scaffolder inside a directory that already holds the blueprint files
-(`AGENTS.md`, `CLAUDE.md`, `context/`, `docs/`, `.claude/`); it fails because the
+(`AGENTS.md`, `CLAUDE.md`, `.claude/`, `blueprint/`); it fails because the
 directory isn't empty.
 
 New here? `README.md` explains the whole workflow.
 
 ## Read these for full context
 
-- `context/project-overview.md` - the project's source of truth
-- `context/coding-standards.md` - conventions to follow
-- `context/ai-interaction.md` - how to work with the user on this project
-- `context/current-feature.md` - the one feature or fix being built right now
+- `blueprint/context/project-overview.md` - the project's source of truth
+- `blueprint/context/coding-standards.md` - conventions to follow
+- `blueprint/context/ai-interaction.md` - how to work with the user on this project
+- `blueprint/context/current-feature.md` - the one feature or fix being built right now
 
 ## Workflow
 
 Build one feature or fix at a time, behind review gates. Each step's instructions
 are a plain markdown file any agent can read and follow:
 
-- `.claude/skills/overview/SKILL.md` - distill the two planning docs into `context/project-overview.md`
-- `.claude/skills/feature/SKILL.md` - turn a build-plan item into a spec in `context/current-feature.md`
-- `.claude/skills/fix/SKILL.md` - document an ad-hoc bug or change into `context/current-feature.md`
+- `.claude/skills/overview/SKILL.md` - distill the two planning docs into `blueprint/context/project-overview.md`
+- `.claude/skills/feature/SKILL.md` - turn a build-plan item into a spec in `blueprint/context/current-feature.md`
+- `.claude/skills/fix/SKILL.md` - document an ad-hoc bug or change into `blueprint/context/current-feature.md`
 - `.claude/skills/implement/SKILL.md` - build the current spec one small, reviewed step at a time
-- `.claude/skills/complete/SKILL.md` - log it (to `docs/features/` or `docs/fixes/`) and merge
+- `.claude/skills/complete/SKILL.md` - log it (to `blueprint/history/features/` or `blueprint/history/fixes/`) and merge
 - `.claude/skills/prototype/SKILL.md` - optional, pre-build: static mockups to lock the look
 
 In Claude Code these run as slash commands (`/overview`, `/feature`, and so on).
 In other tools, perform the same step by following the matching `SKILL.md` when
 the user asks for it (for example, "run the overview" means follow
-`.claude/skills/overview/SKILL.md`). The conventions in `context/` apply however a
+`.claude/skills/overview/SKILL.md`). The conventions in `blueprint/context/` apply however a
 step is invoked, and the review gates are not optional: small steps, and the user
 approves each diff before it lands.
 

@@ -1,6 +1,6 @@
 ---
 name: implement
-description: Build the feature or fix spec'd in context/current-feature.md, one small reviewable step at a time. Creates the branch, implements each step, shows the diff and explains it in plain English, tests, and iterates until it works. After each approved step it offers an optional commit checkpoint on the branch; the feature-level commit, merge, and logging are /complete's job. Use when the user runs /implement, or asks to build, implement, or start the current feature or fix once its spec is ready.
+description: Build the feature or fix spec'd in blueprint/context/current-feature.md, one small reviewable step at a time. Creates the branch, implements each step, shows the diff and explains it in plain English, tests, and iterates until it works. After each approved step it offers an optional commit checkpoint on the branch; the feature-level commit, merge, and logging are /complete's job. Use when the user runs /implement, or asks to build, implement, or start the current feature or fix once its spec is ready.
 ---
 
 # implement - build the current feature or fix, one reviewed step at a time
@@ -11,9 +11,9 @@ Where this sits in the workflow:
     (the spec)            (build it,       (commit +
                            reviewed)        merge + log)
 
-`/feature` (or `/fix`) wrote the spec to `context/current-feature.md` and stopped.
+`/feature` (or `/fix`) wrote the spec to `blueprint/context/current-feature.md` and stopped.
 This skill turns that spec into code, following the build loop in
-`context/ai-interaction.md`, without vibe coding: small steps, a visible diff plus
+`blueprint/context/ai-interaction.md`, without vibe coding: small steps, a visible diff plus
 a plain-English explanation for each, testing, and iteration until it works, all
 behind your approval. It builds on a branch and offers an optional commit
 checkpoint after each step; the feature-level commit, merging, and logging are
@@ -21,11 +21,11 @@ checkpoint after each step; the feature-level commit, merging, and logging are
 
 ## Before you start
 
-Read `context/current-feature.md`. If it has no real spec (still the stub, or its
+Read `blueprint/context/current-feature.md`. If it has no real spec (still the stub, or its
 status is already complete), stop and tell the user to run `/feature` (for a
 planned feature) or `/fix` (for an ad-hoc bug or change) first. Pull the
-conventions from `context/coding-standards.md` and the data model from
-`context/project-overview.md` so the code matches them.
+conventions from `blueprint/context/coding-standards.md` and the data model from
+`blueprint/context/project-overview.md` so the code matches them.
 
 **Resuming?** If the spec already has some build steps checked off (`- [x]`), this
 feature was started earlier and interrupted (often a cleared context). The spec and
@@ -63,7 +63,7 @@ Work through the spec's build steps in order, one at a time. For each step:
    Repeat until it works and the user approves. Nothing is committed until the
    user is happy with the step.
 6. **Mark it done, then prompt to move on.** Once the step is approved, check that
-   step off (`- [x]`) in `context/current-feature.md` so progress survives a context
+   step off (`- [x]`) in `blueprint/context/current-feature.md` so progress survives a context
    clear. Then offer a short choice, noting that checkpoints are optional since
    `/complete` makes the real feature-level commit. Use `AskUserQuestion` (a quick
    selectable prompt) for this - but when you've just produced a long block to read
@@ -99,7 +99,7 @@ reset), and merges. This skill does not touch main.
 - Explain every change in plain English. Understanding the code is the point.
 - Iterate on the branch until each step works; never commit code the user hasn't
   approved.
-- Follow `context/coding-standards.md` (server vs client, scope user-owned queries
+- Follow `blueprint/context/coding-standards.md` (server vs client, scope user-owned queries
   by the authenticated user id, validate inputs, and so on).
 - Build only what the spec says. If the spec is wrong or thin, stop and fix the
   spec first, do not improvise.

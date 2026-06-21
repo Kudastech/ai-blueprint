@@ -1,6 +1,6 @@
 ---
 name: fix
-description: Document an ad-hoc bug fix or small change (one not in the build plan) into context/current-feature.md so it runs through the same build loop. Writes a short fix spec and stops; then /implement builds it and /complete logs it to docs/fixes/ and merges. Use when the user runs /fix, reports a bug, or asks to fix or change something that isn't a planned build-plan feature.
+description: Document an ad-hoc bug fix or small change (one not in the build plan) into blueprint/context/current-feature.md so it runs through the same build loop. Writes a short fix spec and stops; then /implement builds it and /complete logs it to blueprint/history/fixes/ and merges. Use when the user runs /fix, reports a bug, or asks to fix or change something that isn't a planned build-plan feature.
 ---
 
 # fix - document an ad-hoc fix, then build it like anything else
@@ -8,7 +8,7 @@ description: Document an ad-hoc bug fix or small change (one not in the build pl
 Where this sits in the workflow:
 
     /fix  ->  /implement  ->  /complete  ->  back to your features
-    (spec     (build it,      (log to docs/fixes/
+    (spec     (build it,      (log to blueprint/history/fixes/
      the fix)  reviewed)       + merge)
 
 A fix is a bug or small change that isn't a planned build-plan feature. It runs
@@ -22,12 +22,12 @@ sends"`. If the user just reported the problem in chat, use that.
 
 ## Step 1 - write the fix spec
 
-Pull context from `context/project-overview.md` and `context/coding-standards.md`,
-then write a short spec to `context/current-feature.md` (this file holds whatever
+Pull context from `blueprint/context/project-overview.md` and `blueprint/context/coding-standards.md`,
+then write a short spec to `blueprint/context/current-feature.md` (this file holds whatever
 is being built now, feature or fix). Keep it lighter than a feature spec:
 
 - **Title** - the bug or change in a few words.
-- **Type:** Fix  (so `/complete` logs it to `docs/fixes/`, not `docs/features/`).
+- **Type:** Fix  (so `/complete` logs it to `blueprint/history/fixes/`, not `blueprint/history/features/`).
 - **The problem** - what's wrong or what needs to change, and where.
 - **The fix** - the approach, and anything it must not break.
 - **Build steps** - usually one small step; split only if the diff would be too
@@ -41,4 +41,4 @@ Then stop. Tell the user to review the fix spec, then run `/implement` to build 
 - A fix is not a build-plan item; don't add it to `build-plan.md`.
 - Keep it small. If it's really a new feature, use `/feature` and the build plan
   instead.
-- Same conventions as everything else (`context/coding-standards.md`).
+- Same conventions as everything else (`blueprint/context/coding-standards.md`).

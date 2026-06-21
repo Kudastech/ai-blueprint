@@ -1,6 +1,6 @@
 ---
 name: complete
-description: Wrap up a finished feature or fix. Archives its spec to docs/features/ (feature) or docs/fixes/ (fix), checks features off the build plan, resets context/current-feature.md to its stub, makes one feature-level commit, then squash-merges the branch to main and deletes it. Merges only with explicit approval and never pushes without a "yes". Use when the user runs /complete, or asks to finish, wrap up, merge, or close out the current feature or fix after it's built and reviewed.
+description: Wrap up a finished feature or fix. Archives its spec to blueprint/history/features/ (feature) or blueprint/history/fixes/ (fix), checks features off the build plan, resets blueprint/context/current-feature.md to its stub, makes one feature-level commit, then squash-merges the branch to main and deletes it. Merges only with explicit approval and never pushes without a "yes". Use when the user runs /complete, or asks to finish, wrap up, merge, or close out the current feature or fix after it's built and reviewed.
 ---
 
 # complete - log the finished work, make the feature commit, and merge
@@ -17,7 +17,7 @@ reviewed, and the build and tests pass.
 
 ## Before you start
 
-Confirm the work is actually finished: `context/current-feature.md` holds a real
+Confirm the work is actually finished: `blueprint/context/current-feature.md` holds a real
 spec, its steps are built on a branch, and the build and tests pass. Uncommitted
 step work is expected (per-step checkpoints are optional); this skill commits it.
 Don't require the steps to be pre-committed.
@@ -27,13 +27,13 @@ Don't require the steps to be pre-committed.
 Check whether the spec is a feature or a fix (a fix is marked `Type: Fix` and has
 no build-plan number).
 
-- **Feature** - archive `context/current-feature.md` to `docs/features/NN-name.md`
-  (NN is the build-plan number), and check it off in `docs/planning/build-plan.md`
+- **Feature** - archive `blueprint/context/current-feature.md` to `blueprint/history/features/NN-name.md`
+  (NN is the build-plan number), and check it off in `blueprint/planning/build-plan.md`
   (and its parent item once all sub-items are checked).
-- **Fix** - archive it to `docs/fixes/name.md`. A fix isn't a build-plan item, so
+- **Fix** - archive it to `blueprint/history/fixes/name.md`. A fix isn't a build-plan item, so
   there's nothing to check off.
 
-Then reset `context/current-feature.md` to its stub ("nothing in progress"). Don't
+Then reset `blueprint/context/current-feature.md` to its stub ("nothing in progress"). Don't
 commit yet; the next step makes one feature commit covering the code and these doc
 changes. The archive is the build history.
 

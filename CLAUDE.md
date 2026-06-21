@@ -5,7 +5,7 @@ tools), imported below along with the context files Claude Code keeps loaded.
 
 @AGENTS.md
 
-@context/project-overview.md
-@context/coding-standards.md
-@context/ai-interaction.md
-@context/current-feature.md
+@blueprint/context/project-overview.md
+@blueprint/context/coding-standards.md
+@blueprint/context/ai-interaction.md
+@blueprint/context/current-feature.md

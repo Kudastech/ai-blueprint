@@ -1,6 +1,6 @@
 ---
 name: feature
-description: Turn a feature from build-plan.md into a buildable spec. With no argument, specs the next unchecked item in the build plan; given a number or name, specs that one. Sizes the feature and splits anything too big into smaller sub-features (4a, 4b, ...) before writing small, reviewable build steps to context/current-feature.md, then stops at a review gate. Use when the user runs /feature, names or numbers a feature, or asks to spec out, break down, or start the next feature.
+description: Turn a feature from build-plan.md into a buildable spec. With no argument, specs the next unchecked item in the build plan; given a number or name, specs that one. Sizes the feature and splits anything too big into smaller sub-features (4a, 4b, ...) before writing small, reviewable build steps to blueprint/context/current-feature.md, then stops at a review gate. Use when the user runs /feature, names or numbers a feature, or asks to spec out, break down, or start the next feature.
 ---
 
 # feature - turn a build-plan feature into a buildable spec
@@ -42,7 +42,7 @@ State which feature you're building before going further.
 ## Step 2 - size it, and split if too big
 
 Read the target line from `build-plan.md`, then pull full context from
-`context/project-overview.md` (the data model, stack, and conventions). Decide
+`blueprint/context/project-overview.md` (the data model, stack, and conventions). Decide
 how big the feature is:
 
 - **Small enough to build and review as one unit** -> one spec. Continue to
@@ -77,7 +77,7 @@ build plan starts high-level.
 ## Step 3 - write the spec
 
 For the one (sub-)feature being built now, write a full spec to
-`context/current-feature.md` (create `context/` if needed), following
+`blueprint/context/current-feature.md` (create `blueprint/context/` if needed), following
 `reference/feature-spec-template.md`. Fill every section: goal, in/out of scope,
 the build loop, small build steps as a checklist (`- [ ]`, each with an observable
 "done when" - `/implement` ticks them off and resumes from the first unchecked
@@ -95,12 +95,12 @@ skill plans; it never starts building.
   the app working.
 - **Lock data contracts early.** If a shape (type, API response, stored field) is
   used by a later feature, define it now and flag it as load-bearing.
-- **Flag client vs server** and any conventions from `context/coding-standards.md`
+- **Flag client vs server** and any conventions from `blueprint/context/coding-standards.md`
   (for example, filtering user-scoped queries by the authenticated user's id).
 - **Scope honestly.** State what is deferred so the feature stays contained.
 
 ## When a (sub-)feature is done
 
 Check its box in `build-plan.md` (and the parent item once all its sub-items are
-checked), archive the finished `context/current-feature.md` to
-`docs/features/NN-name.md`, then run `/feature` again for the next one.
+checked), archive the finished `blueprint/context/current-feature.md` to
+`blueprint/history/features/NN-name.md`, then run `/feature` again for the next one.

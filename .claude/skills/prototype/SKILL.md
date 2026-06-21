@@ -22,8 +22,8 @@ and only then write any files. Never generate mockups before the user approves.
 ## Step 1 - read what the plan already says
 
 Pull the stated look and feel and the screen/route list from
-`context/project-overview.md` (its UI/UX section); fall back to the UI/UX section
-of `docs/planning/project-plan.md` if the overview isn't generated yet. Use this
+`blueprint/context/project-overview.md` (its UI/UX section); fall back to the UI/UX section
+of `blueprint/planning/project-plan.md` if the overview isn't generated yet. Use this
 as the starting point, so you're refining the user's intent, not asking from
 scratch.
 
