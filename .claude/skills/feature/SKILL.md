@@ -79,8 +79,9 @@ build plan starts high-level.
 For the one (sub-)feature being built now, write a full spec to
 `context/current-feature.md` (create `context/` if needed), following
 `reference/feature-spec-template.md`. Fill every section: goal, in/out of scope,
-the build loop, small build steps (each with an observable "done when"),
-files/areas, data/contracts, testing, and notes for the AI.
+the build loop, small build steps as a checklist (`- [ ]`, each with an observable
+"done when" - `/implement` ticks them off and resumes from the first unchecked
+one), files/areas, data/contracts, testing, and notes for the AI.
 
 Then stop. Tell the user to review and adjust before any code is written. This
 skill plans; it never starts building.

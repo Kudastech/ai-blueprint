@@ -29,10 +29,12 @@ Never accept a step you haven't read. If a diff is too big to review, the step w
 
 ## Build steps
 
-Small, reviewable units. Each ends with something working.
+Small, reviewable units. Each ends with something working. `/implement` checks
+these off as it finishes them, so progress survives a context clear: a fresh
+session reads which boxes are ticked and resumes from the first unchecked step.
 
-1. **<step>** - what you build. *Done when:* <observable criteria>.
-2. **<step>** - what you build. *Done when:* <observable criteria>.
+- [ ] **Step 1 - <step>** - what you build. *Done when:* <observable criteria>.
+- [ ] **Step 2 - <step>** - what you build. *Done when:* <observable criteria>.
 
 ## Files / areas
 

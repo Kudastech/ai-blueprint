@@ -27,11 +27,20 @@ planned feature) or `/fix` (for an ad-hoc bug or change) first. Pull the
 conventions from `context/coding-standards.md` and the data model from
 `context/project-overview.md` so the code matches them.
 
+**Resuming?** If the spec already has some build steps checked off (`- [x]`), this
+feature was started earlier and interrupted (often a cleared context). The spec and
+its ticked steps are files, so pick up where it left off: read which steps are done,
+check the git branch and `git status`/log to see what is committed and what is still
+in the working tree, then continue from the **first unchecked step** instead of
+starting over. No separate save/load is needed - `CLAUDE.md` re-loads
+`current-feature.md` every session.
+
 ## Step 1 - branch
 
 Create and check out a branch named from the spec: `feature/<name>` for a feature,
 `fix/<name>` for a fix. If the project isn't a git repo yet, say so and ask the
-user to run `git init` first; the loop needs branches.
+user to run `git init` first; the loop needs branches. On resume, the branch
+already exists - check it out instead of creating a new one.
 
 ## Step 2 - build one step, review, iterate, checkpoint
 
@@ -53,10 +62,11 @@ Work through the spec's build steps in order, one at a time. For each step:
    step (re-prompt or hand-edit the code), show the updated diff, and re-test.
    Repeat until it works and the user approves. Nothing is committed until the
    user is happy with the step.
-6. **Checkpoint prompt, then move on.** Once the step is approved, use
-   `AskUserQuestion` (a quick selectable prompt, not a free-text question) to offer
-   a short choice, noting that checkpoints are optional since `/complete` makes the
-   real feature-level commit:
+6. **Mark it done, then prompt to move on.** Once the step is approved, check that
+   step off (`- [x]`) in `context/current-feature.md` so progress survives a context
+   clear. Then use `AskUserQuestion` (a quick selectable prompt, not a free-text
+   question) to offer a short choice, noting that checkpoints are optional since
+   `/complete` makes the real feature-level commit:
    - **Continue** (default) - roll into the next step without committing.
    - **Commit checkpoint** - commit just this step on the branch with a
      conventional message (a cheap rollback point).
