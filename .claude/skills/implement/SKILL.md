@@ -60,9 +60,13 @@ Work through the spec's build steps in order, one at a time. For each step:
    - **Continue** (default) - roll into the next step without committing.
    - **Commit checkpoint** - commit just this step on the branch with a
      conventional message (a cheap rollback point).
+   - **Walk me through it** - give a deeper, line-level explanation of the new or
+     changed code (why this approach, what each part does, any gotchas), then
+     re-ask this checkpoint prompt. A loop-back, not a terminal choice.
    - **Stop here** - pause the loop so the user can review or come back later.
 
-   On **Continue** or after **Commit checkpoint**, go to the next step. On **Stop
+   On **Continue** or after **Commit checkpoint**, go to the next step. On **Walk
+   me through it**, explain in depth and then show this prompt again. On **Stop
    here**, stop and say where things stand: the branch is intact; run `/implement`
    again to resume, or `/complete` to wrap up what's built so far.
 
