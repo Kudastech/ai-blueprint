@@ -80,11 +80,13 @@
 ## Testing
 
 The blueprint installs no test runner; testing is opt-in at the project level,
-because the overlay can't know your stack. But once a project declares a test
-command (in the Commands section of `AGENTS.md`), **tests are a gate for
-logic-bearing steps**, not an optional extra. A project with no runner declared
-falls back to verifying logic with the evidence the loop already uses: run it, a
-screenshot, the build.
+because the overlay can't know your stack. **The opt-in switch is one signal: a
+`test` command in the Commands section of `AGENTS.md`.** Declare one and **tests
+become a gate for logic-bearing steps**, not an optional extra; leave it out and
+the loop verifies logic with the evidence it already uses (run it, a screenshot,
+the build). Adding the runner is itself a deliberate step, never a silent
+mid-step install. This is the single definition of the switch; the skills and
+`ai-interaction.md` only point back here.
 
 - **What to test (the scope rule):** pure logic where a wrong answer is possible -
   parsers, formatters, validators, id/slug builders, server actions. These have
@@ -100,8 +102,7 @@ screenshot, the build.
 - **When it's named:** the `/feature` spec's Testing section predicts the coverage,
   `/implement` writes the test with the step, and if a step surfaces logic the spec
   didn't foresee, add a focused test then.
-- Add the runner deliberately (its own step or feature), never silently mid-step.
-  An empty suite should fail, not pass, so "no tests ran" never looks like "passed".
+- An empty suite should fail, not pass, so "no tests ran" never looks like "passed".
 - Test files live next to source files (for example `feature.test.ts`).
 - Run them via the project's test command (see Commands in `AGENTS.md`), not a
   hardcoded tool name.

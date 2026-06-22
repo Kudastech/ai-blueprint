@@ -38,11 +38,11 @@ something done.
    step delivered, one line per file on the why, and the done-when shown true. I
    read and approve each step before moving to the next.
 5. **Test** - Verify the done-when with evidence: the browser/a screenshot and
-   the project's build command (see Commands in `AGENTS.md`). If a test runner is
-   configured, a step that adds logic must ship a passing test and the test command
-   must be green before the step is approved; UI and integration steps ride on
-   screenshot plus build evidence. See the Testing section of `coding-standards.md`
-   for the gate.
+   the project's build command (see Commands in `AGENTS.md`). If the project
+   declares a `test` command in `AGENTS.md` (the opt-in switch), a step that adds
+   logic must ship a passing test and the test command must be green before the
+   step is approved; UI and integration steps ride on screenshot plus build
+   evidence. See the Testing section of `coding-standards.md` for the gate.
 6. **Iterate** - If it doesn't work or needs changes, re-prompt or hand-edit and
    re-test; repeat until it works, before moving on.
 7. **Checkpoint (optional)** - after an approved step `/implement` offers a quick

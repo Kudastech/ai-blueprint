@@ -54,8 +54,9 @@ Work through the spec's build steps in order, one at a time. For each step:
    assertion). This summary is the comprehension gate, so keep it concrete, not
    ceremonial.
 4. **Build, and test if the project tests.** Run the project's build command (see
-   Commands in `AGENTS.md`). If a test runner is configured, run the test command:
-   a step that adds logic must ship a passing test in the same diff, and the suite
+   Commands in `AGENTS.md`). If the project declares a `test` command in
+   `AGENTS.md` (the opt-in switch), run it: a step that adds logic must ship a
+   passing test in the same diff, and the suite
    must be green before the step is approved (see the Testing gate in
    `coding-standards.md`); UI and integration-only steps ride on screenshot plus
    build evidence. Never install a runner mid-step. If a step surfaces non-trivial
