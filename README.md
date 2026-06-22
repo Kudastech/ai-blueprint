@@ -149,8 +149,9 @@ regenerates from them.
    gate.
 6. **Run `/implement`** to build it, one reviewed step at a time. It branches,
    then for each step: build, show the diff, explain it and **confirm the done-when
-   with evidence** (build output, a screenshot), test if the project has a runner,
-   and **iterate until it works** (re-prompt or hand-edit). After each approved step
+   with evidence** (build output, a screenshot), run the gate's tests if a runner
+   is configured (see [Testing](#testing)), and **iterate until it works**
+   (re-prompt or hand-edit). After each approved step
    it pops a quick choice - **continue**, **commit a checkpoint**, **walk me through
    it** (a deeper code explanation), or **stop here** - so checkpoints stay optional.
    It checks each step off in `current-feature.md` as it goes, so you can clear
@@ -166,6 +167,24 @@ regenerates from them.
 **Fixes** (a bug or change that isn't a planned feature): run `/fix "<what's wrong>"`
 instead of `/feature`, then `/implement` and `/complete` as usual. `/complete` logs
 fixes to `blueprint/history/fixes/` rather than checking them off the build plan.
+
+## Testing
+
+Testing is opt-in: the blueprint installs no test runner, because the overlay
+can't know your stack. Wire one up when you want it (its own step or feature) and
+declare its command in the **Commands** section of `AGENTS.md`. Most projects here
+are JavaScript, so the default is `npm run test` (Vitest); a Python project would
+use `pytest`, a Go project `go test`, and so on.
+
+Once a runner is configured, tests become a **gate for logic-bearing steps**: a
+step that adds real logic (parsers, formatters, validators, server actions) ships
+a passing test in the same diff, and `npm run test` must be green before the step
+is approved. UI and integration work (components, render or export routes, anything
+driving a real browser) skips unit tests and rides on the screenshot plus build
+evidence the loop already collects.
+
+No runner configured? Nothing blocks you - logic is verified by that same evidence,
+exactly as before.
 
 ## Picking up where you left off
 
