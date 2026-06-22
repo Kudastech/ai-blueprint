@@ -53,11 +53,13 @@ Work through the spec's build steps in order, one at a time. For each step:
    "done when" is met with evidence (build output, a screenshot, a passing
    assertion). This summary is the comprehension gate, so keep it concrete, not
    ceremonial.
-4. **Build, and test if the project tests.** Run the build (for example
-   `npm run build`). Run unit tests only if a runner is already configured
-   (`npm run test`) - testing is optional and off by default, so never install one
-   mid-step. If a step surfaces non-trivial logic the spec didn't foresee, add a
-   focused test then (when testing is set up) or note why not.
+4. **Build, and test if the project tests.** Run the project's build command (see
+   Commands in `AGENTS.md`). If a test runner is configured, run the test command:
+   a step that adds logic must ship a passing test in the same diff, and the suite
+   must be green before the step is approved (see the Testing gate in
+   `coding-standards.md`); UI and integration-only steps ride on screenshot plus
+   build evidence. Never install a runner mid-step. If a step surfaces non-trivial
+   logic the spec didn't foresee, add a focused test then, or note why not.
 5. **Iterate until it works.** If it fails or the user wants changes, revise the
    step (re-prompt or hand-edit the code), show the updated diff, and re-test.
    Repeat until it works and the user approves. Nothing is committed until the

@@ -47,8 +47,11 @@ session reads which boxes are ticked and resumes from the first unchecked step.
 ## Testing
 
 - How to verify: what to click through, and the observable done-when per step.
-- Unit tests are optional, and only when a test runner is already configured. If
-  so, note what to test (logic, server actions, utilities - not components).
+- If a test runner is configured, name the in-scope logic that needs a test
+  (parsers, formatters, validators, server actions - not components or
+  integration/render routes), so each logic-bearing step ships its test. If no
+  runner is configured, say so and rely on screenshot plus build evidence. See the
+  Testing gate in `coding-standards.md`.
 
 ## Notes for the AI
 

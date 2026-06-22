@@ -79,14 +79,36 @@
 
 ## Testing
 
-- Testing is optional and off by default. The blueprint installs no test runner;
-  add one only when you choose to, never mid-feature without asking. The flow uses
-  tests only if a runner is already configured.
-- Vitest for unit tests (server actions and utilities only, not components)
-- Test files live next to source files: `feature.test.ts`
-- Run tests: `npm run test` (single run) or `npm run test:watch` (watch mode)
-- Use `vi.mock()` for external dependencies (Prisma, the Vercel AI SDK, Clerk, etc.)
-- Use `vi.useFakeTimers()` for time-dependent logic
+The blueprint installs no test runner; testing is opt-in at the project level,
+because the overlay can't know your stack. But once a project declares a test
+command (in the Commands section of `AGENTS.md`), **tests are a gate for
+logic-bearing steps**, not an optional extra. A project with no runner declared
+falls back to verifying logic with the evidence the loop already uses: run it, a
+screenshot, the build.
+
+- **What to test (the scope rule):** pure logic where a wrong answer is possible -
+  parsers, formatters, validators, id/slug builders, server actions. These have
+  assertable inputs and outputs and real edge cases (empty, missing, malformed).
+- **What not to test:** UI components and integration-level surfaces (render or
+  export routes, anything driving a real browser or external service). Verify those
+  with a screenshot and the build, not brittle unit tests.
+- **The gate (when a runner is configured):** a build step that adds in-scope logic
+  must ship a passing test in the same reviewable diff. The project's test command
+  must be green before the step is approved, before any checkpoint commit, and
+  before `/complete` merges. UI and integration-only steps are exempt and ride on
+  screenshot plus build evidence.
+- **When it's named:** the `/feature` spec's Testing section predicts the coverage,
+  `/implement` writes the test with the step, and if a step surfaces logic the spec
+  didn't foresee, add a focused test then.
+- Add the runner deliberately (its own step or feature), never silently mid-step.
+  An empty suite should fail, not pass, so "no tests ran" never looks like "passed".
+- Test files live next to source files (for example `feature.test.ts`).
+- Run them via the project's test command (see Commands in `AGENTS.md`), not a
+  hardcoded tool name.
+
+Stack binding (swap for yours): a TypeScript app uses Vitest, `vi.mock()` for
+external dependencies (Prisma, Clerk, etc.), and `vi.useFakeTimers()` for
+time-dependent logic; a Python app would use pytest; a Go app `go test`.
 
 ## Code Quality
 
