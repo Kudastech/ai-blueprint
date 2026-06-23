@@ -203,6 +203,10 @@ session reads the build plan, and you run `/feature` for the next item. Mid-feat
 (plus the git branch and working tree, which clearing context doesn't touch) picks
 up from the first unchecked step - just run `/implement` again.
 
+Not sure where you left things? Run **`/status`** for a read-only "you are here":
+build-plan progress, which step is next, git state, and the suggested next action.
+It changes nothing - just orients you before you pick the next skill.
+
 ## File map
 
 ```
@@ -216,7 +220,8 @@ up from the first unchecked step - just run `/implement` again.
 │       ├── fix/               (/fix: document an ad-hoc bug fix or change)
 │       ├── implement/         (/implement: build the current feature or fix, reviewed)
 │       ├── complete/          (/complete: feature commit, squash-merge, log)
-│       └── prototype/         (/prototype: static screen mockups, pre-build)
+│       ├── prototype/         (/prototype: static screen mockups, pre-build)
+│       └── status/            (/status: where things stand, read-only)
 └── blueprint/                 (everything else the workflow needs, in one folder)
     ├── project-plan.md        (YOU write: what & why)
     ├── build-plan.md          (YOU write: ordered feature list)
@@ -244,6 +249,7 @@ single `blueprint/` folder, so it never clutters your app.
 | **/implement** | after reviewing a feature spec | Builds `blueprint/context/current-feature.md` one small step at a time on a feature branch: a diff, a plain-English summary with the done-when proven, your approval each step, and a checkpoint choice (**continue / commit checkpoint / walk me through it / stop**). Checks each step off as it goes, so you can clear context and resume from the first unchecked step. The feature commit and merge are `/complete`'s job. |
 | **/complete** | when a feature is built and reviewed | Logs the feature (archives the spec to `blueprint/history/features/`, checks it off `build-plan.md`, resets `current-feature.md`), makes **one feature-level commit**, then **squash-merges** to main with your go-ahead and deletes the branch. Never pushes without a yes. |
 | **/prototype** | before the build loop, to lock the look | Asks about the look and which pages, proposes a plan, then writes throwaway static mockups to `prototypes/` sharing one theme (CSS variables). A pre-build helper, outside the feature loop. |
+| **/status** | any time, to get your bearings | Read-only "you are here": build-plan progress, the current feature's checked/unchecked steps, and git state (branch, uncommitted changes, last commit), ending with the single suggested next action. Changes nothing. The fast way back in after a break or a context clear. |
 
 These commands are the structured path, not a cage. You can describe a feature,
 fix, or change directly in chat at any time, and the same conventions still apply
