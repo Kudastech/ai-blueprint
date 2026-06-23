@@ -50,12 +50,14 @@ flowchart TD
     FT --> CF["current-feature.md"]
     FX --> CF
     CF --> IM(["/implement<br/>build + iterate, reviewed"])
+    IM -.->|prove done-whens| CK(["/check"])
+    CK -.->|fails| IM
     IM --> CP(["/complete<br/>commit + merge + log"])
     CP --> AR["blueprint/history/"]
     AR -.->|next| FT
 
     classDef skill fill:#2563eb,stroke:#1e40af,color:#ffffff;
-    class OV,PT,FT,FX,IM,CP skill;
+    class OV,PT,FT,FX,IM,CP,CK skill;
 ```
 
 ## Starting a new project
@@ -69,6 +71,10 @@ npx create-next-app@latest my-app
 cd my-app
 ```
 
+Make sure the app is a **git repo** - the build loop works on branches and
+squash-merges. `create-next-app` runs `git init` for you; if your scaffold
+doesn't (Vite, Astro, a Python project), run `git init` yourself.
+
 **2. Add the blueprint** (run inside the app):
 
 ```bash
@@ -81,7 +87,13 @@ This drops in `AGENTS.md`, `CLAUDE.md`, `.claude/`, and the `blueprint/` folder.
 cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.claude,blueprint} .
 ```
 
-**3. Plan, then build.** Fill in `blueprint/project-plan.md` and `blueprint/build-plan.md`, then run the skills (`/overview` -> `/feature` -> `/implement` -> `/complete`). See [The workflow, step by step](#the-workflow-step-by-step) below.
+**3. Tune the conventions.** Edit
+[blueprint/context/coding-standards.md](blueprint/context/coding-standards.md) to match your
+stack (it ships with sensible Next.js + TypeScript + Prisma defaults), and skim
+[blueprint/context/ai-interaction.md](blueprint/context/ai-interaction.md) for how the AI
+works with you.
+
+**4. Plan, then build.** Fill in `blueprint/project-plan.md` and `blueprint/build-plan.md`, then run the skills (`/overview` -> `/feature` -> `/implement` -> `/check` -> `/complete`). See [The workflow, step by step](#the-workflow-step-by-step) below.
 
 Scaffolders like `create-next-app` need an empty folder, which is why the app
 comes first and the blueprint is overlaid second. `degit` replaces the app's
@@ -121,22 +133,9 @@ regenerates from them.
 
 ## The workflow, step by step
 
-**Set up (once)**
-
-- **Scaffold your app first**, in an empty directory, however you like:
-  `npx create-next-app@latest my-app` (or Vite, Astro, a Python project, etc.).
-  Tools like `create-next-app` require an empty folder, so the app comes before
-  the blueprint, not after.
-- **Overlay the blueprint.** From inside the app, run one command:
-  `npx degit bradtraversy/ai-blueprint . --force`. It drops in `AGENTS.md`,
-  `CLAUDE.md`, `.claude/`, and the `blueprint/` folder, and replaces the boilerplate
-  README with the blueprint's. Prefer a local copy? Use:
-  `cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.claude,blueprint} .`
-- **Tune the conventions.** Edit
-  [blueprint/context/coding-standards.md](blueprint/context/coding-standards.md) to match your stack
-  (it ships with sensible Next.js + TypeScript + Prisma defaults); skim
-  [blueprint/context/ai-interaction.md](blueprint/context/ai-interaction.md) for how the AI works with
-  you.
+**Set up (once).** Scaffold your app, overlay the blueprint, and tune the
+conventions - see [Starting a new project](#starting-a-new-project) above. Once
+that's done, the loop below is the day-to-day.
 
 **Plan the project**
 
@@ -167,12 +166,17 @@ regenerates from them.
    It checks each step off in `current-feature.md` as it goes, so you can clear
    context mid-feature and resume from the first unchecked step. It builds on the
    branch only.
-7. **Run `/complete`** to wrap up: it archives the spec to
+7. **Run `/check`** (optional, recommended before wrapping up) to prove the work
+   against its spec. It runs the **real app** - browser, CLI, or API - and checks
+   each "done when" in `current-feature.md` against what it actually observes,
+   capturing screenshots or output and watching for console and network errors. It
+   changes nothing; anything that fails goes back through `/implement`.
+8. **Run `/complete`** to wrap up: it archives the spec to
    `blueprint/history/features/NN-name.md`, checks the feature off in `build-plan.md`, resets
    `blueprint/context/current-feature.md` to its stub, makes **one feature-level commit**,
    then **squash-merges** to main (with your go-ahead) and deletes the branch, so
    the feature lands as a single clean commit.
-8. Back to step 4 for the next feature.
+9. Back to step 4 for the next feature.
 
 **Fixes** (a bug or change that isn't a planned feature): run `/fix "<what's wrong>"`
 instead of `/feature`, then `/implement` and `/complete` as usual. `/complete` logs
@@ -274,7 +278,8 @@ loop and the logging; prompt directly when you just want something done.
 
 This blueprint is a **workflow layer**, not an app skeleton, so there's no
 `package.json` in it. You scaffold the app yourself first (with whatever you
-like), then overlay these files on top, as in **Set up** above. That's what keeps
+like), then overlay these files on top, as in [Starting a new
+project](#starting-a-new-project) above. That's what keeps
 it stack-agnostic: the same process drives a Next.js app, a Vite SPA, or a Python
 service. The defaults in `coding-standards.md` assume Next.js + TypeScript +
 Tailwind + Prisma, but you can change them.
