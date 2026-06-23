@@ -88,6 +88,16 @@ comes first and the blueprint is overlaid second. `degit` replaces the app's
 boilerplate README with the blueprint's; rename or swap in your own when you're
 ready (the `cp` alternative leaves your README in place).
 
+### Already have a codebase? Run `/adopt`
+
+The steps above fit a fresh, near-empty app. If you're overlaying onto a project
+that already has working code, overlay the blueprint files the same way (step 2),
+then run **`/adopt`** instead of hand-writing the plans. It surveys the real repo,
+asks you only for the intent the code can't reveal (the *why* and the roadmap),
+and generates `project-plan.md`, `build-plan.md` (a checklist with **shipped
+features already checked off**), and a `coding-standards.md` that matches your
+actual conventions. Then run `/overview` and you're in the normal loop.
+
 ## You provide two files
 
 | File | What it is |
@@ -215,6 +225,7 @@ It changes nothing - just orients you before you pick the next skill.
 ├── AGENTS.md                  (agent instructions; read by Codex, Cursor, etc. Must be at root)
 ├── .claude/
 │   └── skills/                (the slash-command skills. Must be at root)
+│       ├── adopt/             (/adopt: bootstrap the plans from an existing codebase)
 │       ├── overview/          (/overview: two plans to project-overview.md)
 │       ├── feature/           (/feature: one build-plan item to current-feature.md)
 │       ├── fix/               (/fix: document an ad-hoc bug fix or change)
@@ -243,6 +254,7 @@ single `blueprint/` folder, so it never clutters your app.
 
 | Skill | Run it | Does |
 | ----- | ------ | ---- |
+| **/adopt** | once, to onboard an existing codebase | Brownfield on-ramp: surveys the real repo, interviews you for intent the code can't reveal, then generates `project-plan.md`, `build-plan.md` (a checklist with **shipped features already checked**), and a `coding-standards.md` matching your actual conventions. Hands off to `/overview`. Skip it for a fresh scaffold. |
 | **/overview** | after writing or editing the plans | Distills `project-plan.md` + `build-plan.md` into `blueprint/context/project-overview.md`. Re-run whenever the plans change. |
 | **/feature** | for each feature you build | With no number, specs the **next unchecked** build-plan item; or pass a number/name. Sizes it, splits big ones into sub-features, writes a small-step spec to `blueprint/context/current-feature.md`, then stops. |
 | **/fix** | for a bug or change not in the build plan | Documents an ad-hoc fix into `blueprint/context/current-feature.md` (lighter than a feature spec), then stops. Build it with `/implement`; `/complete` logs it to `blueprint/history/fixes/`. |
