@@ -1,36 +1,133 @@
 # AI Coding Blueprint
 
-A starter and a repeatable process for building real software with an AI
-assistant, **without vibe coding**.
+A starter and repeatable workflow for building real software with an AI assistant,
+**without vibe coding**.
 
-You provide two short planning docs. They're the source everything else flows
-from. Write them yourself or let the AI help you draft and flesh them out; what
-matters is that you own and direct what's in them, not that you type every
-character. Everything downstream (the project overview, every feature spec) is
-then *generated* from them by skills. You build one feature at a time, reviewing
-every diff before it lands.
+You provide two short planning docs. The AI turns them into project context,
+feature specs, and build steps. You build one feature at a time, review every
+spec before code exists, and review every diff before it lands.
 
-## Why this exists
+## What this is
 
-"Vibe coding" is describing a vague thing and accepting whatever the AI returns.
-It's fast until it isn't: you end up with code nobody understands and a project
-that can't be changed safely.
+Vibe coding is describing a vague thing and accepting whatever the AI returns.
+It is fast until it is not: you end up with code nobody understands and a project
+that cannot be changed safely.
 
-This blueprint is the opposite. It keeps the AI on a leash with three gates:
+This blueprint gives the AI a controlled loop:
 
-1. **Spec before code.** The skills *plan and stop*. You read the spec before a
-   single line of code exists.
-2. **Small, reviewable steps.** Each step ends with something working and a diff
-   small enough to read in full, explained in plain English with its done-when
-   proven before you approve it. If a diff is too big to review, the step was too
-   big, so split it.
-3. **One feature at a time.** `blueprint/context/current-feature.md` holds exactly one
-   feature. Finish it, archive it, move on.
+1. **Spec before code.** Planning skills write a spec and stop. You review it
+   before a single line of code is written.
+2. **Small, reviewable steps.** Each implementation step ends with something
+   observable, a diff you can read, and proof that the done-when was met.
+3. **One feature at a time.** `blueprint/context/current-feature.md` holds exactly
+   one feature or fix. Finish it, archive it, then move on.
 
-The point isn't to type less. It's to stay in control of a codebase the AI is
+The point is not to type less. It is to stay in control of a codebase the AI is
 helping you write.
 
-## The pipeline
+## Quick start
+
+Scaffold the app first, then overlay the blueprint on top.
+
+**1. Scaffold your app** in a new, empty directory:
+
+```bash
+npx create-next-app@latest my-app
+cd my-app
+```
+
+Make sure the app is a **git repo**. The build loop works on branches and
+squash-merges. `create-next-app` runs `git init` for you; if your scaffolder
+does not, run it yourself:
+
+```bash
+git init
+```
+
+**2. Add the blueprint** from inside the app:
+
+```bash
+npx degit bradtraversy/ai-blueprint . --force
+```
+
+Prefer a local copy instead of `degit`?
+
+```bash
+cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.claude,blueprint} .
+```
+
+This drops in `AGENTS.md`, `CLAUDE.md`, `.claude/`, and `blueprint/`.
+
+**3. Tune the conventions.** Edit
+[blueprint/context/coding-standards.md](blueprint/context/coding-standards.md) to
+match your stack, and skim
+[blueprint/context/ai-interaction.md](blueprint/context/ai-interaction.md) so you
+know how the AI is expected to work with you.
+
+**4. Plan the app.** Fill in the two files you own:
+
+- [blueprint/project-plan.md](blueprint/project-plan.md)
+- [blueprint/build-plan.md](blueprint/build-plan.md)
+
+**5. Start the build loop.**
+
+```text
+/overview
+/feature
+/implement
+/check
+/complete
+```
+
+That path creates project context, specs the next feature, builds it, proves it
+works, then archives and merges it.
+
+Scaffolders like `create-next-app` need an empty folder, which is why the app
+comes first and the blueprint is overlaid second. `degit` replaces the app's
+boilerplate README with this one; the `cp` alternative leaves your README in
+place.
+
+### Already have a codebase?
+
+Overlay the blueprint files the same way, then run:
+
+```text
+/adopt
+```
+
+`/adopt` surveys the real repo, asks for the intent the code cannot reveal, then
+generates the planning docs and coding standards from what already exists. Then
+run `/overview` and continue through the normal build loop.
+
+## The AI build loop
+
+AI loops are popular because the assistant can plan, act, check the result, and
+iterate. This blueprint turns that idea into a project workflow with human review
+gates and a written history.
+
+The main loop is:
+
+```text
+/feature -> review spec -> /implement -> /check -> /complete
+```
+
+For unplanned bugs or small changes, use the fix loop:
+
+```text
+/fix "what is wrong" -> review spec -> /implement -> /check -> /complete
+```
+
+In this repo, **the build loop** means:
+
+- **`/feature`** selects the next planned feature and writes a buildable spec.
+- **`/fix`** writes a smaller spec for an unplanned bug or change.
+- **`/implement`** builds the current spec one reviewed step at a time.
+- **`/check`** runs the real app and proves the done-whens.
+- **`/complete`** archives the spec, commits the finished work, and merges with
+  your approval.
+
+The loop is the control system. The AI can keep iterating, but only inside the
+current spec, with observable checks and review gates.
 
 ```mermaid
 flowchart TD
@@ -60,256 +157,174 @@ flowchart TD
     class OV,PT,FT,FX,IM,CP,CK skill;
 ```
 
-## Starting a new project
-
-Scaffold the app first (any stack), then overlay the blueprint on top.
-
-**1. Scaffold your app** in a new, empty directory:
-
-```bash
-npx create-next-app@latest my-app
-cd my-app
-```
-
-Make sure the app is a **git repo** - the build loop works on branches and
-squash-merges. `create-next-app` runs `git init` for you; if your scaffold
-doesn't (Vite, Astro, a Python project), run `git init` yourself.
-
-**2. Add the blueprint** (run inside the app):
-
-```bash
-npx degit bradtraversy/ai-blueprint . --force
-```
-
-This drops in `AGENTS.md`, `CLAUDE.md`, `.claude/`, and the `blueprint/` folder. Prefer a local copy instead of `degit`? Run:
-
-```bash
-cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.claude,blueprint} .
-```
-
-**3. Tune the conventions.** Edit
-[blueprint/context/coding-standards.md](blueprint/context/coding-standards.md) to match your
-stack (it ships with sensible Next.js + TypeScript + Prisma defaults), and skim
-[blueprint/context/ai-interaction.md](blueprint/context/ai-interaction.md) for how the AI
-works with you.
-
-**4. Plan, then build.** Fill in `blueprint/project-plan.md` and `blueprint/build-plan.md`, then run the skills (`/overview` -> `/feature` -> `/implement` -> `/check` -> `/complete`). See [The workflow, step by step](#the-workflow-step-by-step) below.
-
-Scaffolders like `create-next-app` need an empty folder, which is why the app
-comes first and the blueprint is overlaid second. `degit` replaces the app's
-boilerplate README with the blueprint's; rename or swap in your own when you're
-ready (the `cp` alternative leaves your README in place).
-
-### Already have a codebase? Run `/adopt`
-
-The steps above fit a fresh, near-empty app. If you're overlaying onto a project
-that already has working code, overlay the blueprint files the same way (step 2),
-then run **`/adopt`** instead of hand-writing the plans. It surveys the real repo,
-asks you only for the intent the code can't reveal (the *why* and the roadmap),
-and generates `project-plan.md`, `build-plan.md` (a checklist with **shipped
-features already checked off**), and a `coding-standards.md` that matches your
-actual conventions. Then run `/overview` and you're in the normal loop.
-
-## You provide two files
+## The two files you own
 
 | File | What it is |
 | ---- | ---------- |
-| [blueprint/project-plan.md](blueprint/project-plan.md) | The **what & why**: problem, users, features, data, tech, monetization, UI/UX. Answer each section in a line or two. A worksheet, not an essay. |
-| [blueprint/build-plan.md](blueprint/build-plan.md) | The **ordered feature list**: one line per feature, rough build order. No detail; that comes later, per feature. |
+| [blueprint/project-plan.md](blueprint/project-plan.md) | The **what and why**: problem, users, features, data, tech, monetization, and UI/UX. Answer each section in a line or two. |
+| [blueprint/build-plan.md](blueprint/build-plan.md) | The **ordered feature list**: one line per feature, in rough build order. No deep detail here. |
 
-These two are the only inputs you maintain. Draft them yourself or with the AI's
-help: brainstorm with it, expand a terse idea into full sentences, tighten the
-wording, whatever's useful. Your job is to *decide and own* what goes in; the AI
-is a fine partner for the actual writing. Keep them current; everything else
-regenerates from them.
+These two files are the inputs you maintain. Draft them yourself or with the AI.
+Your job is to decide and own what goes in them. The AI can help with wording,
+expansion, and tradeoffs.
 
-## Everything else is generated
+## What gets generated
 
 | File | Generated by | What it is |
 | ---- | ------------ | ---------- |
-| [blueprint/context/project-overview.md](blueprint/context/project-overview.md) | `/overview` | The single source of truth the AI reads every session: the two plans distilled into one coherent doc with a concrete data model. |
-| [blueprint/context/current-feature.md](blueprint/context/current-feature.md) | `/feature` | The detailed, buildable spec for the **one** feature you're building right now, with build steps `/implement` checks off as it goes (so progress survives a context clear). |
-| `blueprint/history/features/NN-name.md` | `/complete` | The archive of finished feature specs, your build history. |
+| [blueprint/context/project-overview.md](blueprint/context/project-overview.md) | `/overview` | The single source of truth the AI reads every session, generated from the two planning docs. |
+| [blueprint/context/current-feature.md](blueprint/context/current-feature.md) | `/feature` or `/fix` | The spec for the one feature or fix being built right now, including build steps and done-whens. |
+| `blueprint/history/features/NN-name.md` | `/complete` | The archive of finished feature specs. |
+| `blueprint/history/fixes/NN-name.md` | `/complete` | The archive of finished fix specs. |
 
-## The workflow, step by step
+Fix the planning docs, then regenerate. Do not hand-edit generated context unless
+the skill tells you to.
 
-**Set up (once).** Scaffold your app, overlay the blueprint, and tune the
-conventions - see [Starting a new project](#starting-a-new-project) above. Once
-that's done, the loop below is the day-to-day.
+## Using the workflow
 
-**Plan the project**
+Start by running `/overview`. It distills the two planning docs into
+`blueprint/context/project-overview.md` and reports contradictions or gaps under
+**Open questions**. Answer those questions in the plans, then re-run `/overview`.
 
-1. Fill in [blueprint/project-plan.md](blueprint/project-plan.md) and
-   [blueprint/build-plan.md](blueprint/build-plan.md).
-2. Run **`/overview`**. It distills both plans into `blueprint/context/project-overview.md`
-   and reports any contradictions or gaps under an **Open questions** section.
-3. Answer those open questions **in the plans**, then re-run `/overview`. Repeat
-   until the section is empty. (Fix the plans, not the overview; the overview is
-   generated.)
+Then repeat the build loop for each feature:
 
-**Build, feature by feature.** Repeat for each item in the build plan:
+1. Run **`/feature`** to spec the next unchecked build-plan item. You can also
+   pass a number or name, such as `/feature 3` or `/feature "login"`.
+2. Review `blueprint/context/current-feature.md` before code is written.
+3. Run **`/implement`**. It branches, builds one step, shows the diff, proves the
+   done-when, and waits for approval before moving on.
+4. Run **`/check`** when you want an outside proof pass against the real app.
+5. Run **`/complete`** when the feature is done. It archives the spec, checks off
+   the build plan, commits the finished work, and squash-merges with your
+   go-ahead.
 
-4. Run **`/feature`**. With no number it specs the **next unchecked** item in the
-   build plan; pass a number or name (`/feature 3`, `/feature "login"`) to pick a
-   specific one. It sizes the feature, splits anything too big into smaller
-   sub-features, and writes a step-by-step spec to `blueprint/context/current-feature.md`.
-   Then it stops.
-5. **Read the spec.** Adjust anything before code is written. This is your review
-   gate.
-6. **Run `/implement`** to build it, one reviewed step at a time. It branches,
-   then for each step: build, show the diff, explain it and **confirm the done-when
-   with evidence** (build output, a screenshot), run the gate's tests if a runner
-   is configured (see [Testing](#testing)), and **iterate until it works**
-   (re-prompt or hand-edit). After each approved step
-   it pops a quick choice - **continue**, **commit a checkpoint**, **walk me through
-   it** (a deeper code explanation), or **stop here** - so checkpoints stay optional.
-   It checks each step off in `current-feature.md` as it goes, so you can clear
-   context mid-feature and resume from the first unchecked step. It builds on the
-   branch only.
-7. **Run `/check`** (optional, recommended before wrapping up) to prove the work
-   against its spec. It runs the **real app** - browser, CLI, or API - and checks
-   each "done when" in `current-feature.md` against what it actually observes,
-   capturing screenshots or output and watching for console and network errors. It
-   changes nothing; anything that fails goes back through `/implement`.
-8. **Run `/complete`** to wrap up: it archives the spec to
-   `blueprint/history/features/NN-name.md`, checks the feature off in `build-plan.md`, resets
-   `blueprint/context/current-feature.md` to its stub, makes **one feature-level commit**,
-   then **squash-merges** to main (with your go-ahead) and deletes the branch, so
-   the feature lands as a single clean commit.
-9. Back to step 4 for the next feature.
+### Fixes
 
-**Fixes** (a bug or change that isn't a planned feature): run `/fix "<what's wrong>"`
-instead of `/feature`, then `/implement` and `/complete` as usual. `/complete` logs
-fixes to `blueprint/history/fixes/` rather than checking them off the build plan.
+Use `/fix` instead of `/feature`:
 
-## Testing
-
-Testing is opt-in: the blueprint installs no test runner, because the overlay
-can't know your stack. Wire one up when you want it (its own step or feature) and
-declare its command in the **Commands** section of `AGENTS.md`. Most projects here
-are JavaScript, so the default is `npm run test` (Vitest); a Python project would
-use `pytest`, a Go project `go test`, and so on.
-
-Once a runner is configured, tests become a **gate for logic-bearing steps**: a
-step that adds real logic (parsers, formatters, validators, server actions) ships
-a passing test in the same diff, and `npm run test` must be green before the step
-is approved. UI and integration work (components, render or export routes, anything
-driving a real browser) skips unit tests and rides on the screenshot plus build
-evidence the loop already collects.
-
-No runner configured? Nothing blocks you - logic is verified by that same evidence,
-exactly as before.
-
-## Picking up where you left off
-
-You don't need a separate save/load command. The blueprint keeps project state in
-**files, not the conversation**, and `CLAUDE.md` re-loads them every session:
-
-- `project-overview.md` - the source of truth
-- `current-feature.md` - the in-progress spec, with each build step checked off as
-  it's finished
-- `build-plan.md` - what's done and what's next
-- `blueprint/history/features/` and git - the history of everything built
-
-So you can **clear context any time**. Between features it's effortless: the next
-session reads the build plan, and you run `/feature` for the next item. Mid-feature,
-`/implement` has been ticking off steps in `current-feature.md`, so a fresh session
-(plus the git branch and working tree, which clearing context doesn't touch) picks
-up from the first unchecked step - just run `/implement` again.
-
-Not sure where you left things? Run **`/status`** for a read-only "you are here":
-build-plan progress, which step is next, git state, and the suggested next action.
-It changes nothing - just orients you before you pick the next skill.
-
-## File map
-
-```
-.                              (your app: src/, package.json, README.md, ...)
-├── CLAUDE.md                  (Claude Code entry; imports AGENTS.md + context. Must be at root)
-├── AGENTS.md                  (agent instructions; read by Codex, Cursor, etc. Must be at root)
-├── .claude/
-│   └── skills/                (the slash-command skills. Must be at root)
-│       ├── adopt/             (/adopt: bootstrap the plans from an existing codebase)
-│       ├── overview/          (/overview: two plans to project-overview.md)
-│       ├── feature/           (/feature: one build-plan item to current-feature.md)
-│       ├── fix/               (/fix: document an ad-hoc bug fix or change)
-│       ├── implement/         (/implement: build the current feature or fix, reviewed)
-│       ├── check/             (/check: run the app, prove the done-whens with evidence)
-│       ├── complete/          (/complete: feature commit, squash-merge, log)
-│       ├── prototype/         (/prototype: static screen mockups, pre-build)
-│       └── status/            (/status: where things stand, read-only)
-└── blueprint/                 (everything else the workflow needs, in one folder)
-    ├── project-plan.md        (YOU write: what & why)
-    ├── build-plan.md          (YOU write: ordered feature list)
-    ├── context/               (what the AI loads every session)
-    │   ├── project-overview.md  (generated by /overview)
-    │   ├── coding-standards.md  (your conventions, edit once)
-    │   ├── ai-interaction.md    (how the AI works with you)
-    │   └── current-feature.md   (generated by /feature, one at a time)
-    └── history/               (the build archive)
-        ├── features/          (completed feature specs land here)
-        └── fixes/             (completed fix specs land here)
+```text
+/fix "password reset email never sends"
 ```
 
-`CLAUDE.md`, `AGENTS.md`, and `.claude/` have to stay at the repo root because the
-tools that read them look there; everything else the workflow owns lives under the
-single `blueprint/` folder, so it never clutters your app.
+If you already described the problem in chat, `/fix` can use that context. It
+needs an argument or clear problem statement; it does not scan the app and
+magically know what to fix.
 
-## The skills
+Then continue with `/implement`, `/check`, and `/complete`. Fixes are logged to
+`blueprint/history/fixes/` and do not change `build-plan.md`.
+
+## Command reference
 
 | Skill | Run it | Does |
 | ----- | ------ | ---- |
-| **/adopt** | once, to onboard an existing codebase | Brownfield on-ramp: surveys the real repo, interviews you for intent the code can't reveal, then generates `project-plan.md`, `build-plan.md` (a checklist with **shipped features already checked**), and a `coding-standards.md` matching your actual conventions. Hands off to `/overview`. Skip it for a fresh scaffold. |
-| **/overview** | after writing or editing the plans | Distills `project-plan.md` + `build-plan.md` into `blueprint/context/project-overview.md`. Re-run whenever the plans change. |
-| **/feature** | for each feature you build | With no number, specs the **next unchecked** build-plan item; or pass a number/name. Sizes it, splits big ones into sub-features, writes a small-step spec to `blueprint/context/current-feature.md`, then **red-teams its own draft** (gaps, oversized steps, scope creep) and leads with what the critique changed before stopping. |
-| **/fix** | for a bug or change not in the build plan | Documents an ad-hoc fix into `blueprint/context/current-feature.md` (lighter than a feature spec), then stops. Build it with `/implement`; `/complete` logs it to `blueprint/history/fixes/`. |
-| **/implement** | after reviewing a feature spec | Builds `blueprint/context/current-feature.md` one small step at a time on a feature branch: a diff, a plain-English summary with the done-when proven, your approval each step, and a checkpoint choice (**continue / commit checkpoint / walk me through it / stop**). Checks each step off as it goes, so you can clear context and resume from the first unchecked step. The feature commit and merge are `/complete`'s job. |
-| **/check** | to prove a step or feature works | Runs the **real app** and checks each "done when" in `current-feature.md` against observed behavior - drives the browser/CLI/API, captures screenshots and output, watches for console and network errors - then reports pass/fail per criterion. Observes only: no edits, no commit. The evidence gate before `/complete`; fixes go back through `/implement`. (Supersedes the built-in `/verify` with a spec-aware version.) |
-| **/complete** | when a feature is built and reviewed | Logs the feature (archives the spec to `blueprint/history/features/`, checks it off `build-plan.md`, resets `current-feature.md`), makes **one feature-level commit**, then **squash-merges** to main with your go-ahead and deletes the branch. Never pushes without a yes. |
-| **/prototype** | before the build loop, to lock the look | Asks about the look and which pages, proposes a plan, then writes throwaway static mockups to `prototypes/` sharing one theme (CSS variables). A pre-build helper, outside the feature loop. |
-| **/status** | any time, to get your bearings | Read-only "you are here": build-plan progress, the current feature's checked/unchecked steps, and git state (branch, uncommitted changes, last commit), ending with the single suggested next action. Changes nothing. The fast way back in after a break or a context clear. |
+| **/adopt** | once, for an existing codebase | Surveys the repo and generates the planning docs and coding standards from what already exists. |
+| **/overview** | after writing or editing the plans | Generates `blueprint/context/project-overview.md` from the two planning docs. |
+| **/feature** | for each planned feature | Specs the next unchecked feature, or a selected feature, into `current-feature.md`. |
+| **/fix** | for an unplanned bug or small change | Specs an ad-hoc fix into `current-feature.md`. |
+| **/implement** | after reviewing a spec | Builds the current spec one small, reviewed step at a time. |
+| **/check** | before wrapping up, or any time you want proof | Runs the real app and reports pass/fail against the spec's done-whens. |
+| **/complete** | when work is built and reviewed | Archives the spec, commits the finished work, and merges with your approval. |
+| **/prototype** | before the build loop | Creates throwaway static mockups to explore the look and feel. |
+| **/status** | any time | Shows build-plan progress, the current feature state, git state, and the suggested next action. |
 
 These commands are the structured path, not a cage. You can describe a feature,
-fix, or change directly in chat at any time, and the same conventions still apply
-(they're loaded from `blueprint/context/`). Reach for the skills when you want the repeatable
-loop and the logging; prompt directly when you just want something done.
+fix, or change directly in chat at any time. Use the skills when you want the
+repeatable loop, review gates, and history.
 
-## A note on the app itself
+## Testing
 
-This blueprint is a **workflow layer**, not an app skeleton, so there's no
-`package.json` in it. You scaffold the app yourself first (with whatever you
-like), then overlay these files on top, as in [Starting a new
-project](#starting-a-new-project) above. That's what keeps
-it stack-agnostic: the same process drives a Next.js app, a Vite SPA, or a Python
-service. The defaults in `coding-standards.md` assume Next.js + TypeScript +
-Tailwind + Prisma, but you can change them.
+Testing is opt-in. The blueprint installs no test runner because it does not know
+your stack. Add one when you want it, then declare the command in the **Commands**
+section of `AGENTS.md`.
 
-To keep the overlay conflict-free, the blueprint deliberately ships nothing a
-fresh scaffold also creates: all content stays namespaced under `blueprint/` and
-`.claude/`, plus `CLAUDE.md` and `AGENTS.md`. Don't add root files like `.gitignore`,
-`tsconfig.json`, or `eslint.config.mjs` to the blueprint; let the framework
-provide those, and append any blueprint-specific ignores during the first feature.
+Once a runner is configured, tests become a gate for logic-bearing steps:
+parsers, validators, server actions, formatters, and similar work should include
+a passing test in the same diff. UI and integration work can ride on screenshot,
+browser, build, or API evidence from `/implement` and `/check`.
 
-## A note on prototyping
+## Picking up where you left off
 
-Locking the look (mockups, Figma, v0, static HTML, AI artifacts) is exploratory,
-throwaway work, and a poor fit for the spec-and-review feature loop. Do it before
-the build loop and let the result inform the UI/UX section of your project plan.
+You do not need a separate save/load command. The blueprint keeps project state
+in files, not the conversation:
 
-The blueprint ships a `/prototype` helper for this: it asks about the look you
-want and which pages to draft, proposes a plan, then writes static mockups to
-`prototypes/`, all sharing one theme (CSS variables). Those
-variables are the part that carries into the real build (into `globals.css`
-`@theme`); the
-mockups themselves are reference and get discarded. It's a pre-build helper, not a
-feature, so don't list prototyping in the build plan.
+- `blueprint/context/project-overview.md` is the source of truth.
+- `blueprint/context/current-feature.md` is the in-progress spec.
+- `blueprint/build-plan.md` says what is done and what is next.
+- `blueprint/history/` plus git keeps the build history.
 
-## Works in other tools
+You can clear context any time. Between features, run `/feature` for the next
+item. Mid-feature, run `/implement` again and it resumes from the first unchecked
+step in `current-feature.md`.
 
-The blueprint isn't Claude-specific. `AGENTS.md` is the cross-tool entry point that
-Codex, Cursor, GitHub Copilot, Gemini CLI, Aider, and others read; the `blueprint/context/`
-files and `.claude/skills/*/SKILL.md` are plain markdown any agent can read; and
-`CLAUDE.md` just imports `AGENTS.md` so there's one source of truth. The native
-`/slash-command` skills are a Claude Code convenience. In other tools, run a step
-by asking the agent to follow the matching `SKILL.md` (for example, "run the
-overview" -> `.claude/skills/overview/SKILL.md`).
+Not sure where things stand? Run:
+
+```text
+/status
+```
+
+It is read-only and gives you the next suggested action.
+
+## File map
+
+```text
+.                              (your app: src/, package.json, README.md, ...)
+├── CLAUDE.md                  (Claude Code entry; imports AGENTS.md + context)
+├── AGENTS.md                  (agent instructions for Codex, Cursor, and others)
+├── .claude/
+│   └── skills/
+│       ├── adopt/             (/adopt: bootstrap from an existing codebase)
+│       ├── overview/          (/overview: plans to project-overview.md)
+│       ├── feature/           (/feature: build-plan item to current-feature.md)
+│       ├── fix/               (/fix: document an ad-hoc fix)
+│       ├── implement/         (/implement: build the current spec)
+│       ├── check/             (/check: prove the done-whens)
+│       ├── complete/          (/complete: commit, merge, and log)
+│       ├── prototype/         (/prototype: static mockups)
+│       └── status/            (/status: where things stand)
+└── blueprint/
+    ├── project-plan.md        (you write: what and why)
+    ├── build-plan.md          (you write: ordered feature list)
+    ├── context/
+    │   ├── project-overview.md  (generated by /overview)
+    │   ├── coding-standards.md  (your conventions)
+    │   ├── ai-interaction.md    (how the AI works with you)
+    │   └── current-feature.md   (generated by /feature or /fix)
+    └── history/
+        ├── features/          (completed feature specs)
+        └── fixes/             (completed fix specs)
+```
+
+`CLAUDE.md`, `AGENTS.md`, and `.claude/` stay at the repo root because the tools
+that read them look there. Everything else owned by the workflow lives under
+`blueprint/`, so it stays out of your app code.
+
+## Notes
+
+### This is not an app skeleton
+
+There is no `package.json` in the blueprint. Scaffold the app first with whatever
+stack you like, then overlay these files. That keeps the workflow stack-agnostic:
+the same process can guide a Next.js app, a Vite SPA, a Python service, or
+something else.
+
+The defaults in `coding-standards.md` assume Next.js, TypeScript, Tailwind, and
+Prisma. Change them to match your project. To keep the overlay conflict-free, the
+blueprint avoids root files a framework scaffold usually creates, like
+`.gitignore`, `tsconfig.json`, or `eslint.config.mjs`.
+
+### Prototyping is separate
+
+Locking the look with mockups, Figma, v0, or static HTML is exploratory work. Do
+it before the build loop and let the result inform the UI/UX section of your
+project plan. The `/prototype` helper can create throwaway static mockups in
+`prototypes/`.
+
+### Works in other tools
+
+The blueprint is not Claude-specific. `AGENTS.md` is the cross-tool entry point,
+and `CLAUDE.md` imports it so there is one source of truth. In tools without
+native slash commands, ask the agent to follow the matching `SKILL.md`:
+
+```text
+run the overview by following .claude/skills/overview/SKILL.md
+```
