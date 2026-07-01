@@ -1,6 +1,6 @@
 ---
 name: overview
-description: Generate blueprint/context/project-overview.md from the two planning docs (blueprint/project-plan.md and blueprint/build-plan.md). The overview is the single AI-facing source of truth that CLAUDE.md loads every session. Use when the user runs /overview, has just finished writing or editing the plans, or asks to (re)generate the project overview.
+description: Generate blueprint/context/project-overview.md from the two planning docs (blueprint/project-plan.md and blueprint/build-plan.md). The overview is the single AI-facing source of truth that project instructions load every session. Use when the user runs /overview, invokes $overview, has just finished writing or editing the plans, or asks to (re)generate the project overview.
 ---
 
 # overview - turn the two plans into the AI-facing source of truth
@@ -16,8 +16,8 @@ You provide two files: `blueprint/project-plan.md` (what & why) and
 `blueprint/build-plan.md` (the ordered feature list), drafted by you or with
 the AI's help; what matters is that you own their content. Everything else in the
 workflow is generated from those two. This skill is the first generation step: it
-distills both plans into `blueprint/context/project-overview.md`, the single doc CLAUDE.md
-loads at the start of every session.
+distills both plans into `blueprint/context/project-overview.md`, the single doc
+project instructions load at the start of every session.
 
 ## Input
 

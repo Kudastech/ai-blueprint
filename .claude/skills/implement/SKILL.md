@@ -32,7 +32,7 @@ feature was started earlier and interrupted (often a cleared context). The spec 
 its ticked steps are files, so pick up where it left off: read which steps are done,
 check the git branch and `git status`/log to see what is committed and what is still
 in the working tree, then continue from the **first unchecked step** instead of
-starting over. No separate save/load is needed - `CLAUDE.md` re-loads
+starting over. No separate save/load is needed - the project instructions load
 `current-feature.md` every session.
 
 ## Step 1 - branch
@@ -73,10 +73,11 @@ Work through the spec's build steps in order, one at a time. For each step:
 6. **Mark it done, then prompt to move on.** Once the step is approved, check that
    step off (`- [x]`) in `blueprint/context/current-feature.md` so progress survives a context
    clear. Then offer a short choice, noting that checkpoints are optional since
-   `/complete` makes the real feature-level commit. Use `AskUserQuestion` (a quick
-   selectable prompt) for this - but when you've just produced a long block to read
-   (a deep explanation, a big walk-through), ask in plain text instead, so the modal
-   doesn't cover what the user is still reading:
+   `/complete` makes the real feature-level commit. Use the current tool's short
+   user-input prompt when available, such as Codex's request-user-input flow; when
+   you've just produced a long block to read (a deep explanation, a big
+   walk-through), ask in plain text instead, so the prompt doesn't cover what the
+   user is still reading:
    - **Continue** (default) - roll into the next step without committing.
    - **Commit checkpoint** - commit just this step on the branch with a
      conventional message (a cheap rollback point).

@@ -28,11 +28,15 @@ New here? `README.md` explains the whole workflow.
 ## Workflow
 
 Build one feature or fix at a time, behind review gates. Each step's instructions
-are plain markdown skills any capable agent can read and follow. The same
-workflow is exposed through tool-specific adapters:
+are plain markdown skills any capable agent can read and follow. The canonical
+workflow skill source lives in `blueprint/skills-source/`, then gets copied into
+tool-specific adapters:
 
 - Codex: `.agents/skills/<skill>/SKILL.md`
 - Claude Code: `.claude/skills/<skill>/SKILL.md`
+
+When changing workflow skill instructions, edit `blueprint/skills-source/` first,
+then run `node blueprint/scripts/sync-skills.mjs` to regenerate both adapters.
 
 Core skills:
 
