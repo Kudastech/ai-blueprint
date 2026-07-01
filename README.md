@@ -59,6 +59,10 @@ cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.agents,.claude,blueprint} .
 This drops in `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, and `blueprint/`.
 Codex reads `.agents/skills`; Claude Code reads `.claude/skills`.
 
+Only keep the adapter for the tool you use. Codex-only projects can delete
+`CLAUDE.md` and `.claude/`. Claude Code-only projects can delete `.agents/`, but
+should keep `AGENTS.md` because `CLAUDE.md` imports it.
+
 **3. Tune the conventions.** Edit
 [blueprint/context/coding-standards.md](blueprint/context/coding-standards.md) to
 match your stack, and skim
@@ -359,6 +363,11 @@ project plan. The `/prototype` helper can create throwaway static mockups in
 The blueprint is not Claude-specific. `AGENTS.md` is the cross-tool entry point,
 `.agents/skills` exposes the workflow to Codex, and `.claude/skills` exposes it
 to Claude Code.
+
+You do not have to keep both adapters. For Codex-only work, keep `AGENTS.md`,
+`.agents/`, and `blueprint/`. For Claude Code-only work, keep `AGENTS.md`,
+`CLAUDE.md`, `.claude/`, and `blueprint/`. Keep both adapters if you switch
+between tools.
 
 Use the native invocation style for your tool:
 
