@@ -113,7 +113,13 @@ Blueprint setup.
 - [blueprint/project-plan.md](blueprint/project-plan.md)
 - [blueprint/build-plan.md](blueprint/build-plan.md)
 
-**6. Generate the overview once.** This turns your two planning docs into
+The project plan can be rough notes. The build plan should become a numbered
+checkbox list because the build loop uses checked and unchecked items to know
+what is next. If your first pass is just bullets, `/overview` will flag that and
+can propose a cleaned-up checkbox version before generating context.
+
+**6. Generate the overview once.** This checks the two planning docs, helps shape
+the build plan if needed, then turns them into
 `blueprint/context/project-overview.md`, the AI-facing source of truth:
 
 ```text
@@ -252,9 +258,10 @@ the skill tells you to.
 ## Using the workflow
 
 After `/onboard` and after filling in the two planning docs, run `/overview`. It
-distills those docs into `blueprint/context/project-overview.md` and reports
-contradictions or gaps under **Open questions**. Answer those questions in the
-plans, then re-run `/overview`.
+checks that the plans are usable, proposes a normalized checkbox build plan if
+needed, distills the docs into `blueprint/context/project-overview.md`, and
+reports contradictions or gaps under **Open questions**. Answer those questions
+in the plans, then re-run `/overview`.
 
 If you are unsure whether setup is complete, the plans are ready, or the overview
 is current, run `/doctor`. If setup is healthy and you just need to know where
@@ -294,7 +301,7 @@ Then continue with `/implement`, `/check`, and `/complete`. Fixes are logged to
 | **/onboard** | once, after overlaying onto a fresh or early project | Detects the stack, updates commands and conventions, checks `.gitignore`, and tells you what to fill in before `/overview`. |
 | **/doctor** | any time, especially after `/onboard` or when setup feels off | Runs a read-only health check for Blueprint files, adapters, commands, ignore rules, planning readiness, overview freshness, workflow drift, and git state. |
 | **/adopt** | once, for an existing codebase | Surveys the repo and generates the planning docs and coding standards from what already exists. |
-| **/overview** | after writing or editing the plans | Generates `blueprint/context/project-overview.md` from the two planning docs. |
+| **/overview** | after writing or editing the plans | Checks plan quality, normalizes rough build-plan bullets when approved, and generates `blueprint/context/project-overview.md`. |
 | **/feature** | for each planned feature | Specs the next unchecked feature, or a selected feature, into `current-feature.md`. |
 | **/fix** | for an unplanned bug or small change | Specs an ad-hoc fix into `current-feature.md`. |
 | **/implement** | after reviewing a spec | Builds the current spec one small, reviewed step at a time. |
