@@ -63,8 +63,9 @@ something done.
 **Resuming after a context clear.** Progress lives in files, not the chat:
 `current-feature.md` holds the spec with each step checked off as it's done, and git
 holds the code (branch, commits, working tree). A fresh session auto-loads
-`current-feature.md` through `CLAUDE.md`, so `/implement` just continues from the
-first unchecked step - no separate save/load needed.
+`current-feature.md` through the project instructions (`AGENTS.md`, and
+`CLAUDE.md` for Claude Code), so `/implement` or `$implement` just continues from
+the first unchecked step - no separate save/load needed.
 
 Do NOT commit without permission or until the build passes (and tests, if the
 project has them). If the build or tests fail, fix the issues first.

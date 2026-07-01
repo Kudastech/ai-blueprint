@@ -80,13 +80,18 @@
 ## Testing
 
 The blueprint installs no test runner; testing is opt-in at the project level,
-because the overlay can't know your stack. **The opt-in switch is one signal: a
-`test` command in the Commands section of `AGENTS.md`.** Declare one and **tests
-become a gate for logic-bearing steps**, not an optional extra; leave it out and
-the loop verifies logic with the evidence it already uses (run it, a screenshot,
-the build). Adding the runner is itself a deliberate step, never a silent
-mid-step install. This is the single definition of the switch; the skills and
-`ai-interaction.md` only point back here.
+because the overlay can't know your stack. Adding unit testing is an explicit
+setup task the AI can do through the normal workflow, either as a build-plan item
+or with `/fix "add unit testing"`. The setup should choose the stack-native
+runner, wire the scripts or commands, add a small example test, and update the
+Commands section of `AGENTS.md`.
+
+**The opt-in switch is one signal: a `test` command in the Commands section of
+`AGENTS.md`.** Declare one and **tests become a gate for logic-bearing steps**,
+not an optional extra; leave it out and the loop verifies logic with the evidence
+it already uses (run it, a screenshot, the build). Adding the runner is itself a
+deliberate step, never a silent mid-step install. This is the single definition
+of the switch; the skills and `ai-interaction.md` only point back here.
 
 - **What to test (the scope rule):** pure logic where a wrong answer is possible -
   parsers, formatters, validators, id/slug builders, server actions. These have

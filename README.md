@@ -53,10 +53,10 @@ npx degit bradtraversy/ai-blueprint . --force
 Prefer a local copy instead of `degit`?
 
 ```bash
-cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.claude,blueprint} .
+cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.agents,.claude,blueprint} .
 ```
 
-This drops in `AGENTS.md`, `CLAUDE.md`, `.claude/`, and `blueprint/`.
+This drops in `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, and `blueprint/`.
 
 **3. Tune the conventions.** Edit
 [blueprint/context/coding-standards.md](blueprint/context/coding-standards.md) to
@@ -81,6 +81,10 @@ know how the AI is expected to work with you.
 
 That path creates project context, specs the next feature, builds it, proves it
 works, then archives and merges it.
+
+In Codex, invoke the same workflow as skills (`$overview`, `$feature`,
+`$implement`, `$check`, `$complete`) or ask naturally, such as "run the
+overview." In Claude Code, use the slash commands shown above.
 
 Scaffolders like `create-next-app` need an empty folder, which is why the app
 comes first and the blueprint is overlaid second. `degit` replaces the app's
@@ -234,8 +238,23 @@ repeatable loop, review gates, and history.
 ## Testing
 
 Testing is opt-in. The blueprint installs no test runner because it does not know
-your stack. Add one when you want it, then declare the command in the **Commands**
-section of `AGENTS.md`.
+your stack, but adding one is a normal workflow task.
+
+You can make it a build-plan item, or ask for it directly:
+
+```text
+/fix "add unit testing"
+```
+
+The agent should pick the stack-native runner, wire the scripts or commands, add
+a small example test, and update the **Commands** section of `AGENTS.md`. For a
+TypeScript app that usually means Vitest; Python might use pytest, and Go already
+has `go test`.
+
+That work happens in `/implement`, just like any other change. The `/fix` or
+`/feature` step writes the spec, then `/implement` creates the test files, updates
+the project config, runs the build, runs the test command, and iterates until both
+pass.
 
 Once a runner is configured, tests become a gate for logic-bearing steps:
 parsers, validators, server actions, formatters, and similar work should include
@@ -270,8 +289,19 @@ It is read-only and gives you the next suggested action.
 .                              (your app: src/, package.json, README.md, ...)
 ├── CLAUDE.md                  (Claude Code entry; imports AGENTS.md + context)
 ├── AGENTS.md                  (agent instructions for Codex, Cursor, and others)
+├── .agents/
+│   └── skills/                (Codex repo skills)
+│       ├── adopt/             ($adopt: bootstrap from an existing codebase)
+│       ├── overview/          ($overview: plans to project-overview.md)
+│       ├── feature/           ($feature: build-plan item to current-feature.md)
+│       ├── fix/               ($fix: document an ad-hoc fix)
+│       ├── implement/         ($implement: build the current spec)
+│       ├── check/             ($check: prove the done-whens)
+│       ├── complete/          ($complete: commit, merge, and log)
+│       ├── prototype/         ($prototype: static mockups)
+│       └── status/            ($status: where things stand)
 ├── .claude/
-│   └── skills/
+│   └── skills/                (Claude Code skills and slash commands)
 │       ├── adopt/             (/adopt: bootstrap from an existing codebase)
 │       ├── overview/          (/overview: plans to project-overview.md)
 │       ├── feature/           (/feature: build-plan item to current-feature.md)
@@ -294,9 +324,9 @@ It is read-only and gives you the next suggested action.
         └── fixes/             (completed fix specs)
 ```
 
-`CLAUDE.md`, `AGENTS.md`, and `.claude/` stay at the repo root because the tools
-that read them look there. Everything else owned by the workflow lives under
-`blueprint/`, so it stays out of your app code.
+`AGENTS.md`, `CLAUDE.md`, `.agents/`, and `.claude/` stay at the repo root
+because the tools that read them look there. Everything else owned by the
+workflow lives under `blueprint/`, so it stays out of your app code.
 
 ## Notes
 
@@ -322,9 +352,16 @@ project plan. The `/prototype` helper can create throwaway static mockups in
 ### Works in other tools
 
 The blueprint is not Claude-specific. `AGENTS.md` is the cross-tool entry point,
-and `CLAUDE.md` imports it so there is one source of truth. In tools without
-native slash commands, ask the agent to follow the matching `SKILL.md`:
+`.agents/skills` exposes the workflow to Codex, and `CLAUDE.md` imports
+`AGENTS.md` so Claude Code reads the same source of truth.
+
+Use the native invocation style for your tool:
+
+- Codex: `$overview`, `$feature`, `$implement`, `$check`, `$complete`, or plain
+  language like "run the overview."
+- Claude Code: `/overview`, `/feature`, `/implement`, `/check`, `/complete`.
+- Other tools: ask the agent to follow the matching `SKILL.md`.
 
 ```text
-run the overview by following .claude/skills/overview/SKILL.md
+run the overview by following .agents/skills/overview/SKILL.md
 ```

@@ -13,8 +13,8 @@ This project is built with the **AI Coding Blueprint**, a workflow layer, not an
 app skeleton. To start a new project, scaffold the app first in an empty folder
 (create-next-app, Vite, etc.), then overlay these files on top. Never run a
 framework scaffolder inside a directory that already holds the blueprint files
-(`AGENTS.md`, `CLAUDE.md`, `.claude/`, `blueprint/`); it fails because the
-directory isn't empty.
+(`AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, `blueprint/`); it fails
+because the directory isn't empty.
 
 New here? `README.md` explains the whole workflow.
 
@@ -28,21 +28,29 @@ New here? `README.md` explains the whole workflow.
 ## Workflow
 
 Build one feature or fix at a time, behind review gates. Each step's instructions
-are a plain markdown file any agent can read and follow:
+are plain markdown skills any capable agent can read and follow. The same
+workflow is exposed through tool-specific adapters:
 
-- `.claude/skills/overview/SKILL.md` - distill the two planning docs into `blueprint/context/project-overview.md`
-- `.claude/skills/feature/SKILL.md` - turn a build-plan item into a spec in `blueprint/context/current-feature.md`
-- `.claude/skills/fix/SKILL.md` - document an ad-hoc bug or change into `blueprint/context/current-feature.md`
-- `.claude/skills/implement/SKILL.md` - build the current spec one small, reviewed step at a time
-- `.claude/skills/complete/SKILL.md` - log it (to `blueprint/history/features/` or `blueprint/history/fixes/`) and merge
-- `.claude/skills/prototype/SKILL.md` - optional, pre-build: static mockups to lock the look
+- Codex: `.agents/skills/<skill>/SKILL.md`
+- Claude Code: `.claude/skills/<skill>/SKILL.md`
 
-In Claude Code these run as slash commands (`/overview`, `/feature`, and so on).
-In other tools, perform the same step by following the matching `SKILL.md` when
-the user asks for it (for example, "run the overview" means follow
-`.claude/skills/overview/SKILL.md`). The conventions in `blueprint/context/` apply however a
-step is invoked, and the review gates are not optional: small steps, and the user
-approves each diff before it lands.
+Core skills:
+
+- `overview` - distill the two planning docs into `blueprint/context/project-overview.md`
+- `feature` - turn a build-plan item into a spec in `blueprint/context/current-feature.md`
+- `fix` - document an ad-hoc bug or change into `blueprint/context/current-feature.md`
+- `implement` - build the current spec one small, reviewed step at a time
+- `check` - prove the current spec against the running app
+- `complete` - log it to `blueprint/history/features/` or `blueprint/history/fixes/`, then merge
+- `prototype` - optional, pre-build static mockups to lock the look
+- `status` - read-only summary of progress and the suggested next action
+
+In Codex, invoke these as skills (`$overview`, `$feature`, `$implement`, and so
+on) or ask naturally, such as "run the overview." In Claude Code, use the slash
+commands (`/overview`, `/feature`, and so on). In tools without native skills,
+follow the matching `SKILL.md` manually. The conventions in `blueprint/context/`
+apply however a step is invoked, and the review gates are not optional: small
+steps, and the user approves each diff before it lands.
 
 ## Commands
 
