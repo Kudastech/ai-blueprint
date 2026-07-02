@@ -116,6 +116,23 @@ Stack binding (swap for yours): a TypeScript app uses Vitest, `vi.mock()` for
 external dependencies (Prisma, Clerk, etc.), and `vi.useFakeTimers()` for
 time-dependent logic; a Python app would use pytest; a Go app `go test`.
 
+## Browser Verification
+
+For UI and integration behavior, prefer real browser evidence over reading the
+code and assuming it works.
+
+- If Playwright is already installed, or the Commands section of `AGENTS.md`
+  declares a Playwright script, use Playwright for browser checks, screenshots,
+  console-error checks, and user-flow verification.
+- If Playwright is not installed, do not add it silently in the middle of an
+  unrelated feature. Use the available dev server, browser screenshots, build
+  output, API output, or manual verification evidence instead.
+- Add Playwright only when the user asks for it, or when the current spec is
+  explicitly about setting up browser automation.
+- Browser evidence is especially important for flows that click, type, submit,
+  navigate, download files, render complex layouts, or depend on client-side
+  state.
+
 ## Code Quality
 
 - No commented-out code unless specified

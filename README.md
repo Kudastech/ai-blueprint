@@ -349,6 +349,11 @@ parsers, validators, server actions, formatters, and similar work should include
 a passing test in the same diff. UI and integration work can ride on screenshot,
 browser, build, or API evidence from `/implement` and `/check`.
 
+For browser-heavy work, Playwright is preferred when the project already has it
+installed or declares a Playwright command. The blueprint does not install it by
+default; adding browser automation is a normal setup task when a project wants
+that level of verification.
+
 ## Picking up where you left off
 
 You do not need a separate save/load command. The blueprint keeps project state
