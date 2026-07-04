@@ -1,3 +1,3 @@
 # Exclude Blueprint reference CSS templates from GitHub language stats.
-.agents/skills/prototype/reference/theme-variables.css linguist-vendored
-.claude/skills/prototype/reference/theme-variables.css linguist-vendored
+.agents/skills/prototype/reference/theme-variables.css linguist-vendored linguist-detectable=false
+.claude/skills/prototype/reference/theme-variables.css linguist-vendored linguist-detectable=false
