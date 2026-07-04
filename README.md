@@ -61,6 +61,24 @@ git init
 **2. Add the blueprint** from inside the app:
 
 ```bash
+npx github:bradtraversy/ai-blueprint#npx
+```
+
+The GitHub-backed installer asks which adapters you want to keep and leaves your
+app's root `README.md` alone:
+
+```bash
+npx github:bradtraversy/ai-blueprint#npx --codex
+npx github:bradtraversy/ai-blueprint#npx --claude
+npx github:bradtraversy/ai-blueprint#npx --both
+```
+
+The cleaner npm command, `npx create-ai-blueprint@latest`, is planned but not
+published yet.
+
+Prefer a raw overlay?
+
+```bash
 npx degit bradtraversy/ai-blueprint . --force
 ```
 
@@ -71,15 +89,16 @@ cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.agents,.claude,blueprint} .
 ```
 
 This drops in `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, and `blueprint/`.
-Codex reads `.agents/skills`; Claude Code reads `.claude/skills`.
+Codex reads `.agents/skills`; Claude Code reads `.claude/skills`. The
+GitHub-backed npx installer puts the workflow docs at `blueprint/README.md`.
 
 > [!WARNING]
-> This direct overlay is intended for new projects that were just scaffolded.
+> The raw `degit` overlay is intended for new projects that were just scaffolded.
 > It can initially overwrite root files such as `README.md`, `AGENTS.md`, and
 > `CLAUDE.md`. If you are adding the Blueprint to an existing project with real
 > content in those files, use `/adopt` and review conflicts before copying.
 
-If the overlay still puts this Blueprint README at your app root, `/onboard` will
+If the raw overlay puts this Blueprint README at your app root, `/onboard` will
 move the workflow documentation to `blueprint/README.md` and create a small
 project README stub. Your root `README.md` should describe the app, not the
 workflow.
@@ -99,7 +118,8 @@ should keep `AGENTS.md` because `CLAUDE.md` imports it.
 > [!IMPORTANT]
 > After the overlay, run `/onboard` before filling in plans or running
 > `/overview`. This is the setup pass that makes the Blueprint match your actual
-> project.
+> project. If Claude Code was already open when the Blueprint was installed,
+> restart Claude Code in that folder so the newly added project skills appear.
 
 **3. Run onboard before anything else.** This detects the stack, updates the
 Commands section of `AGENTS.md`, sets the `CLAUDE.md` project title when present,
@@ -111,7 +131,7 @@ tunes `coding-standards.md`, moves the copied Blueprint README to
 /onboard
 ```
 
-In Codex, invoke it as `$onboard` or ask naturally, such as "run onboard."
+In Codex, invoke it as `$onboard`. In Claude Code, invoke it as `/onboard`.
 
 **4. Review the setup.** Skim
 [blueprint/context/coding-standards.md](blueprint/context/coding-standards.md) and
