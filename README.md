@@ -64,7 +64,7 @@ git init
 npx degit bradtraversy/ai-blueprint . --force
 ```
 
-Prefer a local copy instead of `degit`?
+Prefer a local copy?
 
 ```bash
 cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.agents,.claude,blueprint} .
@@ -73,9 +73,16 @@ cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.agents,.claude,blueprint} .
 This drops in `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, and `blueprint/`.
 Codex reads `.agents/skills`; Claude Code reads `.claude/skills`.
 
-If the overlay puts this Blueprint README at your app root, `/onboard` will move
-the workflow documentation to `blueprint/README.md` and create a small project
-README stub. Your root `README.md` should describe the app, not the workflow.
+> [!WARNING]
+> This direct overlay is intended for new projects that were just scaffolded.
+> It can initially overwrite root files such as `README.md`, `AGENTS.md`, and
+> `CLAUDE.md`. If you are adding the Blueprint to an existing project with real
+> content in those files, use `/adopt` and review conflicts before copying.
+
+If the overlay still puts this Blueprint README at your app root, `/onboard` will
+move the workflow documentation to `blueprint/README.md` and create a small
+project README stub. Your root `README.md` should describe the app, not the
+workflow.
 
 Only keep the adapter for the tool you use. Codex-only projects can delete
 `CLAUDE.md` and `.claude/`. Claude Code-only projects can delete `.agents/`, but
@@ -151,8 +158,8 @@ In Codex, invoke the same steps as skills (`$overview`, `$feature`, `$implement`
 Code, use the slash commands shown above.
 
 Most scaffolders need an empty folder, which is why the app comes first and the
-blueprint is overlaid second. `degit` may replace the app's boilerplate README
-with this one; `/onboard` moves the copied workflow README to
+blueprint is overlaid second. The direct overlay may replace the app's
+boilerplate README with this one; `/onboard` moves the copied workflow README to
 `blueprint/README.md` so the root README can belong to the app.
 
 ### Already have a codebase?
@@ -485,7 +492,7 @@ something else.
 The defaults in `coding-standards.md` assume Next.js, TypeScript, Tailwind, and
 Prisma. Change them to match your project. To keep the overlay conflict-free, the
 blueprint avoids root files a framework scaffold usually creates, like
-`.gitignore`, `tsconfig.json`, or `eslint.config.mjs`.
+`.gitignore`, `package.json`, lockfiles, `tsconfig.json`, or `eslint.config.mjs`.
 
 ### Prototyping is separate
 
