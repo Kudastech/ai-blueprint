@@ -50,8 +50,10 @@ Core skills:
 - `brief` - read-only briefing on an upcoming build-plan feature (scope, dependencies, size) before you spec it
 - `feature` - turn a build-plan item into a spec in `blueprint/context/current-feature.md`
 - `fix` - document an ad-hoc bug or change into `blueprint/context/current-feature.md`
+- `tests` - add or normalize unit testing and turn on the test gate
 - `implement` - build the current spec one small, reviewed step at a time
 - `check` - prove the current spec against the running app
+- `audit` - read-only code quality review for duplication, dead code, standards drift, and maintainability risks
 - `complete` - log it to `blueprint/history/features/` or `blueprint/history/fixes/`, then merge
 - `prototype` - optional, pre-build static mockups to lock the look
 - `status` - read-only progress summary, workflow drift warning, and suggested next action
@@ -60,9 +62,12 @@ In Codex, invoke these as skills (`$onboard`, `$overview`, `$feature`,
 `$implement`, and so on) or ask naturally, such as "run the overview." In Claude
 Code, use the slash commands (`/onboard`, `/overview`, `/feature`, and so on). In
 tools without native skills, follow the matching `SKILL.md` manually. The
-conventions in `blueprint/context/` apply however a step is invoked, and the
-review gates are not optional: small steps, and the user approves each diff
-before it lands.
+conventions in `blueprint/context/` apply however a step is invoked.
+
+Optional explicit-only skill: `autopilot` can run one bounded spec/build/check
+pass when directly invoked. It may create checkpoint commits on the feature or
+fix branch after passing steps. It stops before `/complete`, merge, push, deploy,
+or destructive actions.
 
 ## Commands
 
@@ -72,5 +77,7 @@ For a standard Next.js project. Change or remove if you're using something else.
 - Build: `npm run build`
 - Production server: `npm run start`
 - Lint: `npm run lint`
-- Test: `npm run test` (single run)
-- Test watch: `npm run test:watch`
+
+Testing is opt-in. If this project does not already have a unit test runner, run
+`/tests` or `$tests` to add one and update this section with the real test
+commands.

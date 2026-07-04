@@ -73,6 +73,10 @@ cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.agents,.claude,blueprint} .
 This drops in `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, and `blueprint/`.
 Codex reads `.agents/skills`; Claude Code reads `.claude/skills`.
 
+If the overlay puts this Blueprint README at your app root, `/onboard` will move
+the workflow documentation to `blueprint/README.md` and create a small project
+README stub. Your root `README.md` should describe the app, not the workflow.
+
 Only keep the adapter for the tool you use. Codex-only projects can delete
 `CLAUDE.md` and `.claude/`. Claude Code-only projects can delete `.agents/`, but
 should keep `AGENTS.md` because `CLAUDE.md` imports it.
@@ -92,8 +96,9 @@ should keep `AGENTS.md` because `CLAUDE.md` imports it.
 
 **3. Run onboard before anything else.** This detects the stack, updates the
 Commands section of `AGENTS.md`, sets the `CLAUDE.md` project title when present,
-tunes `coding-standards.md`, checks `.gitignore`, and confirms which tool
-adapters you need:
+tunes `coding-standards.md`, moves the copied Blueprint README to
+`blueprint/README.md` when needed, creates a small project README stub, checks
+`.gitignore`, and confirms which tool adapters you need:
 
 ```text
 /onboard
@@ -146,8 +151,9 @@ In Codex, invoke the same steps as skills (`$overview`, `$feature`, `$implement`
 Code, use the slash commands shown above.
 
 Most scaffolders need an empty folder, which is why the app comes first and the
-blueprint is overlaid second. `degit` replaces the app's boilerplate README with
-this one; the `cp` alternative leaves your README in place.
+blueprint is overlaid second. `degit` may replace the app's boilerplate README
+with this one; `/onboard` moves the copied workflow README to
+`blueprint/README.md` so the root README can belong to the app.
 
 ### Already have a codebase?
 
@@ -302,15 +308,17 @@ Then continue with `/implement`, `/check`, and `/complete`. Fixes are logged to
 
 | Skill | Run it | Does |
 | ----- | ------ | ---- |
-| **/onboard** | once, after overlaying onto a fresh or early project | Detects the stack, updates commands and conventions, checks `.gitignore`, and tells you what to fill in before `/overview`. |
-| **/doctor** | any time, especially after `/onboard` or when setup feels off | Runs a read-only health check for Blueprint files, adapters, commands, ignore rules, planning readiness, overview freshness, workflow drift, and git state. |
-| **/adopt** | once, for an existing codebase | Surveys the repo and generates the planning docs and coding standards from what already exists. |
+| **/onboard** | once, after overlaying onto a fresh or early project | Detects the stack, moves the copied Blueprint README when needed, updates commands and conventions, checks `.gitignore`, and tells you what to fill in before `/overview`. |
+| **/doctor** | any time, especially after `/onboard` or when setup feels off | Runs a read-only health check for Blueprint files, adapters, commands, root README placement, ignore rules, planning readiness, overview freshness, workflow drift, and git state. |
+| **/adopt** | once, for an existing codebase | Surveys the repo, protects the project README, and generates the planning docs and coding standards from what already exists. |
 | **/overview** | after writing or editing the plans | Checks plan quality, normalizes rough build-plan bullets when approved, and generates `blueprint/context/project-overview.md`. |
 | **/brief** | before spec'ing, or when deciding what's next | Read-only briefing on an upcoming build-plan feature - scope, dependencies, what it touches, size, likely split - without writing anything. |
 | **/feature** | for each planned feature | Specs the next unchecked feature, or a selected feature, into `current-feature.md`. |
 | **/fix** | for an unplanned bug or small change | Specs an ad-hoc fix into `current-feature.md`. |
+| **/tests** | when you want unit tests added | Adds or normalizes the stack-native unit test setup, adds one example test, updates `AGENTS.md`, and runs build plus tests. |
 | **/implement** | after reviewing a spec | Builds the current spec one small, reviewed step at a time. |
 | **/check** | before wrapping up, or any time you want proof | Runs the real app and reports pass/fail against the spec's done-whens. |
+| **/audit** | before closing a feature, or any time quality feels suspect | Runs a read-only code quality audit for duplication, dead code, DRY issues, standards drift, missing tests, and maintainability risks. |
 | **/complete** | when work is built and reviewed | Archives the spec, commits the finished work, and merges with your approval. |
 | **/prototype** | before the build loop | Creates throwaway static mockups to explore the look and feel. |
 | **/status** | any time | Shows build-plan progress, current work, overview freshness, git state, workflow drift warnings, and the suggested next action. |
@@ -318,6 +326,12 @@ Then continue with `/implement`, `/check`, and `/complete`. Fixes are logged to
 These commands are the structured path, not a cage. You can describe a feature,
 fix, or change directly in chat at any time. Use the skills when you want the
 repeatable loop, review gates, and history.
+
+There is also an optional `/autopilot` or `$autopilot` mode for an explicitly
+requested bounded pass. It does not ask between passing implementation steps. It
+creates checkpoint commits on the feature branch after passing steps, handles one
+feature or fix, then stops before `/complete`, merge, push, deploy, or
+destructive actions.
 
 ## Testing
 
@@ -328,21 +342,20 @@ your stack, but adding one is a normal workflow task.
 > Tests become a required gate only after you add a real `test` command to the
 > Commands section of `AGENTS.md`.
 
-You can make it a build-plan item, or ask for it directly:
+To add unit testing, run:
 
 ```text
-/fix "add unit testing"
+/tests
 ```
 
-The agent should pick the stack-native runner, wire the scripts or commands, add
-a small example test, and update the **Commands** section of `AGENTS.md`. For a
-TypeScript app that usually means Vitest; Python might use pytest, and Go already
-has `go test`.
+The agent should pick the stack-native runner, reuse an existing runner if one is
+already present, wire the scripts or commands, add a small example test, and
+update the **Commands** section of `AGENTS.md`. For a TypeScript app that usually
+means Vitest; Python might use pytest, and Go already has `go test`.
 
-That work happens in `/implement`, just like any other change. The `/fix` or
-`/feature` step writes the spec, then `/implement` creates the test files, updates
-the project config, runs the build, runs the test command, and iterates until both
-pass.
+`/tests` is a setup command, not a product feature. It should not try to write a
+broad test suite for existing code. It proves the runner works, documents the
+command, and turns on the testing gate for future logic-bearing work.
 
 Once a runner is configured, tests become a gate for logic-bearing steps:
 parsers, validators, server actions, formatters, and similar work should include
@@ -353,6 +366,21 @@ For browser-heavy work, Playwright is preferred when the project already has it
 installed or declares a Playwright command. The blueprint does not install it by
 default; adding browser automation is a normal setup task when a project wants
 that level of verification.
+
+## Code quality audits
+
+`/check` proves the app does what the spec promised. `/audit` reviews the code
+itself.
+
+Run `/audit` when you want a read-only maintainability pass before closing a
+feature, after an Autopilot run, or whenever the code feels like it may be
+drifting. It looks for issues such as duplicated logic, dead code, unused exports,
+overgrown modules, inconsistent patterns, missing tests for logic-bearing code,
+security risks, performance risks, and drift from `coding-standards.md`.
+
+`/audit` reports findings with severity and file references. It does not edit
+files, install tools, commit, merge, or push. Fixes stay in `/implement` or a
+separate `/fix`.
 
 ## Picking up where you left off
 
@@ -385,27 +413,36 @@ step in `current-feature.md`.
 │       ├── doctor/            ($doctor: read-only Blueprint health check)
 │       ├── onboard/           ($onboard: finish fresh-project setup)
 │       ├── overview/          ($overview: plans to project-overview.md)
+│       ├── brief/             ($brief: preview a build-plan feature)
 │       ├── feature/           ($feature: build-plan item to current-feature.md)
 │       ├── fix/               ($fix: document an ad-hoc fix)
+│       ├── tests/             ($tests: add unit testing)
 │       ├── implement/         ($implement: build the current spec)
 │       ├── check/             ($check: prove the done-whens)
+│       ├── audit/             ($audit: code quality review)
 │       ├── complete/          ($complete: commit, merge, and log)
 │       ├── prototype/         ($prototype: static mockups)
-│       └── status/            ($status: where things stand)
+│       ├── status/            ($status: where things stand)
+│       └── autopilot/         ($autopilot: optional bounded pass)
 ├── .claude/
 │   └── skills/                (Claude Code skills and slash commands)
 │       ├── adopt/             (/adopt: bootstrap from an existing codebase)
 │       ├── doctor/            (/doctor: read-only Blueprint health check)
 │       ├── onboard/           (/onboard: finish fresh-project setup)
 │       ├── overview/          (/overview: plans to project-overview.md)
+│       ├── brief/             (/brief: preview a build-plan feature)
 │       ├── feature/           (/feature: build-plan item to current-feature.md)
 │       ├── fix/               (/fix: document an ad-hoc fix)
+│       ├── tests/             (/tests: add unit testing)
 │       ├── implement/         (/implement: build the current spec)
 │       ├── check/             (/check: prove the done-whens)
+│       ├── audit/             (/audit: code quality review)
 │       ├── complete/          (/complete: commit, merge, and log)
 │       ├── prototype/         (/prototype: static mockups)
-│       └── status/            (/status: where things stand)
+│       ├── status/            (/status: where things stand)
+│       └── autopilot/         (/autopilot: optional bounded pass)
 └── blueprint/
+    ├── README.md             (workflow docs after /onboard moves them)
     ├── project-plan.md        (you write: what and why)
     ├── build-plan.md          (you write: ordered feature list)
     ├── context/
@@ -460,10 +497,10 @@ between tools.
 
 Use the native invocation style for your tool:
 
-- Codex: `$onboard`, `$overview`, `$feature`, `$implement`, `$check`, `$complete`,
-  or plain language like "run the overview."
-- Claude Code: `/onboard`, `/overview`, `/feature`, `/implement`, `/check`,
-  `/complete`.
+- Codex: `$onboard`, `$overview`, `$feature`, `$tests`, `$implement`, `$check`,
+  `$audit`, `$complete`, or plain language like "run the overview."
+- Claude Code: `/onboard`, `/overview`, `/feature`, `/tests`, `/implement`,
+  `/check`, `/audit`, `/complete`.
 - Other tools: ask the agent to follow the matching `SKILL.md`.
 
 ```text
