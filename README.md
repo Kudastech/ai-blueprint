@@ -322,16 +322,26 @@ Then continue with `/implement`, `/check`, and `/complete`. Fixes are logged to
 | **/complete** | when work is built and reviewed | Archives the spec, commits the finished work, and merges with your approval. |
 | **/prototype** | before the build loop | Creates throwaway static mockups to explore the look and feel. |
 | **/status** | any time | Shows build-plan progress, current work, overview freshness, git state, workflow drift warnings, and the suggested next action. |
+| **/autopilot** | experimental, explicit opt-in only | Runs one bounded spec/build/check pass without pausing after each passing implementation step, then stops with a review packet before `/complete`. |
 
 These commands are the structured path, not a cage. You can describe a feature,
 fix, or change directly in chat at any time. Use the skills when you want the
 repeatable loop, review gates, and history.
 
-There is also an optional `/autopilot` or `$autopilot` mode for an explicitly
-requested bounded pass. It does not ask between passing implementation steps. It
-creates checkpoint commits on the feature branch after passing steps, handles one
-feature or fix, then stops before `/complete`, merge, push, deploy, or
-destructive actions.
+### Experimental: Autopilot
+
+`/autopilot` or `$autopilot` is an experimental, explicit opt-in mode for one
+bounded pass. It can pick or resume a feature, write the spec when needed,
+implement small steps, run build/tests/checks, create checkpoint commits on the
+feature branch after passing steps, self-review the diff, and stop with a review
+packet.
+
+Autopilot does not replace the normal workflow. `/feature`, `/implement`,
+`/check`, and `/complete` remain the conservative default.
+
+Autopilot always stops before `/complete`, merge, push, deploy, publish, send,
+destructive actions, or any action that needs a product decision not covered by
+the docs.
 
 ## Testing
 
@@ -423,7 +433,7 @@ step in `current-feature.md`.
 │       ├── complete/          ($complete: commit, merge, and log)
 │       ├── prototype/         ($prototype: static mockups)
 │       ├── status/            ($status: where things stand)
-│       └── autopilot/         ($autopilot: optional bounded pass)
+│       └── autopilot/         ($autopilot: experimental bounded pass)
 ├── .claude/
 │   └── skills/                (Claude Code skills and slash commands)
 │       ├── adopt/             (/adopt: bootstrap from an existing codebase)
@@ -440,7 +450,7 @@ step in `current-feature.md`.
 │       ├── complete/          (/complete: commit, merge, and log)
 │       ├── prototype/         (/prototype: static mockups)
 │       ├── status/            (/status: where things stand)
-│       └── autopilot/         (/autopilot: optional bounded pass)
+│       └── autopilot/         (/autopilot: experimental bounded pass)
 └── blueprint/
     ├── README.md             (workflow docs after /onboard moves them)
     ├── project-plan.md        (you write: what and why)
@@ -498,9 +508,10 @@ between tools.
 Use the native invocation style for your tool:
 
 - Codex: `$onboard`, `$overview`, `$feature`, `$tests`, `$implement`, `$check`,
-  `$audit`, `$complete`, or plain language like "run the overview."
+  `$audit`, `$complete`, or plain language like "run the overview." Experimental:
+  `$autopilot`.
 - Claude Code: `/onboard`, `/overview`, `/feature`, `/tests`, `/implement`,
-  `/check`, `/audit`, `/complete`.
+  `/check`, `/audit`, `/complete`. Experimental: `/autopilot`.
 - Other tools: ask the agent to follow the matching `SKILL.md`.
 
 ```text
