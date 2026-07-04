@@ -41,6 +41,11 @@ Unused adapters can be removed. Codex-only projects can delete `CLAUDE.md` and
 When changing shared workflow behavior, update the matching skill in both
 adapter folders so Codex and Claude Code stay aligned.
 
+If a Blueprint command name is ambiguous or a personal, global, or team skill
+loads instead, follow the local file directly:
+`.agents/skills/<skill>/SKILL.md` for Codex or `.claude/skills/<skill>/SKILL.md`
+for Claude Code.
+
 Core skills:
 
 - `onboard` - tune commands, standards, ignore rules, and tool adapters after overlaying the Blueprint onto a freshly scaffolded or early project
@@ -60,7 +65,9 @@ Core skills:
 
 In Codex, invoke these as skills (`$onboard`, `$overview`, `$feature`,
 `$implement`, and so on) or ask naturally, such as "run the overview." In Claude
-Code, use the slash commands (`/onboard`, `/overview`, `/feature`, and so on). In
+Code, use the slash commands (`/onboard`, `/overview`, `/feature`, and so on). If
+the `.claude/skills/` directory was added while Claude Code was already open,
+restart Claude Code in the project folder so the new project skills appear. In
 tools without native skills, follow the matching `SKILL.md` manually. The
 conventions in `blueprint/context/` apply however a step is invoked.
 
