@@ -36,10 +36,10 @@ helping you write.
 
 ## Quick start
 
-Scaffold the app first, then overlay the blueprint on top.
+Scaffold the app first, then install the Blueprint.
 
 > [!IMPORTANT]
-> Scaffold your app first, then overlay the Blueprint. Do not run a framework
+> Scaffold your app first, then install the Blueprint. Do not run a framework
 > scaffolder inside a folder that already contains Blueprint files.
 
 **1. Scaffold your app** in a new, empty directory. Next.js is only an example
@@ -64,68 +64,18 @@ git init
 npx github:bradtraversy/ai-blueprint#npx
 ```
 
-The GitHub-backed installer asks which adapters you want to keep and leaves your
-app's root `README.md` alone:
-
-```bash
-npx github:bradtraversy/ai-blueprint#npx --codex
-npx github:bradtraversy/ai-blueprint#npx --claude
-npx github:bradtraversy/ai-blueprint#npx --both
-```
-
-The cleaner npm command, `npx create-ai-blueprint@latest`, is planned but not
-published yet.
-
-Prefer a raw overlay?
-
-```bash
-npx degit bradtraversy/ai-blueprint . --force
-```
-
-Prefer a local copy?
-
-```bash
-cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.agents,.claude,blueprint} .
-```
-
-This drops in `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, and `blueprint/`.
-Codex reads `.agents/skills`; Claude Code reads `.claude/skills`. The
-GitHub-backed npx installer puts the workflow docs at `blueprint/README.md`.
-
-> [!WARNING]
-> The raw `degit` overlay is intended for new projects that were just scaffolded.
-> It can initially overwrite root files such as `README.md`, `AGENTS.md`, and
-> `CLAUDE.md`. If you are adding the Blueprint to an existing project with real
-> content in those files, use `/adopt` and review conflicts before copying.
-
-If the raw overlay puts this Blueprint README at your app root, `/onboard` will
-move the workflow documentation to `blueprint/README.md` and create a small
-project README stub. Your root `README.md` should describe the app, not the
-workflow.
-
-Only keep the adapter for the tool you use. Codex-only projects can delete
-`CLAUDE.md` and `.claude/`. Claude Code-only projects can delete `.agents/`, but
-should keep `AGENTS.md` because `CLAUDE.md` imports it.
-
-### Which files do I need?
-
-| Setup | Keep | Optional to delete |
-| ---- | ---- | ---- |
-| Codex only | `AGENTS.md`, `.agents/`, `blueprint/` | `CLAUDE.md`, `.claude/` |
-| Claude Code only | `AGENTS.md`, `CLAUDE.md`, `.claude/`, `blueprint/` | `.agents/` |
-| Codex and Claude Code | `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, `blueprint/` | Nothing |
+The installer asks which AI tool adapters you want and adds the Blueprint files.
 
 > [!IMPORTANT]
-> After the overlay, run `/onboard` before filling in plans or running
+> After installing, run `/onboard` before filling in plans or running
 > `/overview`. This is the setup pass that makes the Blueprint match your actual
 > project. If Claude Code was already open when the Blueprint was installed,
 > restart Claude Code in that folder so the newly added project skills appear.
 
 **3. Run onboard before anything else.** This detects the stack, updates the
 Commands section of `AGENTS.md`, sets the `CLAUDE.md` project title when present,
-tunes `coding-standards.md`, moves the copied Blueprint README to
-`blueprint/README.md` when needed, creates a small project README stub, checks
-`.gitignore`, and confirms which tool adapters you need:
+tunes `coding-standards.md`, checks `.gitignore`, and confirms which tool
+adapters you need:
 
 ```text
 /onboard
@@ -177,15 +127,10 @@ In Codex, invoke the same steps as skills (`$overview`, `$feature`, `$implement`
 `$check`, `$complete`) or ask naturally, such as "run the overview." In Claude
 Code, use the slash commands shown above.
 
-Most scaffolders need an empty folder, which is why the app comes first and the
-blueprint is overlaid second. The direct overlay may replace the app's
-boilerplate README with this one; `/onboard` moves the copied workflow README to
-`blueprint/README.md` so the root README can belong to the app.
-
 ### Already have a codebase?
 
 If the app already has meaningful shipped features, use `/adopt` instead of
-`/onboard`. Overlay the blueprint files the same way, then run:
+`/onboard`. Install the Blueprint, then run:
 
 ```text
 /adopt
@@ -335,7 +280,7 @@ Then continue with `/implement`, `/check`, and `/complete`. Fixes are logged to
 
 | Skill | Run it | Does |
 | ----- | ------ | ---- |
-| **/onboard** | once, after overlaying onto a fresh or early project | Detects the stack, moves the copied Blueprint README when needed, updates commands and conventions, checks `.gitignore`, and tells you what to fill in before `/overview`. |
+| **/onboard** | once, after installing into a fresh or early project | Detects the stack, updates commands and conventions, checks `.gitignore`, and tells you what to fill in before `/overview`. |
 | **/doctor** | any time, especially after `/onboard` or when setup feels off | Runs a read-only health check for Blueprint files, adapters, commands, root README placement, ignore rules, planning readiness, overview freshness, workflow drift, and git state. |
 | **/adopt** | once, for an existing codebase | Surveys the repo, protects the project README, and generates the planning docs and coding standards from what already exists. |
 | **/overview** | after writing or editing the plans | Checks plan quality, normalizes rough build-plan bullets when approved, and generates `blueprint/context/project-overview.md`. |
@@ -505,12 +450,12 @@ actual build loop should stay the same across both adapters.
 ### This is not an app skeleton
 
 There is no `package.json` in the blueprint. Scaffold the app first with whatever
-stack you like, then overlay these files. That keeps the workflow stack-agnostic:
+stack you like, then install these files. That keeps the workflow stack-agnostic:
 the same process can guide a Next.js app, a Vite SPA, a Python service, or
 something else.
 
 The defaults in `coding-standards.md` assume Next.js, TypeScript, Tailwind, and
-Prisma. Change them to match your project. To keep the overlay conflict-free, the
+Prisma. Change them to match your project. To keep the install low-conflict, the
 blueprint avoids root files a framework scaffold usually creates, like
 `.gitignore`, `package.json`, lockfiles, `tsconfig.json`, or `eslint.config.mjs`.
 
