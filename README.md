@@ -61,15 +61,7 @@ git init
 **2. Add the blueprint** from inside the app:
 
 ```bash
-npx create-ai-blueprint@latest
-```
-
-The installer asks which adapters you want to keep:
-
-```bash
-npx create-ai-blueprint@latest -- --codex
-npx create-ai-blueprint@latest -- --claude
-npx create-ai-blueprint@latest -- --both
+npx degit bradtraversy/ai-blueprint . --force
 ```
 
 Prefer a local copy?
@@ -79,24 +71,15 @@ cp -R path/to/ai-blueprint/{AGENTS.md,CLAUDE.md,.agents,.claude,blueprint} .
 ```
 
 This drops in `AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`, and `blueprint/`.
-Codex reads `.agents/skills`; Claude Code reads `.claude/skills`. The npx
-installer keeps your app's root `README.md` alone and puts the Blueprint workflow
-docs at `blueprint/README.md`.
-
-Manual raw overlay:
-
-```bash
-npx degit bradtraversy/ai-blueprint . --force
-```
+Codex reads `.agents/skills`; Claude Code reads `.claude/skills`.
 
 > [!WARNING]
-> The raw `degit` overlay is intended for new projects that were just scaffolded.
+> This direct overlay is intended for new projects that were just scaffolded.
 > It can initially overwrite root files such as `README.md`, `AGENTS.md`, and
-> `CLAUDE.md`, and it copies the whole source repo. If you are adding the
-> Blueprint to an existing project with real content in those files, use
-> `/adopt` and review conflicts before copying.
+> `CLAUDE.md`. If you are adding the Blueprint to an existing project with real
+> content in those files, use `/adopt` and review conflicts before copying.
 
-If a manual overlay puts this Blueprint README at your app root, `/onboard` will
+If the overlay still puts this Blueprint README at your app root, `/onboard` will
 move the workflow documentation to `blueprint/README.md` and create a small
 project README stub. Your root `README.md` should describe the app, not the
 workflow.
@@ -116,8 +99,7 @@ should keep `AGENTS.md` because `CLAUDE.md` imports it.
 > [!IMPORTANT]
 > After the overlay, run `/onboard` before filling in plans or running
 > `/overview`. This is the setup pass that makes the Blueprint match your actual
-> project. If Claude Code was already open when the Blueprint was installed,
-> restart Claude Code in that folder so the newly added project skills appear.
+> project.
 
 **3. Run onboard before anything else.** This detects the stack, updates the
 Commands section of `AGENTS.md`, sets the `CLAUDE.md` project title when present,
@@ -129,25 +111,7 @@ tunes `coding-standards.md`, moves the copied Blueprint README to
 /onboard
 ```
 
-In Codex, invoke it as `$onboard`. In Claude Code, invoke it as `/onboard`.
-
-If Claude Code was already open when you installed the Blueprint and `/onboard`
-does not appear, restart Claude Code in the project folder. Project skills in a
-newly created `.claude/skills/` directory may not appear in an already running
-session.
-
-If your tool loads a personal, global, or team skill instead of the Blueprint
-one, call the local skill file directly:
-
-```text
-follow .agents/skills/onboard/SKILL.md
-```
-
-For Claude Code:
-
-```text
-follow .claude/skills/onboard/SKILL.md
-```
+In Codex, invoke it as `$onboard` or ask naturally, such as "run onboard."
 
 **4. Review the setup.** Skim
 [blueprint/context/coding-standards.md](blueprint/context/coding-standards.md) and
@@ -191,13 +155,7 @@ merges it.
 
 In Codex, invoke the same steps as skills (`$overview`, `$feature`, `$implement`,
 `$check`, `$complete`) or ask naturally, such as "run the overview." In Claude
-Code, use the slash commands shown above. If the project skills were added while
-Claude Code was already running, restart Claude Code before using the slash
-commands.
-
-If a tool has a personal, global, or team skill with the same name as a Blueprint
-command, tell it to follow the local Blueprint skill file directly, such as
-`.agents/skills/overview/SKILL.md` or `.claude/skills/overview/SKILL.md`.
+Code, use the slash commands shown above.
 
 Most scaffolders need an empty folder, which is why the app comes first and the
 blueprint is overlaid second. The direct overlay may replace the app's
@@ -526,13 +484,10 @@ actual build loop should stay the same across both adapters.
 
 ### This is not an app skeleton
 
-There is no root app `package.json` in the install overlay. Scaffold the app
-first with whatever stack you like, then overlay these files. That keeps the
-workflow stack-agnostic: the same process can guide a Next.js app, a Vite SPA, a
-Python service, or something else.
-
-The npm installer package lives under `packages/create-ai-blueprint/` in this
-source repo. The npx installer does not copy that package into your app.
+There is no `package.json` in the blueprint. Scaffold the app first with whatever
+stack you like, then overlay these files. That keeps the workflow stack-agnostic:
+the same process can guide a Next.js app, a Vite SPA, a Python service, or
+something else.
 
 The defaults in `coding-standards.md` assume Next.js, TypeScript, Tailwind, and
 Prisma. Change them to match your project. To keep the overlay conflict-free, the
