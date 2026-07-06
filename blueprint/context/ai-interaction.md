@@ -81,8 +81,8 @@ something done.
 11. **Feature commit** - `/complete` stages everything on the branch (step work
    plus the logging changes) into one conventional feature commit.
 12. **Squash-merge** - `/complete` squash-merges the branch to main (explicit yes)
-    and deletes it, so the feature lands as one commit; push stays a separate
-    explicit yes.
+    and deletes it, so the feature lands as one commit. Then it must ask
+    separately before pushing main; merge approval does not approve a push.
 
 **Resuming after a context clear.** Progress lives in files, not the chat:
 `current-feature.md` holds the spec with each step checked off as it's done, and git

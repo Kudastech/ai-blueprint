@@ -1,6 +1,6 @@
 ---
 name: complete
-description: Wrap up a finished feature or fix. Archives its spec to blueprint/history/features/ (feature) or blueprint/history/fixes/ (fix), checks features off the build plan, resets blueprint/context/current-feature.md to its stub, makes one feature-level commit, then squash-merges the branch to main and deletes it. Merges only with explicit approval and never pushes without a "yes". Use when the user runs /complete, or asks to finish, wrap up, merge, or close out the current feature or fix after it's built and reviewed.
+description: Wrap up a finished feature or fix. Archives its spec to blueprint/history/features/ (feature) or blueprint/history/fixes/ (fix), checks features off the build plan, resets blueprint/context/current-feature.md to its stub, makes one feature-level commit, then squash-merges the branch to main and deletes it. Merges only with explicit approval, then asks separately before pushing main. Use when the user runs /complete, or asks to finish, wrap up, merge, or close out the current feature or fix after it's built and reviewed.
 ---
 
 # complete - log the finished work, make the feature commit, and merge
@@ -57,8 +57,10 @@ or `fix: <name>`). Build and tests must pass first.
    the feature lands as one clean commit regardless of how many checkpoints the
    branch carried.
 2. Delete the branch after a clean merge.
-3. Never push without a separate explicit "yes." If the user says so, push main
-   once. A fresh local repo may have no remote yet; if so, say so.
+3. Stop and ask whether to push local `main` to its upstream. The merge approval
+   does not count as push approval.
+4. Push main only after a separate explicit yes to push main in the current chat.
+   If the repo has no remote or upstream, say so instead of guessing.
 
 Then point the user at `/feature` (or `/fix`) for the next thing.
 
@@ -71,8 +73,10 @@ that command can read the archived feature after `current-feature.md` is reset.
 - The feature is the unit of history: one squashed feature commit on main, even if
   the branch carried several checkpoint commits.
 - Don't merge unfinished or failing work; the build and tests must pass first.
-- Merging and pushing are the user's calls: get an explicit yes for the merge, and
-  a separate explicit yes before any push.
+- Merging and pushing are the user's calls: get an explicit yes for the merge,
+  then ask whether to push main. Do not treat merge approval, `/complete`, or
+  "looks good" as permission to push.
+- Push main only after a separate explicit yes to push main in the current chat.
 - One item per completion. If a parent feature still has unchecked sub-features,
   leave the parent unchecked.
 
