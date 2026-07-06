@@ -72,10 +72,11 @@ The installer asks which AI tool adapters you want and adds the Blueprint files.
 > project. If Claude Code was already open when the Blueprint was installed,
 > restart Claude Code in that folder so the newly added project skills appear.
 
-**3. Run onboard before anything else.** This detects the stack, updates the
-Commands section of `AGENTS.md`, sets the `CLAUDE.md` project title when present,
-tunes `coding-standards.md`, checks `.gitignore`, and confirms which tool
-adapters you need:
+**3. Run onboard before anything else.** This detects the stack and may edit the
+setup files that ship with the overlay: `AGENTS.md` commands, the `CLAUDE.md`
+project title when present, `blueprint/context/coding-standards.md`,
+`blueprint/context/ai-interaction.md`, `.gitignore`, adapter recommendations, and
+README placement:
 
 ```text
 /onboard
@@ -257,7 +258,9 @@ Then repeat the build loop for each feature:
 3. Run **`/implement`**. It branches, builds one step, shows the diff, proves the
    done-when, and waits for approval before moving on.
 4. Run **`/check`** when you want an outside proof pass against the real app.
-5. Run **`/complete`** when the feature is done. It archives the spec, checks off
+5. Run **`/try`** when you want the manual review path: where to go, what to
+   click or run, and what to expect.
+6. Run **`/complete`** when the feature is done. It archives the spec, checks off
    the build plan, commits the finished work, and squash-merges with your
    go-ahead.
 
@@ -290,6 +293,7 @@ Then continue with `/implement`, `/check`, and `/complete`. Fixes are logged to
 | **/tests** | when you want unit tests added | Adds or normalizes the stack-native unit test setup, adds one example test, updates `AGENTS.md`, and runs build plus tests. |
 | **/implement** | after reviewing a spec | Builds the current spec one small, reviewed step at a time. |
 | **/check** | before wrapping up, or any time you want proof | Runs the real app and reports pass/fail against the spec's done-whens. |
+| **/try** | when you want to review manually | Gives a human walkthrough: what to start, where to go, what to click or run, what to expect, and what would count as wrong. |
 | **/audit** | before closing a feature, or any time quality feels suspect | Runs a read-only code quality audit for duplication, dead code, DRY issues, standards drift, missing tests, and maintainability risks. |
 | **/complete** | when work is built and reviewed | Archives the spec, commits the finished work, and merges with your approval. |
 | **/prototype** | before the build loop | Creates throwaway static mockups to explore the look and feel. |
@@ -364,6 +368,17 @@ security risks, performance risks, and drift from `coding-standards.md`.
 files, install tools, commit, merge, or push. Fixes stay in `/implement` or a
 separate `/fix`.
 
+## Manual try guides
+
+`/check` is the agent proof pass. `/try` is the human review path.
+
+Run `/try` when you want to know what to start, where to go, what to click or
+run, what to expect, and what would count as wrong. It reads the active feature
+spec when a feature is in progress, or the latest archived feature after
+`/complete`.
+
+`/try` is read-only. It does not run the app unless you explicitly ask for that.
+
 ## Picking up where you left off
 
 You do not need a separate save/load command. The blueprint keeps project state
@@ -401,6 +416,7 @@ step in `current-feature.md`.
 │       ├── tests/             ($tests: add unit testing)
 │       ├── implement/         ($implement: build the current spec)
 │       ├── check/             ($check: prove the done-whens)
+│       ├── try/               ($try: manual review guide)
 │       ├── audit/             ($audit: code quality review)
 │       ├── complete/          ($complete: commit, merge, and log)
 │       ├── prototype/         ($prototype: static mockups)
@@ -418,6 +434,7 @@ step in `current-feature.md`.
 │       ├── tests/             (/tests: add unit testing)
 │       ├── implement/         (/implement: build the current spec)
 │       ├── check/             (/check: prove the done-whens)
+│       ├── try/               (/try: manual review guide)
 │       ├── audit/             (/audit: code quality review)
 │       ├── complete/          (/complete: commit, merge, and log)
 │       ├── prototype/         (/prototype: static mockups)
@@ -480,10 +497,10 @@ between tools.
 Use the native invocation style for your tool:
 
 - Codex: `$onboard`, `$overview`, `$feature`, `$tests`, `$implement`, `$check`,
-  `$audit`, `$complete`, or plain language like "run the overview." Experimental:
-  `$autopilot`.
+  `$try`, `$audit`, `$complete`, or plain language like "run the overview."
+  Experimental: `$autopilot`.
 - Claude Code: `/onboard`, `/overview`, `/feature`, `/tests`, `/implement`,
-  `/check`, `/audit`, `/complete`. Experimental: `/autopilot`.
+  `/check`, `/try`, `/audit`, `/complete`. Experimental: `/autopilot`.
 - Other tools: ask the agent to follow the matching `SKILL.md`.
 
 ```text

@@ -3,6 +3,11 @@
 > Your conventions. Edit these once to match your stack. The defaults below
 > assume Next.js + TypeScript + Tailwind + Prisma; change or trim anything that
 > doesn't fit your project.
+>
+> Run `/onboard` after installing the Blueprint. It tunes this file to the real
+> project stack, along with `AGENTS.md`, `CLAUDE.md` when present,
+> `ai-interaction.md`, `.gitignore`, and README placement. Review the result
+> before `/overview`.
 
 ## TypeScript
 
@@ -82,9 +87,9 @@
 The blueprint installs no test runner; testing is opt-in at the project level,
 because the overlay can't know your stack. Adding unit testing is an explicit
 setup task the AI can do through the normal workflow, either as a build-plan item
-or with `/fix "add unit testing"`. The setup should choose the stack-native
-runner, wire the scripts or commands, add a small example test, and update the
-Commands section of `AGENTS.md`.
+or with `/tests`. The setup should choose the stack-native runner, wire the
+scripts or commands, add a small example test, and update the Commands section
+of `AGENTS.md`.
 
 **The opt-in switch is one signal: a `test` command in the Commands section of
 `AGENTS.md`.** Declare one and **tests become a gate for logic-bearing steps**,
