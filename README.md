@@ -33,6 +33,7 @@ helping you write.
 | Small diffs | Implementation happens one reviewed step at a time, with proof each step works. |
 | File-backed state | Plans, current work, and history live in markdown files, so context clears are survivable. |
 | Tool adapters | Codex uses `.agents/skills`; Claude Code uses `.claude/skills`. |
+| Optional visibility | Commit the workflow files for portability, or keep them local with `.gitignore`. |
 
 ## Quick start
 
@@ -61,8 +62,10 @@ git init
 **2. Add the blueprint** from inside the app:
 
 ```bash
-npx github:bradtraversy/ai-blueprint#npx
+npx create-ai-blueprint@latest
 ```
+
+You can also run `npm create ai-blueprint@latest`.
 
 The installer asks which AI tool adapters you want and adds the Blueprint files.
 
@@ -76,7 +79,8 @@ The installer asks which AI tool adapters you want and adds the Blueprint files.
 setup files that ship with the overlay: `AGENTS.md` commands, the `CLAUDE.md`
 project title when present, `blueprint/context/coding-standards.md`,
 `blueprint/context/ai-interaction.md`, `.gitignore`, adapter recommendations, and
-README placement:
+README placement. It also asks whether Blueprint workflow files should be
+committed or kept local-only through `.gitignore`:
 
 ```text
 /onboard
@@ -283,7 +287,7 @@ Then continue with `/implement`, `/check`, and `/complete`. Fixes are logged to
 
 | Skill | Run it | Does |
 | ----- | ------ | ---- |
-| **/onboard** | once, after installing into a fresh or early project | Detects the stack, updates commands and conventions, checks `.gitignore`, and tells you what to fill in before `/overview`. |
+| **/onboard** | once, after installing into a fresh or early project | Detects the stack, updates commands and conventions, asks whether Blueprint workflow files should be committed or kept local-only, checks `.gitignore`, and tells you what to fill in before `/overview`. |
 | **/doctor** | any time, especially after `/onboard` or when setup feels off | Runs a read-only health check for Blueprint files, adapters, commands, root README placement, ignore rules, planning readiness, overview freshness, workflow drift, and git state. |
 | **/adopt** | once, for an existing codebase | Surveys the repo, protects the project README, and generates the planning docs and coding standards from what already exists. |
 | **/overview** | after writing or editing the plans | Checks plan quality, normalizes rough build-plan bullets when approved, and generates `blueprint/context/project-overview.md`. |
@@ -457,6 +461,28 @@ step in `current-feature.md`.
 `AGENTS.md`, `CLAUDE.md`, `.agents/`, and `.claude/` stay at the repo root
 because the tools that read them look there. Everything else owned by the
 workflow lives under `blueprint/`, so it stays out of your app code.
+
+This file map shows the portable, committed layout. During `/onboard`, you can
+choose local-only mode instead. That keeps `AGENTS.md` public as a lightweight
+project guide, but adds this to `.gitignore`:
+
+```gitignore
+# AI Blueprint local workflow files
+.agents/
+.claude/
+blueprint/
+CLAUDE.md
+```
+
+In local-only mode, `/onboard` should keep public `AGENTS.md` focused on project
+description, commands, testing status, and conventions, not the hidden workflow
+docs or skill list.
+
+Local-only mode keeps the workflow contents out of the repo, but it is not
+portable by itself. Another machine needs the Blueprint reinstalled or restored
+locally. If those paths were already committed, `.gitignore` is not enough; you
+must explicitly approve untracking them with `git rm --cached` while keeping the
+local files.
 
 When editing shared workflow behavior, keep the matching files in `.agents/skills`
 and `.claude/skills` aligned. Tool-specific invocation text is fine, but the

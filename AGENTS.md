@@ -43,7 +43,7 @@ adapter folders so Codex and Claude Code stay aligned.
 
 Core skills:
 
-- `onboard` - tune commands, standards, ignore rules, and tool adapters after overlaying the Blueprint onto a freshly scaffolded or early project
+- `onboard` - tune commands, standards, visibility, ignore rules, and tool adapters after overlaying the Blueprint onto a freshly scaffolded or early project
 - `doctor` - read-only Blueprint health check for setup, adapters, plans, overview freshness, and workflow drift
 - `adopt` - bootstrap the Blueprint into an existing brownfield app with shipped features
 - `overview` - distill the two planning docs into `blueprint/context/project-overview.md`

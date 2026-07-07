@@ -1,6 +1,6 @@
 ---
 name: doctor
-description: "Run a read-only Blueprint health check for setup, onboarding, required files, tool adapters, commands, ignore rules, planning readiness, overview freshness, and workflow drift. Use when the user runs /doctor, asks whether the Blueprint is installed correctly, wants a health check, setup check, doctor pass, or says something feels off before starting or resuming work."
+description: "Run a read-only Blueprint health check for setup, onboarding, required files, tool adapters, commands, Blueprint visibility, ignore rules, planning readiness, overview freshness, and workflow drift. Use when the user runs /doctor, asks whether the Blueprint is installed correctly, wants a health check, setup check, doctor pass, or says something feels off before starting or resuming work."
 ---
 
 # doctor - Blueprint health check
@@ -12,9 +12,9 @@ Where this sits in the workflow:
 
 This skill answers one question: *is this Blueprint project ready to use?* It is
 the diagnostic pass for setup drift, incomplete onboarding, missing files,
-placeholder plans, stale generated context, and confusing workflow state. It
-never changes anything: no edits, no commits, no installs, no builds, no branch
-changes.
+placeholder plans, stale generated context, Blueprint visibility, and confusing
+workflow state. It never changes anything: no edits, no commits, no installs, no
+builds, no branch changes.
 
 Use `/status` when the user mainly wants progress and the next build action. Use
 `/doctor` when the user wants to know whether the workflow itself is healthy.
@@ -35,6 +35,9 @@ Gather these, then summarize. Do not dump file contents.
      `blueprint/context/current-feature.md`, and
      `blueprint/context/project-overview.md` exist.
    - Confirm `blueprint/history/features/` and `blueprint/history/fixes/` exist.
+   - If `.gitignore` marks Blueprint workflow files as local-only, still require
+     the files to exist on disk. Ignored but present is healthy; ignored and
+     missing means the local workflow needs to be restored.
 2. **Tool adapters**
    - Confirm at least one adapter exists: `.agents/skills/` for Codex or
      `.claude/skills/` for Claude Code.
@@ -61,6 +64,16 @@ Gather these, then summarize. Do not dump file contents.
    - Check obvious ignore patterns for the detected stack. For Node or Astro,
      look for `node_modules`, `.env`, `dist`, and framework cache folders such as
      `.astro` or `.next` when relevant.
+   - Detect local-only Blueprint mode if `.gitignore` ignores `.agents/`,
+     `.claude/`, `blueprint/`, or `CLAUDE.md`. Report it as a visibility choice,
+     not a failure, when the local files exist.
+   - In local-only mode, check whether tracked `AGENTS.md` still describes the
+     Blueprint workflow, points to `blueprint/README.md`, lists hidden adapter
+     paths, or exposes the core skill list. If so, warn that `/onboard` should
+     make `AGENTS.md` public-safe.
+   - If local-only mode is active but those paths are already tracked by git,
+     warn that `.gitignore` does not hide tracked files and the user must approve
+     any `git rm --cached` cleanup separately.
    - Keep this conservative. If uncertain, report "review" instead of failure.
 5. **Planning readiness**
    - Check whether `blueprint/project-plan.md` and `blueprint/build-plan.md` look
@@ -94,6 +107,7 @@ Print a compact health report with these labels:
     Health: Pass | Needs attention | Blocked
     Setup: ...
     Adapters: ...
+    Visibility: ...
     Plans: ...
     Workflow: ...
     Git: ...
@@ -113,6 +127,12 @@ Choose the repair order in this priority:
 - Onboarding incomplete -> run `/onboard`.
 - Root README is still the Blueprint workflow doc -> run `/onboard` or move it
   to `blueprint/README.md` before publishing.
+- Local-only visibility selected but ignored Blueprint files are missing ->
+  reinstall or restore the Blueprint files locally.
+- Local-only visibility selected but Blueprint paths are tracked -> ask whether
+  to untrack them with `git rm --cached` while keeping local files.
+- Local-only visibility selected but `AGENTS.md` still exposes the workflow ->
+  run `/onboard` to make `AGENTS.md` a lightweight public project guide.
 - Commands or ignore rules need review -> update the files or run `/onboard` if
   this is an early project.
 - Plans are placeholders -> fill `blueprint/project-plan.md` and

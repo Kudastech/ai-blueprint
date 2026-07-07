@@ -1,0 +1,44 @@
+{
+  "name": "create-ai-blueprint",
+  "version": "0.1.0",
+  "description": "Install the AI Coding Blueprint into a scaffolded app.",
+  "license": "MIT",
+  "homepage": "https://github.com/bradtraversy/ai-blueprint#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bradtraversy/ai-blueprint.git",
+    "directory": "packages/create-ai-blueprint"
+  },
+  "bugs": {
+    "url": "https://github.com/bradtraversy/ai-blueprint/issues"
+  },
+  "keywords": [
+    "ai",
+    "blueprint",
+    "codex",
+    "claude",
+    "agent",
+    "workflow",
+    "scaffold"
+  ],
+  "bin": {
+    "create-ai-blueprint": "bin/create-ai-blueprint.js"
+  },
+  "scripts": {
+    "prepare-template": "node scripts/prepare-template.js",
+    "prepack": "node scripts/prepare-template.js",
+    "postpack": "node scripts/clean-template.js"
+  },
+  "files": [
+    "bin/",
+    "template/",
+    "README.md",
+    "package.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
