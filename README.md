@@ -67,7 +67,8 @@ npx create-ai-blueprint@latest
 
 You can also run `npm create ai-blueprint@latest`.
 
-The installer asks which AI tool adapters you want and adds the Blueprint files.
+The installer asks which AI tool adapters you want and adds only the Blueprint
+workflow files your app needs.
 
 > [!IMPORTANT]
 > After installing, run `/onboard` before filling in plans or running
@@ -151,11 +152,14 @@ AI loops are popular because the assistant can plan, act, check the result, and
 iterate. This blueprint turns that idea into a project workflow with human review
 gates and a written history.
 
-The repeating build loop is:
+The core build loop is:
 
 ```text
 /feature -> review spec -> /implement -> /check -> /complete
 ```
+
+Use `/try` when you want a manual review path, and `/audit` when you want a
+read-only code quality pass before closing the work.
 
 For unplanned bugs or small changes, use the fix loop:
 
@@ -175,16 +179,22 @@ In this repo, **the build loop** means:
 The loop is the control system. The AI can keep iterating, but only inside the
 current spec, with observable checks and review gates.
 
-The diagram shows the whole workflow. `/overview` happens after planning and only
-re-runs when the plans change; the repeating loop starts at `/feature`.
+The diagram shows the fresh-project workflow. `/overview` happens after planning
+and only re-runs when the plans change; the repeating loop starts at `/feature`
+or `/fix`. For an existing codebase, use `/adopt` instead of `/onboard`; that
+path is described above.
 
 ```mermaid
 flowchart TD
-    subgraph you["you provide"]
+    OB(["/onboard<br/>fresh setup"])
+
+    subgraph planning["planning files"]
         PP["project-plan.md"]
         BPL["build-plan.md"]
     end
 
+    OB -->|fill next| PP
+    OB -->|fill next| BPL
     PP --> OV(["/overview"])
     BPL --> OV
     OV --> POV["project-overview.md<br/>source of truth"]
@@ -199,13 +209,20 @@ flowchart TD
     FX --> CF
     CF --> IM(["/implement<br/>build + iterate, reviewed"])
     IM -.->|prove done-whens| CK(["/check"])
+    IM -.->|manual path| TRY(["/try"])
+    IM -.->|quality pass| AU(["/audit"])
     CK -.->|fails| IM
+    TRY -.->|issues| IM
+    AU -.->|findings| IM
+    CK -.->|passes| CP
+    TRY -.->|looks good| CP
+    AU -.->|clean| CP
     IM --> CP(["/complete<br/>commit + merge + log"])
     CP --> AR["blueprint/history/"]
     AR -.->|next| FT
 
     classDef skill fill:#2563eb,stroke:#1e40af,color:#ffffff;
-    class OV,PT,BR,FT,FX,IM,CP,CK skill;
+    class OB,OV,PT,BR,FT,FX,IM,CP,CK,TRY,AU skill;
 ```
 
 ## The two files you own
@@ -445,7 +462,7 @@ step in `current-feature.md`.
 │       ├── status/            (/status: where things stand)
 │       └── autopilot/         (/autopilot: experimental bounded pass)
 └── blueprint/
-    ├── README.md             (workflow docs after /onboard moves them)
+    ├── README.md             (workflow docs installed here)
     ├── project-plan.md        (you write: what and why)
     ├── build-plan.md          (you write: ordered feature list)
     ├── context/
@@ -492,10 +509,10 @@ actual build loop should stay the same across both adapters.
 
 ### This is not an app skeleton
 
-There is no `package.json` in the blueprint. Scaffold the app first with whatever
-stack you like, then install these files. That keeps the workflow stack-agnostic:
-the same process can guide a Next.js app, a Vite SPA, a Python service, or
-something else.
+The installed Blueprint overlay does not add a project-level `package.json`.
+Scaffold the app first with whatever stack you like, then install these files.
+That keeps the workflow stack-agnostic: the same process can guide a Next.js
+app, a Vite SPA, a Python service, or something else.
 
 The defaults in `coding-standards.md` assume Next.js, TypeScript, Tailwind, and
 Prisma. Change them to match your project. To keep the install low-conflict, the
@@ -522,11 +539,13 @@ between tools.
 
 Use the native invocation style for your tool:
 
-- Codex: `$onboard`, `$overview`, `$feature`, `$tests`, `$implement`, `$check`,
-  `$try`, `$audit`, `$complete`, or plain language like "run the overview."
+- Codex: `$onboard`, `$doctor`, `$adopt`, `$overview`, `$brief`, `$feature`,
+  `$fix`, `$tests`, `$implement`, `$check`, `$try`, `$audit`, `$complete`,
+  `$prototype`, `$status`, or plain language like "run the overview."
   Experimental: `$autopilot`.
-- Claude Code: `/onboard`, `/overview`, `/feature`, `/tests`, `/implement`,
-  `/check`, `/try`, `/audit`, `/complete`. Experimental: `/autopilot`.
+- Claude Code: `/onboard`, `/doctor`, `/adopt`, `/overview`, `/brief`,
+  `/feature`, `/fix`, `/tests`, `/implement`, `/check`, `/try`, `/audit`,
+  `/complete`, `/prototype`, `/status`. Experimental: `/autopilot`.
 - Other tools: ask the agent to follow the matching `SKILL.md`.
 
 ```text
