@@ -87,6 +87,11 @@ something done.
 12. **Squash-merge** - `/complete` squash-merges the branch to main (explicit yes)
     and deletes it, so the feature lands as one commit. Then it must ask
     separately before pushing main; merge approval does not approve a push.
+13. **Release prep (optional)** - run `/release render` or `/release vercel`
+    after a completed feature or milestone when you want local provider config,
+    env var review, build/start checks, and a smoke-test path. `/release` must
+    stop before deploy, remote service creation, remote env changes, push, or
+    publish unless the user gives a separate yes in the current chat.
 
 **Resuming after a context clear.** Progress lives in files, not the chat:
 `current-feature.md` holds the spec with each step checked off as it's done, and git

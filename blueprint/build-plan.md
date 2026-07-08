@@ -18,8 +18,9 @@ pre-build steps, not features (see the README), so don't list them here. Start
 with your first real slice of functionality.
 
 A common order that works well: build the core UI with placeholder data first,
-then wire up data, auth, and integrations, and deploy once it's worth shipping.
-Adapt it to your project.
+then wire up data, auth, and integrations. Add deployment readiness only when
+the app is worth shipping or a provider config change is part of the work. Adapt
+it to your project.
 
 ## Format
 
@@ -31,6 +32,8 @@ Good:
 - [ ] 1. **Skill submission** - upload a skill package and save its metadata
 - [ ] 2. **Validation result** - run checks and show pass/fail status for a skill
 - [ ] 3. **Directory listing** - browse and filter published skills
+- [ ] 4. **Deployment readiness** - configure Render or Vercel and verify the
+  production build
 
 Avoid:
 

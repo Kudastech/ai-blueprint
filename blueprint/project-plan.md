@@ -32,3 +32,9 @@ Explain how you plan to make money. eg. Ads, memberships, etc
 ## 7. UI/UX - How should this look and feel?
 
 Describe the look and feel. Add examples if you want
+
+## 8. Deployment - Where and how will this ship?
+
+Target host if known, such as Render or Vercel. Include app type, build command,
+start command or output directory, env vars by name, database or storage needs,
+workers or cron jobs, health check path, and domain notes if you know them.

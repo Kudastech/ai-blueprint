@@ -56,6 +56,7 @@ Core skills:
 - `try` - read-only manual review guide: where to go, what to click, what to expect
 - `audit` - read-only code quality review for duplication, dead code, standards drift, and maintainability risks
 - `complete` - run the final safety pass, log it to `blueprint/history/features/` or `blueprint/history/fixes/`, then merge with approval
+- `release` - optional Render or Vercel deployment readiness, local config, env review, and smoke-test planning
 - `prototype` - optional, pre-build static mockups to lock the look
 - `status` - read-only progress summary, workflow drift warning, and suggested next action
 
@@ -69,6 +70,10 @@ Optional explicit-only skill: `autopilot` can run one bounded spec/build/check
 pass when directly invoked. It may create checkpoint commits on the feature or
 fix branch after passing steps. It stops before `/complete`, merge, push, deploy,
 or destructive actions.
+
+Deployment is also explicit. `/release` can prepare local Render or Vercel config
+and run readiness checks, but it must stop before deploy, remote service changes,
+push, or publish unless the user gives a separate yes in the current chat.
 
 ## Commands
 

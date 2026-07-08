@@ -23,6 +23,10 @@ The installer copies the Blueprint workflow files into the current directory:
 It keeps the app's root `README.md` alone and installs the Blueprint workflow
 docs at `blueprint/README.md`.
 
+The installed workflow includes optional Render and Vercel deployment readiness
+through `/release` or `$release`; it prepares local config and checks, but does
+not deploy without explicit approval.
+
 If you install the Blueprint while Claude Code is already open in the project,
 restart Claude Code in that folder so the newly added project skills appear.
 

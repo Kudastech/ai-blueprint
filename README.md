@@ -158,8 +158,9 @@ The core build loop is:
 /feature -> review spec -> /implement -> /check -> /complete
 ```
 
-Use `/try` when you want a manual review path, and `/audit` when you want a
-read-only code quality pass before closing the work.
+Use `/try` when you want a manual review path, `/audit` when you want a read-only
+code quality pass before closing the work, and `/release` after a completed
+feature or milestone when you want Render or Vercel deployment prep.
 
 For unplanned bugs or small changes, use the fix loop:
 
@@ -284,6 +285,8 @@ Then repeat the build loop for each feature:
 6. Run **`/complete`** when the feature is done. It archives the spec, checks off
    the build plan, commits the finished work, and squash-merges with your
    go-ahead. After the merge, it must ask separately before pushing main.
+7. Optionally run **`/release render`** or **`/release vercel`** when you want
+   local deployment config and a provider-specific readiness check.
 
 ### Fixes
 
@@ -317,6 +320,7 @@ Then continue with `/implement`, `/check`, and `/complete`. Fixes are logged to
 | **/try** | when you want to review manually | Gives a human walkthrough: what to start, where to go, what to click or run, what to expect, and what would count as wrong. |
 | **/audit** | before closing a feature, or any time quality feels suspect | Runs a read-only code quality audit for duplication, dead code, DRY issues, standards drift, missing tests, and maintainability risks. |
 | **/complete** | when work is built and reviewed | Runs a final safety pass, archives the spec, commits the finished work, and merges with your approval. Pushes main only after a separate yes. |
+| **/release** | after a completed feature or milestone | Prepares Render or Vercel deployment readiness, local config, env var review, and smoke-test steps. Never deploys or changes remote services without a separate yes. |
 | **/prototype** | before the build loop | Creates throwaway static mockups to explore the look and feel. |
 | **/status** | any time | Shows build-plan progress, current work, overview freshness, git state, workflow drift warnings, and the suggested next action. |
 | **/autopilot** | experimental, explicit opt-in only | Runs one bounded spec/build/check pass without pausing after each passing implementation step, then stops with a review packet before `/complete`. |
@@ -400,6 +404,28 @@ spec when a feature is in progress, or the latest archived feature after
 
 `/try` is read-only. It does not run the app unless you explicitly ask for that.
 
+## Deployment readiness
+
+`/release` prepares a project for Render or Vercel without making deployment an
+automatic part of the build loop.
+
+Use it after a feature or milestone is complete:
+
+```text
+/release render
+/release vercel
+```
+
+It reads the project plans, app commands, package files, and existing provider
+config. It can create or update local files such as `render.yaml`, `vercel.json`,
+or `.env.example` when the target is clear. It also runs local build/test/start
+checks where possible and ends with the env vars, smoke-test path, blockers, and
+next provider step.
+
+`/release` must stop before deploy, remote service creation, remote env changes,
+push, publish, or any external action unless you explicitly approve that action
+in the current chat.
+
 ## Picking up where you left off
 
 You do not need a separate save/load command. The blueprint keeps project state
@@ -440,6 +466,7 @@ step in `current-feature.md`.
 │       ├── try/               ($try: manual review guide)
 │       ├── audit/             ($audit: code quality review)
 │       ├── complete/          ($complete: commit, merge, and log)
+│       ├── release/           ($release: Render or Vercel readiness)
 │       ├── prototype/         ($prototype: static mockups)
 │       ├── status/            ($status: where things stand)
 │       └── autopilot/         ($autopilot: experimental bounded pass)
@@ -458,6 +485,7 @@ step in `current-feature.md`.
 │       ├── try/               (/try: manual review guide)
 │       ├── audit/             (/audit: code quality review)
 │       ├── complete/          (/complete: commit, merge, and log)
+│       ├── release/           (/release: Render or Vercel readiness)
 │       ├── prototype/         (/prototype: static mockups)
 │       ├── status/            (/status: where things stand)
 │       └── autopilot/         (/autopilot: experimental bounded pass)
@@ -541,11 +569,11 @@ Use the native invocation style for your tool:
 
 - Codex: `$onboard`, `$doctor`, `$adopt`, `$overview`, `$brief`, `$feature`,
   `$fix`, `$tests`, `$implement`, `$check`, `$try`, `$audit`, `$complete`,
-  `$prototype`, `$status`, or plain language like "run the overview."
+  `$release`, `$prototype`, `$status`, or plain language like "run the overview."
   Experimental: `$autopilot`.
 - Claude Code: `/onboard`, `/doctor`, `/adopt`, `/overview`, `/brief`,
   `/feature`, `/fix`, `/tests`, `/implement`, `/check`, `/try`, `/audit`,
-  `/complete`, `/prototype`, `/status`. Experimental: `/autopilot`.
+  `/complete`, `/release`, `/prototype`, `/status`. Experimental: `/autopilot`.
 - Other tools: ask the agent to follow the matching `SKILL.md`.
 
 ```text
