@@ -42,6 +42,11 @@ Gather these, then summarize. Do not dump file contents.
    - Confirm at least one adapter exists: `.agents/skills/` for Codex or
      `.claude/skills/` for Claude Code.
    - If both adapters are present, say that is healthy when both tools are used.
+   - If both adapters are present, compare their skill folder names. Warn about
+     missing skills on either side.
+   - If git shows changes under `.agents/skills/` or `.claude/skills/`, check
+     the matching adapter file too. Warn when workflow behavior was updated in
+     one adapter but not the other.
    - If only one tool is used, mention the unused adapter can be deleted. Do not
      treat extra adapters as an error.
    - If `CLAUDE.md` exists and still starts with `# Project Name`, flag that
@@ -92,6 +97,8 @@ Gather these, then summarize. Do not dump file contents.
    - Check whether `blueprint/context/current-feature.md` is the reset stub or an
      active feature or fix spec.
    - If a spec is active, report checked and unchecked implementation steps.
+   - If `current-feature.md` is the reset stub but git has source or workflow
+     changes, warn that work is happening without an active spec.
    - Flag active spec on `main`, all spec steps checked but no completion, or a
      mismatch between the active spec and the next unchecked build-plan item.
 8. **Git**

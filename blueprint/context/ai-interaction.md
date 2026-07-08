@@ -75,7 +75,11 @@ something done.
    cover what you're reading. Checkpoints are optional cheap rollback points; "walk
    me through it" gives a deeper code explanation and loops back; `/complete` makes
    the real feature-level commit. Build and tests must pass before any commit.
-10. **Log** - `/complete` archives the spec to `blueprint/history/features/NN-name.md` (or
+   When implementation is done, end with a compact review packet: changed files,
+   checks run, manual try path, risks, and next action.
+10. **Safety + log** - `/complete` first checks the active spec, branch, changed
+   files, build/test/check evidence, manual try path, and adapter sync when
+   workflow files changed. Then it archives the spec to `blueprint/history/features/NN-name.md` (or
    `blueprint/history/fixes/`), checks the feature off in `blueprint/build-plan.md`, and
    resets `blueprint/context/current-feature.md` to its stub.
 11. **Feature commit** - `/complete` stages everything on the branch (step work

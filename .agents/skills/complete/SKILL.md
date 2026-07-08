@@ -1,6 +1,6 @@
 ---
 name: complete
-description: Wrap up a finished feature or fix. Archives its spec to blueprint/history/features/ (feature) or blueprint/history/fixes/ (fix), checks features off the build plan, resets blueprint/context/current-feature.md to its stub, makes one feature-level commit, then squash-merges the branch to main and deletes it. Merges only with explicit approval, then asks separately before pushing main. Use when the user runs /complete, or asks to finish, wrap up, merge, or close out the current feature or fix after it's built and reviewed.
+description: Wrap up a finished feature or fix. Runs a final safety pass, archives its spec to blueprint/history/features/ (feature) or blueprint/history/fixes/ (fix), checks features off the build plan, resets blueprint/context/current-feature.md to its stub, makes one feature-level commit, then squash-merges the branch to main and deletes it. Merges only with explicit approval, then asks separately before pushing main. Use when the user runs /complete, or asks to finish, wrap up, merge, or close out the current feature or fix after it's built and reviewed.
 ---
 
 # complete - log the finished work, make the feature commit, and merge
@@ -23,6 +23,23 @@ spec's done-whens are behavioral, `/check` should have proven them against the
 running app first - don't merge on an unverified claim. Uncommitted step work is
 expected (per-step checkpoints are optional); this skill commits it. Don't require
 the steps to be pre-committed.
+
+## Step 0 - final safety pass
+
+Before logging or committing, run a short safety pass and report blockers only:
+
+- active spec exists and the work is not being completed from `main` or `master`
+- changed files are tied to the active spec, with no unrelated dirty work mixed in
+- build passed in this session, and tests passed when the project has a declared
+  test command and the change touched logic
+- behavioral done-whens have `/check` evidence or equivalent proof, and there is
+  a clear manual try path
+- if workflow files changed, `.agents` and `.claude` stayed in sync where both
+  adapters exist
+
+Do not claim "passed", "verified", or "working" without naming the command,
+route, screenshot, or output that proves it. Stop before Step 1 if required
+evidence is missing.
 
 ## Step 1 - log the work
 

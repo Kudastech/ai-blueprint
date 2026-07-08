@@ -55,7 +55,7 @@ Core skills:
 - `check` - prove the current spec against the running app
 - `try` - read-only manual review guide: where to go, what to click, what to expect
 - `audit` - read-only code quality review for duplication, dead code, standards drift, and maintainability risks
-- `complete` - log it to `blueprint/history/features/` or `blueprint/history/fixes/`, then merge
+- `complete` - run the final safety pass, log it to `blueprint/history/features/` or `blueprint/history/fixes/`, then merge with approval
 - `prototype` - optional, pre-build static mockups to lock the look
 - `status` - read-only progress summary, workflow drift warning, and suggested next action
 
