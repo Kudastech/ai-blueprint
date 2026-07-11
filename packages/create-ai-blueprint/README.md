@@ -1,6 +1,6 @@
 # create-ai-blueprint
 
-Install the AI Coding Blueprint into an already scaffolded app.
+Install AI Blueprint into an already scaffolded app.
 
 ```bash
 npx create-ai-blueprint@latest

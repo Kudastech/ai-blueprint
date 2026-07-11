@@ -273,7 +273,7 @@ function printPlan(targetDir, adapter, entries, existingEntries) {
 }
 
 function printSuccess(targetDir, adapter, entries, existingEntries) {
-  console.log("AI Coding Blueprint installed.");
+  console.log("AI Blueprint installed.");
   console.log(`Target: ${targetDir}`);
   console.log(`Adapters: ${adapter}`);
   console.log("Copied:");
@@ -323,7 +323,7 @@ function printClaudeRestartNote(adapter) {
 function printHelp() {
   console.log(`create-ai-blueprint
 
-Install the AI Coding Blueprint into an already scaffolded app.
+Install AI Blueprint into an already scaffolded app.
 
 Usage:
   npx create-ai-blueprint@latest

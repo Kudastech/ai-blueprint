@@ -1,7 +1,7 @@
 {
   "name": "create-ai-blueprint",
   "version": "0.1.0",
-  "description": "Install the AI Coding Blueprint into a scaffolded app.",
+  "description": "Install AI Blueprint into a scaffolded app.",
   "license": "MIT",
   "homepage": "https://github.com/bradtraversy/ai-blueprint#readme",
   "repository": {

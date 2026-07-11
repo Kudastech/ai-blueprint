@@ -1,7 +1,9 @@
-# AI Coding Blueprint
+# AI Blueprint
 
 A starter and repeatable workflow for building real software with an AI assistant,
 **without vibe coding**.
+
+[Official site](https://ai-blueprint.dev) | [Documentation](https://ai-blueprint.dev/docs/)
 
 You provide two short planning docs. The AI turns them into project context,
 feature specs, and build steps. You build one feature at a time, review every
@@ -323,19 +325,18 @@ Then continue with `/implement`, `/check`, and `/complete`. Fixes are logged to
 | **/release** | after a completed feature or milestone | Prepares Render or Vercel deployment readiness, local config, env var review, and smoke-test steps. Never deploys or changes remote services without a separate yes. |
 | **/prototype** | before the build loop | Creates throwaway static mockups to explore the look and feel. |
 | **/status** | any time | Shows build-plan progress, current work, overview freshness, git state, workflow drift warnings, and the suggested next action. |
-| **/autopilot** | experimental, explicit opt-in only | Runs one bounded spec/build/check pass without pausing after each passing implementation step, then stops with a review packet before `/complete`. |
+| **/autopilot** | explicit opt-in only | Runs one bounded spec/build/check pass without pausing after each passing implementation step, then stops with a review packet before `/complete`. |
 
 These commands are the structured path, not a cage. You can describe a feature,
 fix, or change directly in chat at any time. Use the skills when you want the
 repeatable loop, review gates, and history.
 
-### Experimental: Autopilot
+### Autopilot
 
-`/autopilot` or `$autopilot` is an experimental, explicit opt-in mode for one
-bounded pass. It can pick or resume a feature, write the spec when needed,
-implement small steps, run build/tests/checks, create checkpoint commits on the
-feature branch after passing steps, self-review the diff, and stop with a review
-packet.
+`/autopilot` or `$autopilot` is an explicit opt-in mode for one bounded pass. It
+can pick or resume a feature, write the spec when needed, implement small steps,
+run build/tests/checks, create checkpoint commits on the feature branch after
+passing steps, self-review the diff, and stop with a review packet.
 
 Autopilot does not replace the normal workflow. `/feature`, `/implement`,
 `/check`, and `/complete` remain the conservative default.
@@ -469,7 +470,7 @@ step in `current-feature.md`.
 │       ├── release/           ($release: Render or Vercel readiness)
 │       ├── prototype/         ($prototype: static mockups)
 │       ├── status/            ($status: where things stand)
-│       └── autopilot/         ($autopilot: experimental bounded pass)
+│       └── autopilot/         ($autopilot: bounded pass)
 ├── .claude/
 │   └── skills/                (Claude Code skills and slash commands)
 │       ├── adopt/             (/adopt: bootstrap from an existing codebase)
@@ -488,7 +489,7 @@ step in `current-feature.md`.
 │       ├── release/           (/release: Render or Vercel readiness)
 │       ├── prototype/         (/prototype: static mockups)
 │       ├── status/            (/status: where things stand)
-│       └── autopilot/         (/autopilot: experimental bounded pass)
+│       └── autopilot/         (/autopilot: bounded pass)
 └── blueprint/
     ├── README.md             (workflow docs installed here)
     ├── project-plan.md        (you write: what and why)
@@ -570,10 +571,10 @@ Use the native invocation style for your tool:
 - Codex: `$onboard`, `$doctor`, `$adopt`, `$overview`, `$brief`, `$feature`,
   `$fix`, `$tests`, `$implement`, `$check`, `$try`, `$audit`, `$complete`,
   `$release`, `$prototype`, `$status`, or plain language like "run the overview."
-  Experimental: `$autopilot`.
+  Autopilot: `$autopilot`.
 - Claude Code: `/onboard`, `/doctor`, `/adopt`, `/overview`, `/brief`,
   `/feature`, `/fix`, `/tests`, `/implement`, `/check`, `/try`, `/audit`,
-  `/complete`, `/release`, `/prototype`, `/status`. Experimental: `/autopilot`.
+  `/complete`, `/release`, `/prototype`, `/status`. Autopilot: `/autopilot`.
 - Other tools: ask the agent to follow the matching `SKILL.md`.
 
 ```text

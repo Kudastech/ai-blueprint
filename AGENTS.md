@@ -9,7 +9,7 @@ there is a single source of truth.
 
 A description of your project and the problem it solves.
 
-This project is built with the **AI Coding Blueprint**, a workflow layer, not an
+This project is built with the **AI Blueprint**, a workflow layer, not an
 app skeleton. To start a new project, scaffold the app first in an empty folder
 (create-next-app, Vite, etc.), then overlay these files on top. Never run a
 framework scaffolder inside a directory that already holds the blueprint files
