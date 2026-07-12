@@ -54,7 +54,7 @@ Core skills:
 - `implement` - build the current spec one small, reviewed step at a time
 - `check` - prove the current spec against the running app
 - `try` - read-only manual review guide: where to go, what to click, what to expect
-- `audit` - read-only code quality review for duplication, dead code, standards drift, and maintainability risks
+- `audit` - branch-aware or full-project read-only review for code quality, security, performance, tests, and standards drift
 - `complete` - run the final safety pass, log it to `blueprint/history/features/` or `blueprint/history/fixes/`, then merge with approval
 - `release` - optional Render or Vercel deployment readiness, local config, env review, and smoke-test planning
 - `prototype` - optional, pre-build static mockups to lock the look
@@ -67,9 +67,10 @@ tools without native skills, follow the matching `SKILL.md` manually. The
 conventions in `blueprint/context/` apply however a step is invoked.
 
 Optional explicit-only skill: `autopilot` can run one bounded spec/build/check
-pass when directly invoked. It may create checkpoint commits on the feature or
-fix branch after passing steps. It stops before `/complete`, merge, push, deploy,
-or destructive actions.
+and targeted-audit pass when directly invoked. It may create checkpoint commits
+on the feature or fix branch after passing steps, repair confirmed P0/P1 findings
+within scope, and rerun affected checks. It stops before `/complete`, merge, push,
+deploy, or destructive actions.
 
 Deployment is also explicit. `/release` can prepare local Render or Vercel config
 and run readiness checks, but it must stop before deploy, remote service changes,

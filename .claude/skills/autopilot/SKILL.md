@@ -1,6 +1,6 @@
 ---
 name: autopilot
-description: Optional explicit Blueprint mode for one bounded spec/build/check pass. It can pick or resume the current feature, write the spec when needed, create or reuse the branch, implement small steps, run build/tests/checks, create checkpoint commits after passing steps, self-review the diff, and stop with a review packet. It never completes, merges, pushes, deploys, publishes, sends, or performs destructive actions without explicit approval. Use only when the user explicitly runs /autopilot, invokes $autopilot, or directly asks for Autopilot.
+description: Optional explicit Blueprint mode for one bounded spec/build/check/audit pass. It can pick or resume the current feature, write the spec when needed, create or reuse the branch, implement small steps, run build/tests/checks, create checkpoint commits after passing steps, audit changed code, repair confirmed high-severity findings, and stop with a review packet. It never completes, merges, pushes, deploys, publishes, sends, or performs destructive actions without explicit approval. Use only when the user explicitly runs /autopilot, invokes $autopilot, or directly asks for Autopilot.
 ---
 
 # autopilot - optional Blueprint loop
@@ -8,8 +8,8 @@ description: Optional explicit Blueprint mode for one bounded spec/build/check p
 Where this sits in the workflow:
 
     /status  ->  [autopilot]  ->  review packet  ->  /complete
-    (where       (spec, build,    (human review,    (log, commit,
-     are we?)     check, review)   fixes if needed)  merge with approval)
+    (where       (spec, build,      (human review,    (log, commit,
+     are we?)     check, audit)      fixes if needed)  merge with approval)
 
 Autopilot is an explicit opt-in path. It uses the same Blueprint files and the
 same quality gates, but it does not stop after every normal review point. A
@@ -149,7 +149,38 @@ feature when any done-when is behavioral, visual, or integration-facing.
 For pure library or CLI work, build plus tests and representative command output
 may be enough. Be explicit about the evidence used.
 
-## Step 6 - final review packet
+## Step 6 - targeted quality audit and repair
+
+After the acceptance check, apply the `/audit current` behavior to the active
+feature, its diff, and the nearby code affected by the change. This is a targeted
+feature audit, not a repository-wide cleanup pass.
+
+For every finding:
+
+1. Validate it against the actual code, spec, tests, `coding-standards.md`, and
+   local project patterns. An audit finding is evidence to investigate, not an
+   automatic instruction to edit.
+2. Repair confirmed P0 and P1 findings when the fix stays inside the approved
+   feature scope and does not require a product or architecture decision.
+3. Report P2 and P3 findings in the final packet. Fix them only when the change
+   is small, directly caused by the current feature, and clearly required by the
+   project standards.
+4. If a confirmed P0 or P1 finding cannot be repaired safely within scope, stop
+   and report it. Do not present the feature as ready for `/complete`.
+
+After any audit repair:
+
+1. Rerun the affected build, lint, typecheck, and test commands.
+2. Rerun the acceptance evidence affected by the repair.
+3. Recheck the repaired area using the same targeted audit criteria.
+4. Create a checkpoint commit only after the repair and its checks pass.
+
+Use the existing two-attempt hard stop for repeated repair failures. Do not widen
+the feature into a general refactor, silently suppress a finding, or turn this
+step into a full-project hardening pass. A broader cleanup remains a separate
+`/audit` followed by planned `/fix` work.
+
+## Step 7 - final review packet
 
 Stop with a concise review packet. Keep it useful enough for `/complete` but not
 a full audit report:
@@ -164,6 +195,9 @@ a full audit report:
 - how to try it manually, or a pointer to `/try` for the full walkthrough
 - checkpoint commits created
 - self-review findings
+- targeted audit scope and findings
+- audit repairs made and checks rerun
+- unresolved P0/P1 findings, which block `/complete`
 - unresolved risks or skipped checks
 - exact next action
 
@@ -191,6 +225,8 @@ Stop immediately and report instead of continuing when Autopilot would need to:
 - One Autopilot run handles one feature or one fix.
 - Autopilot creates checkpoint commits on the feature or fix branch after passing
   steps.
+- Autopilot audits the active feature and affected code, not the entire project.
+- Confirmed unresolved P0 or P1 findings block readiness for `/complete`.
 - Autopilot stops before `/complete`. It never merges.
 - The Blueprint files remain the state machine. Keep
   `current-feature.md` accurate as steps complete.

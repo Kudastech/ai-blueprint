@@ -320,12 +320,12 @@ Then continue with `/implement`, `/check`, and `/complete`. Fixes are logged to
 | **/implement** | after reviewing a spec | Builds the current spec one small, reviewed step at a time, then ends with a compact review packet. |
 | **/check** | before wrapping up, or any time you want proof | Runs the real app and reports pass/fail against the spec's done-whens. |
 | **/try** | when you want to review manually | Gives a human walkthrough: what to start, where to go, what to click or run, what to expect, and what would count as wrong. |
-| **/audit** | before closing a feature, or any time quality feels suspect | Runs a read-only code quality audit for duplication, dead code, DRY issues, standards drift, missing tests, and maintainability risks. |
+| **/audit** | before closing a feature, or any time quality feels suspect | Runs a branch-aware or full-project read-only audit for code quality, security, performance, tests, and standards drift. |
 | **/complete** | when work is built and reviewed | Runs a final safety pass, archives the spec, commits the finished work, and merges with your approval. Pushes main only after a separate yes. |
 | **/release** | after a completed feature or milestone | Prepares Render or Vercel deployment readiness, local config, env var review, and smoke-test steps. Never deploys or changes remote services without a separate yes. |
 | **/prototype** | before the build loop | Creates throwaway static mockups to explore the look and feel. |
 | **/status** | any time | Shows build-plan progress, current work, overview freshness, git state, workflow drift warnings, and the suggested next action. |
-| **/autopilot** | explicit opt-in only | Runs one bounded spec/build/check pass without pausing after each passing implementation step, then stops with a review packet before `/complete`. |
+| **/autopilot** | explicit opt-in only | Runs one bounded spec/build/check pass, audits the changed code, repairs confirmed high-severity findings within scope, reruns affected checks, then stops with a review packet before `/complete`. |
 
 These commands are the structured path, not a cage. You can describe a feature,
 fix, or change directly in chat at any time. Use the skills when you want the
@@ -335,8 +335,11 @@ repeatable loop, review gates, and history.
 
 `/autopilot` or `$autopilot` is an explicit opt-in mode for one bounded pass. It
 can pick or resume a feature, write the spec when needed, implement small steps,
-run build/tests/checks, create checkpoint commits on the feature branch after
-passing steps, self-review the diff, and stop with a review packet.
+run build/tests/checks, create checkpoint commits on the feature branch, and
+self-review the diff. It then runs a targeted audit of the active feature and
+affected code, repairs confirmed P0/P1 findings that remain within scope, reruns
+the affected checks, and stops with a review packet. Broader project cleanup
+remains a separate `/audit` followed by planned `/fix` work.
 
 Autopilot does not replace the normal workflow. `/feature`, `/implement`,
 `/check`, and `/complete` remain the conservative default.
@@ -384,15 +387,43 @@ that level of verification.
 `/check` proves the app does what the spec promised. `/audit` reviews the code
 itself.
 
-Run `/audit` when you want a read-only maintainability pass before closing a
-feature, after an Autopilot run, or whenever the code feels like it may be
-drifting. It looks for issues such as duplicated logic, dead code, unused exports,
-overgrown modules, inconsistent patterns, missing tests for logic-bearing code,
-security risks, performance risks, and drift from `coding-standards.md`.
+Autopilot applies the targeted `/audit current` behavior before producing its
+review packet. It validates findings, repairs confirmed P0/P1 issues within the
+approved feature scope, and reruns the affected checks. It does not turn a
+feature pass into a repository-wide cleanup.
+
+Run `/audit` directly when you want a separate read-only maintainability pass,
+a broader project review, or whenever the code feels like it may be drifting. It
+looks for issues such as duplicated logic, dead code, unused exports, overgrown
+modules, inconsistent patterns, missing tests for logic-bearing code, security
+risks, performance risks, and drift from `coding-standards.md`.
+
+Choose the scope explicitly when needed:
+
+```text
+/audit current       # Active spec, full feature-branch delta, and local changes
+/audit changed       # Staged, unstaged, and untracked source files
+/audit full          # All project-owned source, tests, and configuration
+/audit src/auth      # One path plus the callers and tests needed to understand it
+```
+
+With no argument, Audit uses `current` when a feature is active, `changed` when
+local changes exist, and `full` otherwise. The `current` scope includes committed
+checkpoint work from the feature branch's merge base through `HEAD`, so a clean
+working tree does not hide completed Autopilot steps. The `full` scope excludes
+dependencies, generated files, build and coverage output, caches, vendored code,
+and minified assets unless you explicitly include them.
+
+Confirmed P0 and P1 findings require a concrete code path, violated contract or
+security boundary, failing check, or reproducible behavior. Unconfirmed concerns
+are reported separately as risks. Audit reports its commit range, reviewed and
+excluded paths, unavailable checks, runtime evidence, and whether full-project
+coverage was complete. Suspected secrets are always redacted and never copied
+into the report.
 
 `/audit` reports findings with severity and file references. It does not edit
-files, install tools, commit, merge, or push. Fixes stay in `/implement` or a
-separate `/fix`.
+files, install tools, commit, merge, or push when run directly. Fixes stay in
+`/implement`, Autopilot's bounded repair step, or a separate `/fix`.
 
 ## Manual try guides
 
