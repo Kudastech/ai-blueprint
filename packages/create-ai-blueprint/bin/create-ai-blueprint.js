@@ -4,6 +4,12 @@ const fs = require("node:fs/promises");
 const fsSync = require("node:fs");
 const path = require("node:path");
 const readline = require("node:readline/promises");
+const {
+  MANIFEST_PATH,
+  applyPreparedUpdate,
+  prepareUpdate,
+  writeInstallManifest
+} = require("../lib/update");
 
 const packageRoot = path.resolve(__dirname, "..");
 const templateRoot = path.join(packageRoot, "template");
@@ -30,6 +36,27 @@ async function main() {
   }
 
   const targetDir = path.resolve(process.cwd(), options.target || ".");
+  const version = readPackageVersion();
+
+  if (options.command === "update") {
+    const prepared = await prepareUpdate({
+      targetDir,
+      templateRoot,
+      version
+    });
+    printUpdatePlan(prepared);
+
+    if (options.dryRun) {
+      return;
+    }
+
+    const replaceConflicts =
+      options.force || (await confirmUpdateConflicts(prepared, options));
+    const result = await applyPreparedUpdate(prepared, { replaceConflicts });
+    printUpdateSuccess(prepared, result);
+    return;
+  }
+
   const adapter = await resolveAdapter(options);
   const entries = getTemplateEntries(adapter);
   const existingEntries = entries.filter((entry) =>
@@ -47,12 +74,20 @@ async function main() {
     await copyTemplateEntry(entry, targetDir);
   }
 
+  await writeInstallManifest({
+    targetDir,
+    templateRoot,
+    version,
+    adapter
+  });
+
   printSuccess(targetDir, adapter, entries, existingEntries);
 }
 
 function parseArgs(args) {
   const options = {
     adapter: null,
+    command: "install",
     dryRun: false,
     force: false,
     help: false,
@@ -62,11 +97,22 @@ function parseArgs(args) {
   };
 
   const modeFlags = [];
+  let commandSeen = false;
 
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
 
     if (arg === "init") {
+      continue;
+    }
+
+    if (arg === "update") {
+      if (commandSeen) {
+        throw new Error("Choose only one command.");
+      }
+
+      options.command = "update";
+      commandSeen = true;
       continue;
     }
 
@@ -127,6 +173,13 @@ function parseArgs(args) {
   }
 
   options.adapter = modeFlags[0] || null;
+
+  if (options.command === "update" && options.adapter) {
+    throw new Error(
+      "Update detects the installed adapters. Do not pass --codex, --claude, or --both."
+    );
+  }
+
   return options;
 }
 
@@ -229,6 +282,34 @@ async function confirmOverwrite(existingEntries, options) {
   }
 }
 
+async function confirmUpdateConflicts(prepared, options) {
+  const count = prepared.plan.conflicts.length;
+
+  if (count === 0) {
+    return false;
+  }
+
+  if (options.yes || !process.stdin.isTTY) {
+    throw new Error(
+      `${count} managed file conflict${count === 1 ? "" : "s"} found. Run the update interactively to review them, or pass --force to back them up and replace them.`
+    );
+  }
+
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  try {
+    const answer = await rl.question(
+      `Back up and replace ${count} conflicting managed file${count === 1 ? "" : "s"}? [y/N] `
+    );
+    return ["y", "yes"].includes(answer.trim().toLowerCase());
+  } finally {
+    rl.close();
+  }
+}
+
 async function copyTemplateEntry(entry, targetDir) {
   const source = path.join(templateRoot, entry.source);
   const target = path.join(targetDir, entry.target);
@@ -272,6 +353,30 @@ function printPlan(targetDir, adapter, entries, existingEntries) {
   }
 }
 
+function printUpdatePlan(prepared) {
+  const { plan } = prepared;
+  console.log("AI Blueprint update plan.");
+  console.log(`Target: ${prepared.targetDir}`);
+  console.log(`Adapters: ${prepared.adapters.join(", ")}`);
+  console.log(`Version: ${prepared.previousVersion} -> ${prepared.version}`);
+  console.log(`Add: ${plan.add.length}`);
+  console.log(`Update: ${plan.update.length}`);
+  console.log(`Remove: ${plan.remove.length}`);
+  console.log(`Conflicts: ${plan.conflicts.length}`);
+  console.log(`Unchanged: ${plan.unchanged.length}`);
+
+  if (plan.conflicts.length > 0) {
+    console.log("Conflicting managed files:");
+    for (const conflict of plan.conflicts) {
+      console.log(`- ${conflict.path} (${conflict.reason})`);
+    }
+  }
+
+  console.log(
+    "Preserved: AGENTS.md, CLAUDE.md, project and build plans, context, history, references, and prototypes."
+  );
+}
+
 function printSuccess(targetDir, adapter, entries, existingEntries) {
   console.log("AI Blueprint installed.");
   console.log(`Target: ${targetDir}`);
@@ -281,6 +386,7 @@ function printSuccess(targetDir, adapter, entries, existingEntries) {
   for (const entry of entries) {
     console.log(`- ${entry.target}`);
   }
+  console.log(`- ${MANIFEST_PATH}`);
 
   if (existingEntries.length > 0) {
     console.log("Overwrote matching Blueprint files where paths already existed.");
@@ -295,6 +401,23 @@ function printSuccess(targetDir, adapter, entries, existingEntries) {
   printClaudeRestartNote(adapter);
   console.log(
     "If a different skill loads, tell the agent to follow the local Blueprint skill file directly."
+  );
+}
+
+function printUpdateSuccess(prepared, result) {
+  console.log("AI Blueprint updated.");
+  console.log(`Version: ${prepared.previousVersion} -> ${prepared.version}`);
+  console.log(`Added: ${result.added}`);
+  console.log(`Updated: ${result.updated}`);
+  console.log(`Removed: ${result.removed}`);
+  console.log(`Unchanged: ${result.unchanged}`);
+
+  if (result.backupDir) {
+    console.log(`Backup: ${path.relative(prepared.targetDir, result.backupDir)}`);
+  }
+
+  console.log(
+    "Preserved user-owned plans, context, history, references, prototypes, AGENTS.md, and CLAUDE.md."
   );
 }
 
@@ -327,6 +450,7 @@ Install AI Blueprint into an already scaffolded app.
 
 Usage:
   npx create-ai-blueprint@latest
+  npx create-ai-blueprint@latest update
   npx create-ai-blueprint@latest -- --codex
   npx create-ai-blueprint@latest -- --claude
   npx create-ai-blueprint@latest -- --both
@@ -336,7 +460,7 @@ Options:
   --claude         Install AGENTS.md, CLAUDE.md, .claude/, and blueprint/
   --both           Install both Codex and Claude Code adapters
   --target, -t     Target directory, defaults to the current directory
-  --force, -f      Overwrite matching Blueprint files without prompting
+  --force, -f      Install: overwrite matching files. Update: back up and replace managed conflicts
   --yes, -y        Use defaults in non-interactive installs
   --dry-run        Print what would be copied without writing files
   --help, -h       Show help
@@ -351,7 +475,14 @@ function readPackageVersion() {
   return JSON.parse(packageJson).version;
 }
 
-main().catch((error) => {
-  console.error(`Error: ${error.message}`);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(`Error: ${error.message}`);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  getTemplateEntries,
+  parseArgs
+};

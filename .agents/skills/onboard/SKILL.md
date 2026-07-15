@@ -143,7 +143,7 @@ Blueprint visibility?
    Portable. Best for teams and working across machines.
 
 2. Keep Blueprint workflow files local
-   Adds .agents/, .claude/, blueprint/, and CLAUDE.md to .gitignore.
+   Adds .ai-blueprint/, .agents/, .claude/, blueprint/, and CLAUDE.md to .gitignore.
    Keeps AGENTS.md public as the lightweight project agent guide.
 ```
 
@@ -153,6 +153,7 @@ Recommend option 1 by default. If the user chooses option 2:
 
   ```gitignore
   # AI Blueprint local workflow files
+  .ai-blueprint/
   .agents/
   .claude/
   blueprint/
@@ -169,10 +170,11 @@ Recommend option 1 by default. If the user chooses option 2:
   `.gitignore` names still reveal the ignored paths.
 - Explain that Blueprint state, specs, and history will not travel with the repo;
   another machine needs the Blueprint reinstalled or restored locally.
-- If any of `.agents/`, `.claude/`, `blueprint/`, or `CLAUDE.md` are already
-  tracked, say `.gitignore` will not hide tracked files. Ask before running
-  `git rm --cached -r .agents .claude blueprint CLAUDE.md`, and only run it if
-  the user explicitly approves. Never delete the local files.
+- If any of `.ai-blueprint/`, `.agents/`, `.claude/`, `blueprint/`, or
+  `CLAUDE.md` are already tracked, say `.gitignore` will not hide tracked files.
+  Ask before running
+  `git rm --cached -r .ai-blueprint .agents .claude blueprint CLAUDE.md`, and
+  only run it if the user explicitly approves. Never delete the local files.
 
 Then report which adapter folders are needed:
 

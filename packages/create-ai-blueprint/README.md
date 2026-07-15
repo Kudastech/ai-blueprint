@@ -16,6 +16,7 @@ The installer copies the Blueprint workflow files into the current directory:
 
 - `AGENTS.md`
 - `CLAUDE.md`
+- `.ai-blueprint/manifest.json`
 - `.agents/`
 - `.claude/`
 - `blueprint/`
@@ -45,3 +46,36 @@ The same flags work with `npm create ai-blueprint@latest -- ...`.
 Use `--force` to overwrite existing Blueprint files. Without `--force`, the
 installer asks before overwriting in an interactive terminal and exits in
 non-interactive runs.
+
+## Updating an existing installation
+
+Preview the update plan:
+
+```bash
+npx create-ai-blueprint@latest update --dry-run
+```
+
+Apply the update:
+
+```bash
+npx create-ai-blueprint@latest update
+```
+
+The updater detects the installed adapters and manages only these paths:
+
+- `.agents/skills/`
+- `.claude/skills/`
+- `blueprint/README.md`
+
+It preserves `AGENTS.md`, `CLAUDE.md`, project and build plans, context, history,
+references, and prototypes. The `.ai-blueprint/manifest.json` file records the
+installed version and hashes of managed files.
+
+Locally modified managed files are reported as conflicts. Interactive updates
+ask before replacing them. Non-interactive updates exit unless you pass
+`--force`, which backs up the conflicting files before replacement. Backups are
+stored under `.ai-blueprint/backups/` and ignored by git.
+
+The first update of a legacy install creates the manifest. Files that already
+match the current package are adopted automatically. Differing files remain
+conflicts so local changes are not lost.

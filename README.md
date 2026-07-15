@@ -148,6 +148,34 @@ If the app already has meaningful shipped features, use `/adopt` instead of
 generates the planning docs and coding standards from what already exists. Then
 run `/overview` and continue through the normal build loop.
 
+### Keep Blueprint current
+
+Preview an update before it writes anything:
+
+```bash
+npx create-ai-blueprint@latest update --dry-run
+```
+
+Then apply it:
+
+```bash
+npx create-ai-blueprint@latest update
+```
+
+Updates manage only Blueprint-owned workflow files under `.agents/skills/`,
+`.claude/skills/`, and `blueprint/README.md`. They do not overwrite `AGENTS.md`,
+`CLAUDE.md`, project plans, build plans, context, history, references, or
+prototypes.
+
+New installs record managed-file hashes in `.ai-blueprint/manifest.json`. If a
+managed file changes locally, the updater reports a conflict instead of silently
+overwriting it. An interactive update can back up and replace conflicts after
+confirmation. In non-interactive use, pass `--force` to do the same explicitly.
+Backups are stored under `.ai-blueprint/backups/` and ignored by git.
+
+Older installs without a manifest can use the same command. Matching files are
+adopted into the manifest, while differing managed files are treated as conflicts.
+
 ## The AI workflow
 
 AI loops are popular because the assistant can plan, act, check the result, and
@@ -239,6 +267,22 @@ These two files are the inputs you maintain. Draft them yourself or with the AI.
 Your job is to decide and own what goes in them. The AI can help with wording,
 expansion, and tradeoffs.
 
+The build plan is a living roadmap, not a frozen record of the initial MVP. Keep
+completed items checked and add new unchecked features as the project grows.
+Milestone headings such as `## MVP` and `## Post-MVP` can separate phases without
+changing how `/feature` finds the next item. Keep completed feature numbers
+stable because archived specs refer back to them.
+
+When adding an incremental feature, `build-plan.md` is usually the only planning
+file that changes. Update `project-plan.md` too when the feature changes the
+product direction, users, data, stack, monetization, UI/UX, or deployment. Then
+re-run `/overview` before feature work so generated context stays current.
+
+You can make those edits directly. You can also run `/feature "new capability"`.
+If no existing item matches, the skill proposes a feature-sized build-plan line,
+any necessary project-plan edits, and its placement. After you approve the plan
+change, it refreshes the overview and continues by writing the feature spec.
+
 > [!TIP]
 > Keep these files short and decisive. The overview step will turn them into more
 > concrete project context.
@@ -277,7 +321,9 @@ Then repeat the build loop for each feature:
 1. Optionally run **`/brief`** first to preview what the next feature involves -
    scope, dependencies, size - without writing anything. Then run **`/feature`**
    to spec the next unchecked build-plan item. You can also pass a number or name,
-   such as `/feature 3` or `/feature "login"`.
+   such as `/feature 3` or `/feature "login"`. If the named feature is genuinely
+   new, `/feature` offers to add it to the living build plan and refresh the
+   overview before spec'ing it.
 2. Review `blueprint/context/current-feature.md` before code is written.
 3. Run **`/implement`**. It branches, builds one step, shows the diff, proves the
    done-when, and waits for approval before moving on.
@@ -314,7 +360,7 @@ Then continue with `/implement`, `/check`, and `/complete`. Fixes are logged to
 | **/adopt** | once, for an existing codebase | Surveys the repo, protects the project README, and generates the planning docs and coding standards from what already exists. |
 | **/overview** | after writing or editing the plans | Checks plan quality, normalizes rough build-plan bullets when approved, and generates `blueprint/context/project-overview.md`. |
 | **/brief** | before spec'ing, or when deciding what's next | Read-only briefing on an upcoming build-plan feature - scope, dependencies, what it touches, size, likely split - without writing anything. |
-| **/feature** | for each planned feature | Specs the next unchecked feature, or a selected feature, into `current-feature.md`. |
+| **/feature** | for each planned or newly requested feature | Specs the next unchecked feature or a selected feature into `current-feature.md`. If a new feature is not in the plan, proposes the plan update and refreshes the overview after approval before spec'ing it. |
 | **/fix** | for an unplanned bug or small change | Specs an ad-hoc fix into `current-feature.md`. |
 | **/tests** | when you want unit tests added | Adds or normalizes the stack-native unit test setup, adds one example test, updates `AGENTS.md`, and runs build plus tests. |
 | **/implement** | after reviewing a spec | Builds the current spec one small, reviewed step at a time, then ends with a compact review packet. |
@@ -483,6 +529,8 @@ step in `current-feature.md`.
 .                              (your app: src/, package.json, README.md, ...)
 ├── CLAUDE.md                  (Claude Code entry; imports AGENTS.md + context)
 ├── AGENTS.md                  (agent instructions for Codex, Cursor, and others)
+├── .ai-blueprint/
+│   └── manifest.json          (installed version and managed-file hashes)
 ├── .agents/
 │   └── skills/                (Codex repo skills)
 │       ├── adopt/             ($adopt: bootstrap from an existing codebase)
@@ -545,6 +593,7 @@ project guide, but adds this to `.gitignore`:
 
 ```gitignore
 # AI Blueprint local workflow files
+.ai-blueprint/
 .agents/
 .claude/
 blueprint/
