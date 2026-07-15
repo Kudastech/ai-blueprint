@@ -70,8 +70,10 @@ End with a single suggested next action, chosen in this order:
   `/complete`.
 - `current-feature.md` is the reset stub and unchecked build-plan items remain ->
   `/feature` and name the next build-plan item.
-- All build-plan items are checked -> say so; suggest the next milestone, such as
-  hardening, deploy, docs, or a new plan.
+- All build-plan items are checked -> say the current milestone is complete;
+  suggest hardening, release, or docs when appropriate, or
+  `/feature "new capability"` to propose an addition to the living build plan.
+  Do not suggest creating a second build plan.
 
 If something is off, include a `Watch:` line before the next action. Catching
 drift is half the value of the command.

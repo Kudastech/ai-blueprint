@@ -13,6 +13,25 @@ Completed features get checked off here, so the build plan doubles as your
 progress tracker. A big item gets split into sub-items (4a, 4b, etc.) when you
 spec it.
 
+## Continuing after the initial build
+
+This is a living roadmap, not a plan that freezes when the first release is
+done. Keep completed items checked, then append new unchecked features as the
+project grows. Optional milestone headings such as `## MVP` and `## Post-MVP`
+keep a longer plan readable without changing how `/feature` finds the next
+unchecked item.
+
+Do not renumber completed features because their archived specs refer back to
+those numbers. Continue with the next unused number. If a new feature materially
+changes the product direction, users, data, stack, monetization, UI/UX, or
+deployment, update the relevant part of `project-plan.md` too. Then re-run
+`/overview` before spec'ing the feature.
+
+You can edit this file directly or ask the AI to start a new feature by name. If
+`/feature "team workspaces"` does not match an existing item, it will propose the
+new build-plan line and any necessary project-plan changes, wait for approval,
+refresh the overview, and then write the feature spec.
+
 Scaffolding the app (create-next-app, etc.) and prototyping the look are
 pre-build steps, not features (see the README), so don't list them here. Start
 with your first real slice of functionality.

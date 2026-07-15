@@ -1,6 +1,6 @@
 ---
 name: feature
-description: Turn a feature from build-plan.md into a buildable spec. With no argument, specs the next unchecked item in the build plan; given a number or name, specs that one. Sizes the feature and splits anything too big into smaller sub-features (4a, 4b, ...), writes small, reviewable build steps to blueprint/context/current-feature.md, then red-teams its own draft for gaps, oversized steps, and scope creep before stopping at a review gate. Use when the user runs /feature, names or numbers a feature, or asks to spec out, break down, or start the next feature.
+description: Turn a feature from build-plan.md into a buildable spec. With no argument, specs the next unchecked item in the build plan; given a number or name, specs that one. If a clearly new feature does not match the plan, proposes a reviewed plan addition, refreshes the overview after approval, then specs it. Sizes the feature and splits anything too big into smaller sub-features (4a, 4b, ...), writes small, reviewable build steps to blueprint/context/current-feature.md, then red-teams its own draft for gaps, oversized steps, and scope creep before stopping at a review gate. Use when the user runs /feature, names or numbers a feature, asks to add and start a new feature, or asks to spec out, break down, or start the next feature.
 ---
 
 # feature - turn a build-plan feature into a buildable spec
@@ -21,6 +21,10 @@ buildable.
 A feature from `build-plan.md`, by number or name - e.g. `/feature 3` or
 `/feature "typing engine"`.
 
+The request may also describe a genuinely new feature that is not in the build
+plan yet. That goes through the new-feature intake in Step 1. Never silently add
+scope to the user-owned plans.
+
 **With no argument, build the next one.** `/feature` on its own specs the first
 unchecked item in `build-plan.md`. The build plan is a checklist; finished
 features are checked off, so the first unchecked item is always what's next. (If a
@@ -28,9 +32,39 @@ big item has been split into sub-items, the next unchecked sub-item is the targe
 
 ## Step 1 - pick the target
 
-- Given a number or name -> use it.
+- Given a number or name that matches a build-plan item -> use it.
+- Given a request that clearly describes a new feature with no reasonable match
+  in the build plan -> follow **New-feature intake** below.
 - No argument -> read `build-plan.md` top to bottom and take the first unchecked
   leaf (a plain item, or a sub-item under one that was split).
+
+### New-feature intake
+
+Use this path for a new product capability, not a bug or small unplanned change.
+Those still belong in `/fix`.
+
+1. Search checked and unchecked items for an existing or near-duplicate feature.
+   If the wording may simply be a mistaken name, show the closest matches instead
+   of creating new scope.
+2. If it is genuinely new, propose one feature-sized checkbox line and where it
+   belongs in `build-plan.md`. Preserve completed items and their numbering. Use
+   the next unused whole number for a new top-level item. If the existing plan is
+   complete, place it under an existing later milestone heading or propose a
+   `## Post-MVP` heading.
+3. Check whether the feature materially changes the product direction, users,
+   data, stack, monetization, UI/UX, or deployment. Include exact proposed edits
+   to the relevant `project-plan.md` sections only when needed. An incremental
+   feature normally changes only `build-plan.md`.
+4. Stop for approval before editing either user-owned plan. Show the complete
+   proposed plan change, including any project-plan edits, in the review request.
+5. After approval, write the plan changes, follow the installed `overview` skill
+   to regenerate `blueprint/context/project-overview.md`, then resume this skill
+   with the newly added build-plan item as the target. If overview finds a
+   contradiction or decision the user must resolve, stop there and do not spec
+   against unresolved context.
+
+The result follows the same normal loop as any other planned feature. Do not
+create a second build plan or bypass overview regeneration.
 
 **If the build plan isn't a checklist yet** - a plain list with no `- [ ]` boxes -
 treat every item as unchecked: take the first item as the target, and offer to

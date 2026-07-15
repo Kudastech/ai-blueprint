@@ -48,7 +48,7 @@ Core skills:
 - `adopt` - bootstrap the Blueprint into an existing brownfield app with shipped features
 - `overview` - distill the two planning docs into `blueprint/context/project-overview.md`
 - `brief` - read-only briefing on an upcoming build-plan feature (scope, dependencies, size) before you spec it
-- `feature` - turn a build-plan item into a spec in `blueprint/context/current-feature.md`
+- `feature` - turn a build-plan item into a spec, or propose a reviewed plan addition for a genuinely new feature
 - `fix` - document an ad-hoc bug or change into `blueprint/context/current-feature.md`
 - `tests` - add or normalize unit testing and turn on the test gate
 - `implement` - build the current spec one small, reviewed step at a time
