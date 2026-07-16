@@ -109,11 +109,18 @@ async function validateInstall(targetDir, version, adapters) {
   ];
 
   if (expectsCodex) {
-    expectedPaths.push(".agents/skills/onboard/SKILL.md");
+    expectedPaths.push(
+      ".agents/skills/onboard/SKILL.md",
+      ".agents/skills/rollback/SKILL.md"
+    );
   }
 
   if (expectsClaude) {
-    expectedPaths.push("CLAUDE.md", ".claude/skills/onboard/SKILL.md");
+    expectedPaths.push(
+      "CLAUDE.md",
+      ".claude/skills/onboard/SKILL.md",
+      ".claude/skills/rollback/SKILL.md"
+    );
   }
 
   for (const relativePath of expectedPaths) {

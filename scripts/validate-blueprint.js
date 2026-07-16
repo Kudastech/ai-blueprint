@@ -16,6 +16,7 @@ const requiredPaths = [
   "blueprint/context/project-overview.md",
   "blueprint/history/features/README.md",
   "blueprint/history/fixes/README.md",
+  "blueprint/history/rollbacks/README.md",
   "packages/create-ai-blueprint/bin/create-ai-blueprint.js",
   "packages/create-ai-blueprint/lib/update.js",
   "packages/create-ai-blueprint/package.json"

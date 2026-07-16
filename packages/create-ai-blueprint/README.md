@@ -28,6 +28,11 @@ The installed workflow includes optional Render and Vercel deployment readiness
 through `/release` or `$release`; it prepares local config and checks, but does
 not deploy without explicit approval.
 
+It also includes `/rollback` or `$rollback` for planning a reviewed reversal of
+a completed feature from its archived spec and exact git commit. Rollbacks keep
+the original feature archive and use the normal implement, check, and complete
+gates.
+
 If you install the Blueprint while Claude Code is already open in the project,
 restart Claude Code in that folder so the newly added project skills appear.
 

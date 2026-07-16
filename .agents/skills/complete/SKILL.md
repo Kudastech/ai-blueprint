@@ -1,18 +1,18 @@
 ---
 name: complete
-description: Wrap up a finished feature or fix. Runs a final safety pass, archives its spec to blueprint/history/features/ (feature) or blueprint/history/fixes/ (fix), checks features off the build plan, resets blueprint/context/current-feature.md to its stub, makes one feature-level commit, then squash-merges the branch to main and deletes it. Merges only with explicit approval, then asks separately before pushing main. Use when the user runs /complete, or asks to finish, wrap up, merge, or close out the current feature or fix after it's built and reviewed.
+description: Wrap up a finished feature, fix, or rollback. Runs a final safety pass, archives its spec to blueprint/history/features/, blueprint/history/fixes/, or blueprint/history/rollbacks/, updates the build plan for features and rollbacks, resets blueprint/context/current-feature.md to its stub, makes one work-level commit, then squash-merges the branch to main and deletes it. Merges only with explicit approval, then asks separately before pushing main. Use when the user runs /complete, or asks to finish, wrap up, merge, or close out the current feature, fix, or rollback after it is built and reviewed.
 ---
 
-# complete - log the finished work, make the feature commit, and merge
+# complete - log the finished work, make the work commit, and merge
 
 Where this sits in the workflow:
 
-    /feature or /fix  ->  /implement  ->  [complete]  ->  next
-    (the spec)            (build it)      (commit + merge + log)
+    /feature, /fix, or /rollback  ->  /implement  ->  [complete]  ->  next
+    (the spec)                         (build it)      (commit + merge + log)
 
-`/implement` built the feature or fix on its branch, with optional per-step commit
+`/implement` built the feature, fix, or rollback on its branch, with optional per-step commit
 checkpoints. This skill closes it out: it logs the work, makes the single
-feature-level commit, and squash-merges. Run it only when the build is done,
+work-level commit, and squash-merges. Run it only when the build is done,
 reviewed, and the build and tests pass.
 
 ## Before you start
@@ -43,17 +43,28 @@ evidence is missing.
 
 ## Step 1 - log the work
 
-Check whether the spec is a feature or a fix (a fix is marked `Type: Fix` and has
-no build-plan number).
+Check whether the spec is a feature, fix, or rollback. A fix is marked
+`Type: Fix` and has no build-plan number. A rollback is marked `Type: Rollback`
+and records the exact target feature, archive, commit, and parent.
 
 - **Feature** - archive `blueprint/context/current-feature.md` to `blueprint/history/features/NN-name.md`
   (NN is the build-plan number), and check it off in `blueprint/build-plan.md`
   (and its parent item once all sub-items are checked).
 - **Fix** - archive it to `blueprint/history/fixes/name.md`. A fix isn't a build-plan item, so
   there's nothing to check off.
+- **Rollback** - archive it to
+  `blueprint/history/rollbacks/YYYY-MM-DD-NN-name.md`, preserving the original
+  completed feature archive. Create `blueprint/history/rollbacks/` first if an
+  older Blueprint installation does not have it yet. Uncheck the exact target item in
+  `blueprint/build-plan.md` and its parent when applicable, then append a concise
+  note to the target line with the rollback date and archive path. Keep the
+  feature number stable. If the user later decides the feature is permanently
+  abandoned rather than pending rebuild, that roadmap decision is a separate
+  plan edit.
 
-Then reset `blueprint/context/current-feature.md` to its stub ("nothing in progress"). Don't
-commit yet; the next step makes one feature commit covering the code and these doc
+Then reset `blueprint/context/current-feature.md` to its current stub ("nothing
+in progress"), including `/rollback` alongside `/feature` and `/fix`. Don't
+commit yet; the next step makes one work commit covering the code and these doc
 changes. The archive is the build history.
 
 **Discard consumed prototypes.** If this feature built the look from `prototypes/`
@@ -62,11 +73,11 @@ into the app - delete the `prototypes/` folder now. The tokens live in the real
 stylesheet and the HTML mockups were always throwaway; fold the deletion into this
 feature's commit. Skip this if the feature didn't consume prototypes.
 
-## Step 2 - make the feature commit
+## Step 2 - make the work commit
 
 Stage everything on the branch (any uncommitted step work plus the Step 1 logging
-changes) and make one conventional feature commit (for example `feat: <feature>`
-or `fix: <name>`). Build and tests must pass first.
+changes) and make one conventional work commit (for example `feat: <feature>`,
+`fix: <name>`, or `revert: roll back <feature>`). Build and tests must pass first.
 
 ## Step 3 - merge
 
@@ -79,16 +90,20 @@ or `fix: <name>`). Build and tests must pass first.
 4. Push main only after a separate explicit yes to push main in the current chat.
    If the repo has no remote or upstream, say so instead of guessing.
 
-Then point the user at `/feature` (or `/fix`) for the next thing.
+Then point the user at `/feature`, `/fix`, or `/rollback` for the next thing.
 
-Finish with a concise **How to try it** note for the completed feature. If the
+Finish with a concise **How to try it** note for the completed work. For a
+rollback, explain how to confirm the removed behavior is gone and name one
+unaffected regression path. If the
 manual path is more than a couple of steps, tell the user to run `/try latest`;
 that command can read the archived feature after `current-feature.md` is reset.
 
 ## Rules
 
-- The feature is the unit of history: one squashed feature commit on main, even if
-  the branch carried several checkpoint commits.
+- The work item is the unit of history: one squashed feature, fix, or rollback
+  commit on main, even if the branch carried several checkpoint commits.
+- A rollback preserves the original feature archive and adds a separate rollback
+  archive. Never rewrite history to make the feature look as if it never existed.
 - Don't merge unfinished or failing work; the build and tests must pass first.
 - Merging and pushing are the user's calls: get an explicit yes for the merge,
   then ask whether to push main. Do not treat merge approval, `/complete`, or

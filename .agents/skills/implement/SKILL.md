@@ -1,29 +1,31 @@
 ---
 name: implement
-description: Build the feature or fix spec'd in blueprint/context/current-feature.md, one small reviewable step at a time. Creates the branch, implements each step, shows the diff and explains it in plain English, tests, and iterates until it works. After each approved step it offers an optional commit checkpoint on the branch; the feature-level commit, merge, and logging are /complete's job. Use when the user runs /implement, or asks to build, implement, or start the current feature or fix once its spec is ready.
+description: "Build the feature, fix, or rollback spec'd in blueprint/context/current-feature.md, one small reviewable step at a time. Creates the matching branch, implements each step, shows the diff and explains it in plain English, tests, and iterates until it works. Type: Rollback specs use a guarded reverse patch that preserves Blueprint history. After each approved step it offers an optional commit checkpoint on the branch; the work-level commit, merge, and logging are /complete's job. Use when the user runs /implement, or asks to build, implement, or start the current feature, fix, or rollback once its spec is ready."
 ---
 
-# implement - build the current feature or fix, one reviewed step at a time
+# implement - build the current spec, one reviewed step at a time
 
 Where this sits in the workflow:
 
-    /feature or /fix  ->  [implement]  ->  /complete  ->  next
-    (the spec)            (build it,       (commit +
-                           reviewed)        merge + log)
+    /feature, /fix, or /rollback  ->  [implement]  ->  /complete  ->  next
+    (the spec)                         (build it,       (commit +
+                                        reviewed)        merge + log)
 
-`/feature` (or `/fix`) wrote the spec to `blueprint/context/current-feature.md` and stopped.
+`/feature`, `/fix`, or `/rollback` wrote the spec to
+`blueprint/context/current-feature.md` and stopped.
 This skill turns that spec into code, following the build loop in
 `blueprint/context/ai-interaction.md`, without vibe coding: small steps, a visible diff plus
 a plain-English explanation for each, testing, and iteration until it works, all
 behind your approval. It builds on a branch and offers an optional commit
-checkpoint after each step; the feature-level commit, merging, and logging are
+checkpoint after each step; the work-level commit, merging, and logging are
 `/complete`'s job.
 
 ## Before you start
 
 Read `blueprint/context/current-feature.md`. If it has no real spec (still the stub, or its
 status is already complete), stop and tell the user to run `/feature` (for a
-planned feature) or `/fix` (for an ad-hoc bug or change) first. Pull the
+planned feature), `/fix` (for an ad-hoc bug or change), or `/rollback` (for a
+completed feature reversal) first. Pull the
 conventions from `blueprint/context/coding-standards.md` and the data model from
 `blueprint/context/project-overview.md` so the code matches them.
 
@@ -43,9 +45,48 @@ starting over. No separate save/load is needed - the project instructions load
 ## Step 1 - branch
 
 Create and check out a branch named from the spec: `feature/<name>` for a feature,
-`fix/<name>` for a fix. If the project isn't a git repo yet, say so and ask the
-user to run `git init` first; the loop needs branches. On resume, the branch
-already exists - check it out instead of creating a new one.
+`fix/<name>` for a fix, or `rollback/<name>` for a Type: Rollback spec. If the
+project isn't a git repo yet, say so and ask the user to run `git init` first;
+the loop needs branches. On resume, the branch already exists - check it out
+instead of creating a new one.
+
+### Type: Rollback safeguard
+
+For a rollback spec, do not hand-delete the old feature and do not run a whole
+commit `git revert`. Completed feature commits also contain Blueprint history and
+plan bookkeeping, while `current-feature.md` now contains the active rollback
+spec. Reversing the whole commit would damage that state.
+
+Before the first rollback build step:
+
+1. Re-resolve the target archive's introducing commit and confirm it matches the
+   full Target commit SHA recorded in the approved spec.
+2. Confirm the target is an ancestor of `HEAD`, has the recorded single parent,
+   and the only dirty path before applying the patch is the approved rollback
+   spec. Stop on drift.
+3. Preview the target's product diff while excluding `.ai-blueprint/**`,
+   `.agents/**`, `.claude/**`, `blueprint/**`, `AGENTS.md`, `CLAUDE.md`, and
+   `prototypes/**`. Confirm the preview is non-empty and matches the Product
+   paths in the spec.
+4. Apply that product diff in reverse with three-way conflict detection and
+   stage it. Substitute the two approved full SHAs before running:
+
+       git diff --binary <target-parent> <target-commit> -- . \
+         ':(exclude).ai-blueprint/**' ':(exclude).agents/**' \
+         ':(exclude).claude/**' ':(exclude)blueprint/**' \
+         ':(exclude)AGENTS.md' ':(exclude)CLAUDE.md' \
+         ':(exclude)prototypes/**' |
+         git apply --reverse --3way --index
+
+   Never omit the protected pathspec exclusions for convenience.
+5. Show both `git diff --cached` and `git status`. Confirm no protected path is
+   staged or modified before presenting the step for review.
+
+If the reverse patch conflicts, stop and report the exact paths and later commit
+that appears involved. Do not auto-resolve, discard, stash, reset, or switch to a
+broad checkout. Ask whether to resolve only the conflict allowed by the approved
+spec or abandon the attempt. A cascade into another completed feature needs a
+new rollback plan.
 
 ## Step 2 - build one step, review, iterate, checkpoint
 
@@ -115,9 +156,9 @@ not), stop with a compact review packet:
 - known risks, skipped checks, or follow-up notes
 - next action, usually `/complete`
 
-Then tell the user `/complete` makes the one feature-level commit, logs it
-(archive, check off if it's a feature, reset), and merges with approval. This
-skill does not touch main.
+Then tell the user `/complete` makes the one work-level commit, logs it (archive,
+update the build plan for a feature or rollback, reset), and merges with
+approval. This skill does not touch main.
 
 ## Rules
 
@@ -129,8 +170,10 @@ skill does not touch main.
   by the authenticated user id, validate inputs, and so on).
 - Build only what the spec says. If the spec is wrong or thin, stop and fix the
   spec first, do not improvise.
-- Per-step commits are optional checkpoints. The feature-level commit, the merge,
+- Per-step commits are optional checkpoints. The work-level commit, the merge,
   and any push are `/complete`'s job.
+- For Type: Rollback, reverse only the approved product diff and preserve all
+  protected Blueprint paths.
 
 ## Formatting
 

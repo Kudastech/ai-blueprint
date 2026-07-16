@@ -23,11 +23,11 @@ New here? `README.md` explains the whole workflow.
 - `blueprint/context/project-overview.md` - the project's source of truth
 - `blueprint/context/coding-standards.md` - conventions to follow
 - `blueprint/context/ai-interaction.md` - how to work with the user on this project
-- `blueprint/context/current-feature.md` - the one feature or fix being built right now
+- `blueprint/context/current-feature.md` - the one feature, fix, or rollback being built right now
 
 ## Workflow
 
-Build one feature or fix at a time, behind review gates. Each step's instructions
+Build one feature, fix, or rollback at a time, behind review gates. Each step's instructions
 are plain markdown skills any capable agent can read and follow. The workflow is
 exposed through tool-specific adapters:
 
@@ -55,7 +55,8 @@ Core skills:
 - `check` - prove the current spec against the running app
 - `try` - read-only manual review guide: where to go, what to click, what to expect
 - `audit` - branch-aware or full-project read-only review for code quality, security, performance, tests, and standards drift
-- `complete` - run the final safety pass, log it to `blueprint/history/features/` or `blueprint/history/fixes/`, then merge with approval
+- `rollback` - plan a safe reversal of a completed feature from its archive and exact git commit, with later-dependency review before code changes
+- `complete` - run the final safety pass, log features, fixes, or rollbacks under `blueprint/history/`, then merge with approval
 - `release` - optional Render or Vercel deployment readiness, local config, env review, and smoke-test planning
 - `prototype` - optional, pre-build static mockups to lock the look
 - `status` - read-only progress summary, workflow drift warning, and suggested next action

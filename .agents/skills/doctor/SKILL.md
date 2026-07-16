@@ -35,6 +35,10 @@ Gather these, then summarize. Do not dump file contents.
      `blueprint/context/current-feature.md`, and
      `blueprint/context/project-overview.md` exist.
    - Confirm `blueprint/history/features/` and `blueprint/history/fixes/` exist.
+     When the rollback skill is installed, also check
+     `blueprint/history/rollbacks/`. A missing rollback folder on a legacy
+     installation is a warning, not a blocker; `/complete` creates it on the
+     first rollback.
    - If `.gitignore` marks Blueprint workflow files as local-only, still require
      the files to exist on disk. Ignored but present is healthy; ignored and
      missing means the local workflow needs to be restored.
@@ -95,12 +99,15 @@ Gather these, then summarize. Do not dump file contents.
      call the overview possibly stale and suggest `/overview` before feature work.
 7. **Current workflow state**
    - Check whether `blueprint/context/current-feature.md` is the reset stub or an
-     active feature or fix spec.
+     active feature, fix, or rollback spec.
    - If a spec is active, report checked and unchecked implementation steps.
    - If `current-feature.md` is the reset stub but git has source or workflow
      changes, warn that work is happening without an active spec.
    - Flag active spec on `main`, all spec steps checked but no completion, or a
-     mismatch between the active spec and the next unchecked build-plan item.
+     branch that does not match `feature/`, `fix/`, or `rollback/` for the spec
+     type. For a feature, also flag a mismatch with the next unchecked
+     build-plan item. For a rollback, confirm its target is a checked item and do
+     not compare it to the next unchecked item.
 8. **Git**
    - Report current branch, clean vs dirty working tree, rough changed-file count,
      last commit subject, and whether the branch is ahead of upstream.

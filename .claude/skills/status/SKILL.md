@@ -34,10 +34,10 @@ state.
 1. **Build plan** - `blueprint/build-plan.md`. Count checked vs unchecked leaf
    items. Name the next unchecked leaf, the same target `/feature` would pick,
    and note if a parent item was split into sub-items (`4a`, `4b`, ...).
-2. **Current feature** - `blueprint/context/current-feature.md`. Is something in
-   progress, or is it the reset stub? If a spec is present, report its name, which
-   build steps are checked, and the first unchecked step where `/implement`
-   resumes.
+2. **Current work** - `blueprint/context/current-feature.md`. Is something in
+   progress, or is it the reset stub? If a feature, fix, or rollback spec is
+   present, report its type and name, which build steps are checked, and the
+   first unchecked step where `/implement` resumes.
 3. **Overview freshness** - if `blueprint/context/project-overview.md` is missing,
    or if `project-plan.md` or `build-plan.md` appears newer than it by filesystem
    time, mention that `/overview` should run before new feature work.
@@ -46,8 +46,11 @@ state.
    branch is ahead of its remote. If the directory is not a git repo, say so and
    skip this part rather than failing.
 5. **Progress drift** - flag active spec on `main`, a spec in progress but no
-   matching branch, all spec steps checked but not completed, or disagreement
-   between `build-plan.md` and `current-feature.md`.
+   matching `feature/`, `fix/`, or `rollback/` branch, all spec steps checked but
+   not completed, or disagreement between `build-plan.md` and
+   `current-feature.md`. A rollback legitimately targets a checked build-plan
+   item until `/complete` unchecks it, so do not compare it to the next unchecked
+   feature.
 
 ## Output
 
