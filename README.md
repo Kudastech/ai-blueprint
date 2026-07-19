@@ -223,48 +223,7 @@ and only re-runs when the plans change; the repeating loop starts at `/feature`
 or `/fix`. For an existing codebase, use `/adopt` instead of `/onboard`; that
 path is described above.
 
-```mermaid
-flowchart TD
-    OB(["/onboard<br/>fresh setup"])
-
-    subgraph planning["planning files"]
-        PP["project-plan.md"]
-        BPL["build-plan.md"]
-    end
-
-    OB -->|fill next| PP
-    OB -->|fill next| BPL
-    PP --> OV(["/overview"])
-    BPL --> OV
-    OV --> POV["project-overview.md<br/>source of truth"]
-    POV -.->|optional| PT(["/prototype"])
-    PT -.-> PRO["prototypes/"]
-    POV -.->|understand, read-only| BR(["/brief"])
-    BR -.-> FT
-
-    POV --> FT(["/feature"])
-    POV --> FX(["/fix"])
-    AR -.-> RB(["/rollback<br/>archive + git risk review"])
-    FT --> CF["current-feature.md"]
-    FX --> CF
-    RB --> CF
-    CF --> IM(["/implement<br/>build + iterate, reviewed"])
-    IM -.->|prove done-whens| CK(["/check"])
-    IM -.->|manual path| TRY(["/try"])
-    IM -.->|quality pass| AU(["/audit"])
-    CK -.->|fails| IM
-    TRY -.->|issues| IM
-    AU -.->|findings| IM
-    CK -.->|passes| CP
-    TRY -.->|looks good| CP
-    AU -.->|clean| CP
-    IM --> CP(["/complete<br/>commit + merge + log"])
-    CP --> AR["blueprint/history/"]
-    AR -.->|next| FT
-
-    classDef skill fill:#2563eb,stroke:#1e40af,color:#ffffff;
-    class OB,OV,PT,BR,FT,FX,RB,IM,CP,CK,TRY,AU skill;
-```
+![AI Blueprint fresh-project workflow](assets/ai-blueprint-workflow.png)
 
 ## The two files you own
 
