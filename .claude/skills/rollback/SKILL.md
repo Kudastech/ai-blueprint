@@ -69,7 +69,6 @@ committed, explain that git cannot reconstruct a safe rollback from it.
 Inspect the target commit and build the product-path set from the files it
 changed. Exclude these protected workflow paths:
 
-- `.ai-blueprint/**`
 - `.agents/**`
 - `.claude/**`
 - `blueprint/**`

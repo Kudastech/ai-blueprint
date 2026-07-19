@@ -104,8 +104,8 @@ async function validateInstall(targetDir, version, adapters) {
     "blueprint/README.md",
     "blueprint/project-plan.md",
     "blueprint/build-plan.md",
-    ".ai-blueprint/manifest.json",
-    ".ai-blueprint/.gitignore"
+    "blueprint/.state/manifest.json",
+    "blueprint/.state/.gitignore"
   ];
 
   if (expectsCodex) {
@@ -128,6 +128,7 @@ async function validateInstall(targetDir, version, adapters) {
   }
 
   await requireMissing(path.join(targetDir, "README.md"));
+  await requireMissing(path.join(targetDir, ".ai-blueprint"));
 
   if (!expectsCodex) {
     await requireMissing(path.join(targetDir, ".agents"));
@@ -139,7 +140,10 @@ async function validateInstall(targetDir, version, adapters) {
   }
 
   const manifest = JSON.parse(
-    await fs.readFile(path.join(targetDir, ".ai-blueprint", "manifest.json"), "utf8")
+    await fs.readFile(
+      path.join(targetDir, "blueprint", ".state", "manifest.json"),
+      "utf8"
+    )
   );
 
   if (manifest.schemaVersion !== 1) {

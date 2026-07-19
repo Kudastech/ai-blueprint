@@ -16,7 +16,7 @@ The installer copies the Blueprint workflow files into the current directory:
 
 - `AGENTS.md`
 - `CLAUDE.md`
-- `.ai-blueprint/manifest.json`
+- `blueprint/.state/manifest.json`
 - `.agents/`
 - `.claude/`
 - `blueprint/`
@@ -73,13 +73,13 @@ The updater detects the installed adapters and manages only these paths:
 - `blueprint/README.md`
 
 It preserves `AGENTS.md`, `CLAUDE.md`, project and build plans, context, history,
-references, and prototypes. The `.ai-blueprint/manifest.json` file records the
+references, and prototypes. The `blueprint/.state/manifest.json` file records the
 installed version and hashes of managed files.
 
 Locally modified managed files are reported as conflicts. Interactive updates
 ask before replacing them. Non-interactive updates exit unless you pass
 `--force`, which backs up the conflicting files before replacement. Backups are
-stored under `.ai-blueprint/backups/` and ignored by git.
+stored under `blueprint/.state/backups/` and ignored by git.
 
 The first update of a legacy install creates the manifest. Files that already
 match the current package are adopted automatically. Differing files remain

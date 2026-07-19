@@ -6,6 +6,7 @@ const test = require("node:test");
 
 const { parseArgs } = require("../bin/create-ai-blueprint");
 const {
+  CONTROL_DIR,
   MANIFEST_PATH,
   applyPreparedUpdate,
   prepareUpdate,
@@ -60,9 +61,13 @@ test("new installs record only Blueprint-owned managed files", async (t) => {
     "blueprint/README.md"
   ]);
   assert.equal(
-    await fs.readFile(path.join(targetDir, ".ai-blueprint/.gitignore"), "utf8"),
+    await fs.readFile(path.join(targetDir, CONTROL_DIR, ".gitignore"), "utf8"),
     "backups/\nstaging/\n"
   );
+  assert.equal((await readManifest(targetDir)).version, "1.0.0");
+  await assert.rejects(fs.access(path.join(targetDir, ".ai-blueprint")), {
+    code: "ENOENT"
+  });
   assert.equal(
     await fs.readFile(path.join(targetDir, "blueprint/build-plan.md"), "utf8"),
     "Project roadmap\n"
@@ -122,7 +127,7 @@ test("update replaces unchanged managed files and preserves project files", asyn
   assert.equal(result.added, 1);
   assert.match(
     path.relative(targetDir, result.backupDir),
-    /^\.ai-blueprint\/backups\/2026-07-15T12-00-00Z-1\.0\.0-to-1\.1\.0-[a-f0-9]{8}$/
+    /^blueprint\/\.state\/backups\/2026-07-15T12-00-00Z-1\.0\.0-to-1\.1\.0-[a-f0-9]{8}$/
   );
   assert.equal(
     await fs.readFile(path.join(targetDir, ".agents/skills/check/SKILL.md"), "utf8"),

@@ -2,7 +2,7 @@ const crypto = require("node:crypto");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
-const CONTROL_DIR = ".ai-blueprint";
+const CONTROL_DIR = "blueprint/.state";
 const MANIFEST_PATH = `${CONTROL_DIR}/manifest.json`;
 const MANIFEST_SCHEMA_VERSION = 1;
 const MANAGED_ROOTS = {
@@ -532,7 +532,7 @@ async function atomicWrite(target, content) {
   await fs.mkdir(path.dirname(target), { recursive: true });
   const temporary = path.join(
     path.dirname(target),
-    `.${path.basename(target)}.ai-blueprint-${process.pid}-${crypto.randomBytes(4).toString("hex")}`
+    `.${path.basename(target)}.blueprint-${process.pid}-${crypto.randomBytes(4).toString("hex")}`
   );
   await fs.writeFile(temporary, content);
 

@@ -64,15 +64,15 @@ Before the first rollback build step:
 2. Confirm the target is an ancestor of `HEAD`, has the recorded single parent,
    and the only dirty path before applying the patch is the approved rollback
    spec. Stop on drift.
-3. Preview the target's product diff while excluding `.ai-blueprint/**`,
-   `.agents/**`, `.claude/**`, `blueprint/**`, `AGENTS.md`, `CLAUDE.md`, and
+3. Preview the target's product diff while excluding `.agents/**`, `.claude/**`,
+   `blueprint/**`, `AGENTS.md`, `CLAUDE.md`, and
    `prototypes/**`. Confirm the preview is non-empty and matches the Product
    paths in the spec.
 4. Apply that product diff in reverse with three-way conflict detection and
    stage it. Substitute the two approved full SHAs before running:
 
        git diff --binary <target-parent> <target-commit> -- . \
-         ':(exclude).ai-blueprint/**' ':(exclude).agents/**' \
+         ':(exclude).agents/**' \
          ':(exclude).claude/**' ':(exclude)blueprint/**' \
          ':(exclude)AGENTS.md' ':(exclude)CLAUDE.md' \
          ':(exclude)prototypes/**' |

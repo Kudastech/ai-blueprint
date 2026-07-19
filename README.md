@@ -167,11 +167,11 @@ Updates manage only Blueprint-owned workflow files under `.agents/skills/`,
 `CLAUDE.md`, project plans, build plans, context, history, references, or
 prototypes.
 
-New installs record managed-file hashes in `.ai-blueprint/manifest.json`. If a
+New installs record managed-file hashes in `blueprint/.state/manifest.json`. If a
 managed file changes locally, the updater reports a conflict instead of silently
 overwriting it. An interactive update can back up and replace conflicts after
 confirmation. In non-interactive use, pass `--force` to do the same explicitly.
-Backups are stored under `.ai-blueprint/backups/` and ignored by git.
+Backups are stored under `blueprint/.state/backups/` and ignored by git.
 
 Older installs without a manifest can use the same command. Matching files are
 adopted into the manifest, while differing managed files are treated as conflicts.
@@ -522,8 +522,6 @@ step in `current-feature.md`.
 .                              (your app: src/, package.json, README.md, ...)
 ├── CLAUDE.md                  (Claude Code entry; imports AGENTS.md + context)
 ├── AGENTS.md                  (agent instructions for Codex, Cursor, and others)
-├── .ai-blueprint/
-│   └── manifest.json          (installed version and managed-file hashes)
 ├── .agents/
 │   └── skills/                (Codex repo skills)
 │       ├── adopt/             ($adopt: bootstrap from an existing codebase)
@@ -565,6 +563,8 @@ step in `current-feature.md`.
 │       ├── status/            (/status: where things stand)
 │       └── autopilot/         (/autopilot: bounded pass)
 └── blueprint/
+    ├── .state/
+    │   └── manifest.json     (installed version and managed-file hashes)
     ├── README.md             (workflow docs installed here)
     ├── project-plan.md        (you write: what and why)
     ├── build-plan.md          (you write: ordered feature list)
@@ -589,7 +589,6 @@ project guide, but adds this to `.gitignore`:
 
 ```gitignore
 # AI Blueprint local workflow files
-.ai-blueprint/
 .agents/
 .claude/
 blueprint/
