@@ -104,6 +104,7 @@ async function validateInstall(targetDir, version, adapters) {
     "blueprint/README.md",
     "blueprint/project-plan.md",
     "blueprint/build-plan.md",
+    "blueprint/context/findings.md",
     "blueprint/.state/manifest.json",
     "blueprint/.state/.gitignore"
   ];

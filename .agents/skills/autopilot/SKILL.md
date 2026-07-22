@@ -55,6 +55,7 @@ Read the same state `/status` reads:
 - `blueprint/build-plan.md`
 - `blueprint/context/project-overview.md`
 - `blueprint/context/current-feature.md`
+- `blueprint/context/findings.md`
 - `blueprint/context/coding-standards.md`
 - `blueprint/context/ai-interaction.md`
 - git branch, status, and recent log
@@ -158,7 +159,9 @@ may be enough. Be explicit about the evidence used.
 
 After the acceptance check, apply the `/audit current` behavior to the active
 feature, its diff, and the nearby code affected by the change. This is a targeted
-feature audit, not a repository-wide cleanup pass.
+feature audit, not a repository-wide cleanup pass. Findings are recorded in
+`blueprint/context/findings.md` with durable IDs and statuses, as `/audit`
+defines; the ledger reports status and never scopes what the audit examines.
 
 For every finding:
 
@@ -166,7 +169,8 @@ For every finding:
    local project patterns. An audit finding is evidence to investigate, not an
    automatic instruction to edit.
 2. Repair confirmed P0 and P1 findings when the fix stays inside the approved
-   feature scope and does not require a product or architecture decision.
+   feature scope and does not require a product or architecture decision. Set
+   the repaired finding to `fixed` in the ledger, never `closed`.
 3. Report P2 and P3 findings in the final packet. Fix them only when the change
    is small, directly caused by the current feature, and clearly required by the
    project standards.
@@ -177,7 +181,11 @@ After any audit repair:
 
 1. Rerun the affected build, lint, typecheck, and test commands.
 2. Rerun the acceptance evidence affected by the repair.
-3. Recheck the repaired area using the same targeted audit criteria.
+3. Recheck the repaired area using the same targeted audit criteria. When that
+   recheck confirms the original defect is gone and the repair introduced no
+   new one, move the `fixed` finding to `closed` under the `/audit` close
+   conditions and name it in the packet. An unrelated new finding gets its own
+   ledger entry and does not keep the repaired one open.
 4. Create a checkpoint commit only after the repair and its checks pass.
 
 Use the existing two-attempt hard stop for repeated repair failures. Do not widen
@@ -202,7 +210,8 @@ a full audit report:
 - self-review findings
 - targeted audit scope and findings
 - audit repairs made and checks rerun
-- unresolved P0/P1 findings, which block `/complete`
+- P0/P1 findings still `open` or `fixed` in `blueprint/context/findings.md`,
+  which block `/complete`
 - unresolved risks or skipped checks
 - exact next action
 
@@ -231,7 +240,8 @@ Stop immediately and report instead of continuing when Autopilot would need to:
 - Autopilot creates checkpoint commits on the feature or fix branch after passing
   steps.
 - Autopilot audits the active feature and affected code, not the entire project.
-- Confirmed unresolved P0 or P1 findings block readiness for `/complete`.
+- A P0 or P1 finding left `open` or `fixed` in `blueprint/context/findings.md`
+  blocks readiness for `/complete`. The ledger is what makes this enforceable.
 - Autopilot stops before `/complete`. It never merges.
 - The Blueprint files remain the state machine. Keep
   `current-feature.md` accurate as steps complete.

@@ -29,13 +29,19 @@ the steps to be pre-committed.
 Before logging or committing, run a short safety pass and report blockers only:
 
 - active spec exists and the work is not being completed from `main` or `master`
-- changed files are tied to the active spec, with no unrelated dirty work mixed in
+- changed files are tied to the active spec, with no unrelated dirty work mixed
+  in (a dirty `blueprint/context/findings.md` is expected, since `/audit` writes it)
 - build passed in this session, and tests passed when the project has a declared
   test command and the change touched logic
 - behavioral done-whens have `/check` evidence or equivalent proof, and there is
   a clear manual try path
 - if workflow files changed, `.agents` and `.claude` stayed in sync where both
   adapters exist
+- no P0 or P1 finding in `blueprint/context/findings.md` is `open` or `fixed`.
+  `fixed` still blocks on purpose: the repair exists but no review has looked at
+  it - run `/audit` to close it. The only waivers are `accepted` (the user's
+  explicit decision in the current chat, reason recorded; never set it for
+  them) or `invalid`. A missing ledger file means no findings.
 
 Do not claim "passed", "verified", or "working" without naming the command,
 route, screenshot, or output that proves it. Stop before Step 1 if required
@@ -61,6 +67,18 @@ and records the exact target feature, archive, commit, and parent.
   feature number stable. If the user later decides the feature is permanently
   abandoned rather than pending rebuild, that roadmap decision is a separate
   plan edit.
+
+**Archive resolved findings.** If `blueprint/context/findings.md` holds any
+findings, append a `## Findings` section to the archive file just written with
+every `closed`, `accepted`, or `invalid` entry at its final status (`accepted`
+entries keep their recorded reason). Prefix each ID with the archive name for
+global uniqueness: feature 12's `F-03` becomes `12/F-03`; fixes and rollbacks
+use their archive filename as the prefix. An entry carried forward from earlier
+work archives with the item that resolved it; its **Found** line preserves
+where it came from. Then remove the archived entries from the ledger. Unresolved entries (`open` or `fixed` P2/P3, and `unverified`
+leads) stay in the ledger with their IDs so they are never silently dropped;
+when nothing remains, reset the ledger to its stub. If the file is missing
+(an older install), create the stub now.
 
 Then reset `blueprint/context/current-feature.md` to its current stub ("nothing
 in progress"), including `/rollback` alongside `/feature` and `/fix`. Don't
@@ -105,6 +123,10 @@ that command can read the archived feature after `current-feature.md` is reset.
 - A rollback preserves the original feature archive and adds a separate rollback
   archive. Never rewrite history to make the feature look as if it never existed.
 - Don't merge unfinished or failing work; the build and tests must pass first.
+- Never merge while a P0 or P1 finding is `open` or `fixed` in the ledger. The
+  recorded ways past the gate without code are `accepted` (only by the user's
+  explicit decision, with their reason) or `invalid`; both travel into the
+  archive, never a silent drop.
 - Merging and pushing are the user's calls: get an explicit yes for the merge,
   then ask whether to push main. Do not treat merge approval, `/complete`, or
   "looks good" as permission to push.

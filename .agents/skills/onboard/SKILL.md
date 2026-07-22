@@ -167,8 +167,9 @@ Recommend option 1 by default. If the user chooses option 2:
   would expose the local-only workflow.
 - Explain that local-only mode hides the workflow contents from the repo, but the
   `.gitignore` names still reveal the ignored paths.
-- Explain that Blueprint state, specs, and history will not travel with the repo;
-  another machine needs the Blueprint reinstalled or restored locally.
+- Explain that Blueprint state, specs, findings, and history will not travel
+  with the repo; another machine needs the Blueprint reinstalled or restored
+  locally.
 - If any of `.agents/`, `.claude/`, `blueprint/`, or
   `CLAUDE.md` are already tracked, say `.gitignore` will not hide tracked files.
   Ask before running

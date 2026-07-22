@@ -54,7 +54,7 @@ Core skills:
 - `implement` - build the current spec one small, reviewed step at a time
 - `check` - prove the current spec against the running app
 - `try` - read-only manual review guide: where to go, what to click, what to expect
-- `audit` - branch-aware or full-project read-only review for code quality, security, performance, tests, and standards drift
+- `audit` - branch-aware or full-project review for code quality, security, performance, tests, and standards drift; records findings with durable IDs and statuses in `blueprint/context/findings.md`, where open or fixed P0/P1 findings block `complete`
 - `rollback` - plan a safe reversal of a completed feature from its archive and exact git commit, with later-dependency review before code changes
 - `complete` - run the final safety pass, log features, fixes, or rollbacks under `blueprint/history/`, then merge with approval
 - `release` - optional Render or Vercel deployment readiness, local config, env review, and smoke-test planning

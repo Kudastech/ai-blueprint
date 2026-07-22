@@ -121,7 +121,11 @@ Work through the spec's build steps in order, one at a time. For each step:
    user is happy with the step.
 6. **Mark it done, then prompt to move on.** Once the step is approved, check that
    step off (`- [x]`) in `blueprint/context/current-feature.md` so progress survives a context
-   clear. Then offer a short choice, noting that checkpoints are optional since
+   clear. If the step repaired a finding tracked in
+   `blueprint/context/findings.md`, set that finding's status to `fixed` now too
+   and note the repair in its **Resolution** line. Never set `closed`: a repair
+   is re-reviewed by `/audit` before it clears, because a fix can introduce a
+   worse defect than the one it removed. Then offer a short choice, noting that checkpoints are optional since
    `/complete` makes the real feature-level commit. Use the current tool's short
    user-input prompt when available; when you've just produced a long block to
    read (a deep explanation, a big
@@ -146,6 +150,20 @@ split it. Build and tests must pass before any commit.
 
 ## Step 3 - hand off to /complete
 
+Before handing off, check `blueprint/context/findings.md`. A P0 or P1 finding
+still `open` or `fixed` there means `/complete` will refuse the merge, so close
+the loop now:
+
+- Repair each `open` P0 or P1 as an extra reviewed step. First append it to the
+  spec's build steps in `current-feature.md` (`- [ ] Repair F-03 - <title>`) so
+  the repair is on the record and survives a context clear, then run the same
+  loop as Step 2: smallest change, diff, plain-English explanation, evidence.
+  Check the step off and mark the finding `fixed` together.
+- Then run `/audit` so the repairs are re-reviewed and can move to `closed`.
+  A repair this skill made never closes itself.
+- If the user decides a finding should not be fixed, only they can set
+  `accepted` (reason recorded); `invalid` is for findings the review got wrong.
+
 When every step is built and the build and tests pass (committed as checkpoints or
 not), stop with a compact review packet:
 
@@ -153,6 +171,7 @@ not), stop with a compact review packet:
 - what changed, grouped by file or area
 - checks run, with the exact command or proof used
 - how to try it manually, or a pointer to `/try`
+- ledger state: any findings still `open` or `fixed`, by ID
 - known risks, skipped checks, or follow-up notes
 - next action, usually `/complete`
 

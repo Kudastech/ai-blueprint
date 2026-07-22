@@ -13,6 +13,7 @@ const requiredPaths = [
   "blueprint/context/ai-interaction.md",
   "blueprint/context/coding-standards.md",
   "blueprint/context/current-feature.md",
+  "blueprint/context/findings.md",
   "blueprint/context/project-overview.md",
   "blueprint/history/features/README.md",
   "blueprint/history/fixes/README.md",

@@ -39,6 +39,12 @@ Gather these, then summarize. Do not dump file contents.
      `blueprint/history/rollbacks/`. A missing rollback folder on a legacy
      installation is a warning, not a blocker; `/complete` creates it on the
      first rollback.
+   - Check `blueprint/context/findings.md`. Missing on a legacy installation is
+     a warning, not a blocker; `/audit` and `/complete` create it on first use.
+     When present, confirm its entry headers still match
+     `### <id> [<severity>] <status> - <title>` and warn on a malformed ledger.
+     Report any P0 or P1 finding still `open` or `fixed` by ID, since it will
+     block `/complete`. Never block on the ledger yourself.
    - If `.gitignore` marks Blueprint workflow files as local-only, still require
      the files to exist on disk. Ignored but present is healthy; ignored and
      missing means the local workflow needs to be restored.
@@ -154,6 +160,9 @@ Choose the repair order in this priority:
 - Overview missing or stale -> run `/overview`.
 - Active spec has unchecked steps -> run `/status` or `/implement`, depending on
   whether the user wants orientation or action.
+- A P0 or P1 finding is `open` -> repair it through `/implement` while a spec
+  is active, or `/fix <finding id>` between work items. One that is `fixed` ->
+  `/audit` to re-review and close it. Both come before suggesting `/complete`.
 - Active spec is done but not closed -> run `/check`, then `/complete`.
 - Everything is healthy -> say so, then suggest `/status` for progress or
   `/feature` for the next planned feature.

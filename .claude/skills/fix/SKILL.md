@@ -20,6 +20,12 @@ it just starts here instead of `/feature`, and is logged separately.
 A description of the bug or change, for example `/fix "password reset email never
 sends"`. If the user just reported the problem in chat, use that.
 
+The input may also be a finding ID from `blueprint/context/findings.md`, alone
+or with a description, for example `/fix F-03`. Pull the problem statement from
+that ledger entry. Use this form only between work items, when
+`current-feature.md` is the reset stub: this skill overwrites that file, so
+while a spec is active, repair its findings through `/implement` instead.
+
 ## Step 1 - write the fix spec
 
 Pull context from `blueprint/context/project-overview.md` and `blueprint/context/coding-standards.md`,
@@ -28,6 +34,9 @@ is being built now, feature or fix). Keep it lighter than a feature spec:
 
 - **Title** - the bug or change in a few words.
 - **Type:** Fix  (so `/complete` logs it to `blueprint/history/fixes/`, not `blueprint/history/features/`).
+- **Fixes:** `<finding id>` - only when the fix targets a ledger finding. The
+  stamp makes the repair traceable: `/implement` marks that finding `fixed`
+  when the repairing step lands, and `/audit` re-reviews it before it closes.
 - **The problem** - what's wrong or what needs to change, and where.
 - **The fix** - the approach, and anything it must not break.
 - **Build steps** - usually one small step; split only if the diff would be too

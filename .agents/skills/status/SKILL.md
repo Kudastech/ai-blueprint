@@ -38,14 +38,18 @@ state.
    progress, or is it the reset stub? If a feature, fix, or rollback spec is
    present, report its type and name, which build steps are checked, and the
    first unchecked step where `/implement` resumes.
-3. **Overview freshness** - if `blueprint/context/project-overview.md` is missing,
+3. **Findings** - `blueprint/context/findings.md`. Count findings by status and
+   report open and fixed counts next to build-plan progress. Call out any P0 or
+   P1 still `open` or `fixed` by ID, since those block `/complete`. A missing
+   file means no findings.
+4. **Overview freshness** - if `blueprint/context/project-overview.md` is missing,
    or if `project-plan.md` or `build-plan.md` appears newer than it by filesystem
    time, mention that `/overview` should run before new feature work.
-4. **Git** - current branch, whether the working tree is clean or has uncommitted
+5. **Git** - current branch, whether the working tree is clean or has uncommitted
    changes, roughly how many files changed, last commit subject, and whether the
    branch is ahead of its remote. If the directory is not a git repo, say so and
    skip this part rather than failing.
-5. **Progress drift** - flag active spec on `main`, a spec in progress but no
+6. **Progress drift** - flag active spec on `main`, a spec in progress but no
    matching `feature/`, `fix/`, or `rollback/` branch, all spec steps checked but
    not completed, or disagreement between `build-plan.md` and
    `current-feature.md`. A rollback legitimately targets a checked build-plan
@@ -59,8 +63,9 @@ A short, scannable summary, not a wall of text. Aim for something like:
     Status: Building feature 4 - PDF export
     Plans: Overview current. Build plan 3 of 9 complete.
     Current work: Step 2 of 3 done. Next step: Download PDF button.
+    Findings: 1 open P2 (F-04), 1 fixed P1 awaiting re-review (F-02).
     Git: branch feature/pdf-export, 3 uncommitted files, last commit "feat: widen export helper".
-    Watch: active feature is dirty, which is expected mid-implement.
+    Watch: F-02 is fixed but not re-reviewed; it blocks /complete until /audit closes it.
 
     Next action: run /implement for Step 3.
 
@@ -69,8 +74,12 @@ End with a single suggested next action, chosen in this order:
 - The overview is missing or stale and no feature is in progress -> `/overview`.
 - A spec is in progress with unchecked steps -> `/implement` and name the step.
 - A spec is in progress and all implementation steps are checked -> `/check` if
-  proof is not recorded, `/try` if the user wants a manual review path, otherwise
-  `/complete`.
+  proof is not recorded, `/try` if the user wants a manual review path,
+  `/implement` when a P0 or P1 finding is still `open` (the repair is an extra
+  reviewed step), `/audit` when one is `fixed` and awaiting re-review (both
+  block `/complete`), otherwise `/complete`.
+- `current-feature.md` is the reset stub and a P0 or P1 finding is `open` ->
+  `/fix <finding id>`; when one is `fixed`, `/audit` to re-review and close it.
 - `current-feature.md` is the reset stub and unchecked build-plan items remain ->
   `/feature` and name the next build-plan item.
 - All build-plan items are checked -> say the current milestone is complete;
