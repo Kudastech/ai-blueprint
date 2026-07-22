@@ -7,7 +7,8 @@
     "check": "node scripts/check-blueprint.js",
     "check:static": "node scripts/validate-blueprint.js",
     "test": "npm --prefix packages/create-ai-blueprint test",
-    "test:package": "node scripts/smoke-package.js"
+    "test:package": "node scripts/smoke-package.js",
+    "test:e2e": "node scripts/e2e/run.js"
   },
   "engines": {
     "node": ">=18"
