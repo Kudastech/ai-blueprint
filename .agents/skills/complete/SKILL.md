@@ -76,9 +76,13 @@ global uniqueness: feature 12's `F-03` becomes `12/F-03`; fixes and rollbacks
 use their archive filename as the prefix. An entry carried forward from earlier
 work archives with the item that resolved it; its **Found** line preserves
 where it came from. Then remove the archived entries from the ledger. Unresolved entries (`open` or `fixed` P2/P3, and `unverified`
-leads) stay in the ledger with their IDs so they are never silently dropped;
-when nothing remains, reset the ledger to its stub. If the file is missing
-(an older install), create the stub now.
+leads) stay in the ledger with their IDs so they are never silently dropped.
+When nothing remains, reset the ledger to exactly this stub, and create it the
+same way if the file is missing (an older install):
+
+    # Findings
+
+    _No findings recorded. `/audit` appends findings here when it finds them._
 
 Then reset `blueprint/context/current-feature.md` to its current stub ("nothing
 in progress"), including `/rollback` alongside `/feature` and `/fix`. Don't
