@@ -37,16 +37,6 @@ helping you write.
 | Tool adapters | Codex uses `.agents/skills`; Claude Code uses `.claude/skills`. |
 | Optional visibility | Commit the workflow files for portability, or keep them local with `.gitignore`. |
 
-## Visual overview
-
-The diagram shows the fresh-project workflow. `/overview` happens after planning
-and only re-runs when the plans change. The repeating loop starts at `/feature`
-or `/fix`, then moves through implementation, proof, manual review, audit,
-completion, and history. For an existing codebase, use `/adopt` instead of
-`/onboard`.
-
-![AI Blueprint fresh-project workflow](assets/ai-blueprint-workflow.png)
-
 ## Quick start
 
 Scaffold the app first, then install the Blueprint.
@@ -227,6 +217,16 @@ In this repo, **the build loop** means:
 
 The loop is the control system. The AI can keep iterating, but only inside the
 current spec, with observable checks and review gates.
+
+## Visual overview
+
+The diagram shows the fresh-project workflow. `/overview` happens after planning
+and only re-runs when the plans change. The repeating loop starts at `/feature`
+or `/fix`, then moves through implementation, proof, manual review, audit,
+completion, and history. For an existing codebase, use `/adopt` instead of
+`/onboard`.
+
+![AI Blueprint fresh-project workflow](assets/ai-blueprint-workflow.png)
 
 ## The two files you own
 
