@@ -23,6 +23,10 @@ This blueprint gives the AI a controlled loop:
    observable, a diff you can read, and proof that the done-when was met.
 3. **One work item at a time.** `blueprint/context/current-feature.md` holds
    exactly one feature, fix, or rollback. Finish it, archive it, then move on.
+4. **Findings with teeth.** Review findings get durable IDs and status in a
+   ledger, and a serious finding blocks the merge until a fresh review confirms
+   the repair - or you explicitly waive it, on the record. Nothing gets
+   silently dropped when the context clears.
 
 The point is not to type less. It is to stay in control of a codebase the AI is
 helping you write.
@@ -34,6 +38,7 @@ helping you write.
 | Spec first | The AI writes a feature or fix spec, then stops for review before code. |
 | Small diffs | Implementation happens one reviewed step at a time, with proof each step works. |
 | File-backed state | Plans, current work, and history live in markdown files, so context clears are survivable. |
+| Findings gate | `/audit` findings live in a ledger with durable IDs; open or unreviewed P0/P1 findings block `/complete`. |
 | Tool adapters | Codex uses `.agents/skills`; Claude Code uses `.claude/skills`. |
 | Optional visibility | Commit the workflow files for portability, or keep them local with `.gitignore`. |
 
