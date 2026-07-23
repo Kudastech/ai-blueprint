@@ -1,0 +1,33 @@
+name: Publish create-ai-blueprint
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://registry.npmjs.org
+      - name: Update npm for trusted publishing
+        run: npm install -g npm@latest
+      - name: Validate Blueprint
+        run: npm run check
+      - name: Verify tag matches package version
+        if: github.ref_type == 'tag'
+        run: node -e "const v = require('./packages/create-ai-blueprint/package.json').version; const t = process.env.GITHUB_REF_NAME; if (t !== 'v' + v) { console.error('Tag ' + t + ' does not match package version ' + v); process.exit(1); }"
+      - name: Publish to npm
+        run: npm publish
+        working-directory: packages/create-ai-blueprint
