@@ -162,7 +162,9 @@ the loop now:
 - Then run `/audit` so the repairs are re-reviewed and can move to `closed`.
   A repair this skill made never closes itself.
 - If the user decides a finding should not be fixed, only they can set
-  `accepted` (reason recorded); `invalid` is for findings the review got wrong.
+  `accepted` (reason recorded). A finding that looks wrong goes back to
+  `/audit` to invalidate with recorded evidence; this skill never sets
+  `accepted` or `invalid`.
 
 When every step is built and the build and tests pass (committed as checkpoints or
 not), stop with a compact review packet:

@@ -151,7 +151,7 @@ scheme from Step 5; only P0 and P1 block `/complete`. Status is one of:
 | `fixed` | Repaired, not yet re-reviewed | Yes |
 | `closed` | Repaired and re-reviewed against the new code | No |
 | `accepted` | Not fixing, by the user's explicit decision; reason recorded in Resolution | No |
-| `invalid` | The finding was wrong | No |
+| `invalid` | Re-examination proved the finding wrong; evidence recorded in Resolution | No |
 
 After the review:
 
@@ -170,6 +170,9 @@ After the review:
   close a finding implicitly.
 - Set `accepted` only on the user's explicit decision in the current session,
   and record their reason. Never accept a finding on their behalf.
+- Set `invalid` only when re-examination shows the finding was wrong, and
+  record that evidence in **Resolution**. It is a review verdict (or the
+  user's explicit call), never a shortcut past the gate for blocked work.
 
 `fixed` blocking `/complete` is deliberate: a repair is not done when the code
 changes, it is done when a review has looked at the result. `/implement` marks

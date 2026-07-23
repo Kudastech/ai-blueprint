@@ -480,8 +480,9 @@ status:
 a repair does not clear the gate until a review has looked at the result,
 because a fix can introduce a worse defect than the one it removed.
 `/implement` repairs open findings as extra reviewed steps, `/fix F-03` picks
-one up between work items, and only you can waive a finding (`accepted` with a
-recorded reason, or `invalid`). Resolved findings archive with the work item
+one up between work items, and a finding clears without code only through your
+explicit `accepted` (reason recorded) or an `invalid` verdict backed by
+re-review; an agent never waives its own findings. Resolved findings archive with the work item
 under `blueprint/history/`. The ledger reports status; it never becomes the
 checklist a review scopes to.
 

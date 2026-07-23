@@ -41,7 +41,9 @@ Before logging or committing, run a short safety pass and report blockers only:
   `fixed` still blocks on purpose: the repair exists but no review has looked at
   it - run `/audit` to close it. The only waivers are `accepted` (the user's
   explicit decision in the current chat, reason recorded; never set it for
-  them) or `invalid`. A missing ledger file means no findings.
+  them) or `invalid` (an `/audit` re-examination verdict with recorded
+  evidence, or the user's explicit call). A missing ledger file means no
+  findings.
 
 Do not claim "passed", "verified", or "working" without naming the command,
 route, screenshot, or output that proves it. Stop before Step 1 if required
@@ -81,6 +83,13 @@ When nothing remains, reset the ledger to exactly this stub, and create it the
 same way if the file is missing (an older install):
 
     # Findings
+
+    > **Generated file.** The findings ledger: review findings raised by `/audit`
+    > against the work in progress, each with a durable ID, severity (P0-P3), and
+    > status. `/implement` marks repaired findings `fixed`, a later `/audit` pass
+    > moves them to `closed`, and `/complete` refuses to merge while any P0 or P1
+    > finding is `open` or `fixed`, then archives resolved findings with the work
+    > and resets this file.
 
     _No findings recorded. `/audit` appends findings here when it finds them._
 
@@ -129,8 +138,9 @@ that command can read the archived feature after `current-feature.md` is reset.
 - Don't merge unfinished or failing work; the build and tests must pass first.
 - Never merge while a P0 or P1 finding is `open` or `fixed` in the ledger. The
   recorded ways past the gate without code are `accepted` (only by the user's
-  explicit decision, with their reason) or `invalid`; both travel into the
-  archive, never a silent drop.
+  explicit decision, with their reason) or `invalid` (only from re-examination
+  evidence or the user's explicit call); both travel into the archive, never a
+  silent drop.
 - Merging and pushing are the user's calls: get an explicit yes for the merge,
   then ask whether to push main. Do not treat merge approval, `/complete`, or
   "looks good" as permission to push.
