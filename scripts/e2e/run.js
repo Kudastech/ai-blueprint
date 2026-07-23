@@ -5,6 +5,15 @@ const { Runner, ensureClaudeAvailable } = require("./harness");
 const scenariosDir = path.join(__dirname, "scenarios");
 
 async function main() {
+  if (process.env.E2E_ACCEPT_RISK !== "1") {
+    console.error(
+      "This harness drives a live agent with --dangerously-skip-permissions in a\n" +
+        "scratch workspace on this machine, and it spends real tokens.\n" +
+        "Run it as: E2E_ACCEPT_RISK=1 npm run test:e2e"
+    );
+    process.exit(1);
+  }
+
   ensureClaudeAvailable();
 
   const available = fs
